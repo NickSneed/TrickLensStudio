@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter, Routes, Route } from "react-router-dom";
-import Layout from "./pages/Layout.js";
-import Home from "./pages/Home.js";
-import Secondary from "./pages/Secondary.js";
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import Layout from './pages/Layout.js';
+import Home from './pages/Home.js';
 import './styles/app.scss';
 
 export default function App() {
@@ -12,7 +11,6 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />
-                    <Route path="secondary" element={<Secondary />} />
                     <Route path="*" element={<Home />} />
                 </Route>
             </Routes>

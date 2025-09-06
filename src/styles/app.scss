@@ -7,30 +7,6 @@ body {
     padding: 40px;
 }
 
-nav {
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-
-        li {
-            display: inline-block;
-            margin: 0 20px 0 0;
-        }
-    }
-    
-    a {
-        color: c.$gray;
-        text-decoration: none;
-    }
-}
-
-p {
-    max-width: 400px;
-}
-
-button {
-    cursor: pointer;
-    margin: 0 10px 0 0;
-    padding: 10px 20px;
+input {
+    margin: 20px;
 }
