@@ -8,7 +8,6 @@ const Home = () => {
 
     return (
         <>
-            <br />
             {Array.from({ length: 30 }, (_, i) => (
                 <Photo key={i} data={fileBuffer} photoIndex={i} paletteId={palette} />
             ))}

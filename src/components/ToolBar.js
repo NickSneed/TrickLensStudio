@@ -17,6 +17,7 @@ const ToolBar = ({ palette, setPalette, setFileBuffer }) => {
             <div style={toolbarStyles}>
                 <FileLoader setFileBuffer={setFileBuffer} />
                 <PaletteSelector selectedPalette={palette} onPaletteChange={setPalette} />
+                <span style={{ float: 'right', margin: '20px' }}>GBCam Studio</span>
             </div>
         </>
     );

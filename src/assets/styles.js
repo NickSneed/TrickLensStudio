@@ -47,8 +47,8 @@ export const styles = {
         display: 'none'
     },
     swatchContainer: {
-        width: '40px',
-        height: '16px',
+        width: '100px',
+        height: '24px',
         margin: '0 auto 5px auto', // Center the swatch above the text
         verticalAlign: 'middle',
         overflow: 'hidden',
