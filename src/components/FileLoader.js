@@ -10,7 +10,7 @@ const FileLoader = ({ setSaveData }) => {
         if (file) {
             // On load
             reader.onload = (loadEvent) => {
-                const saveData = parseSave(new Uint8Array(loadEvent.target.result));
+                const saveData = parseSave(loadEvent.target.result);
                 setSaveData(saveData);
             };
 
