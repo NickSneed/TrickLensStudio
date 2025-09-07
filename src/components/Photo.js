@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { useRef, useEffect } from 'react';
-import { applyPalette } from 'gbcam-js';
+import { palettes, applyPalette } from 'gbcam-js';
 
 function Photo({ data, photoIndex, paletteId }) {
     const canvasRef = useRef(null);
     const scale = 1;
+    const palette = palettes[paletteId];
 
     // Check if within range
     if (photoIndex > 29 || photoIndex < 0) {
@@ -23,7 +24,7 @@ function Photo({ data, photoIndex, paletteId }) {
                 const { width, height, photoData } = data.images[photoIndex];
 
                 // Apply the color palette to the photo
-                const pixels = applyPalette(photoData, paletteId);
+                const pixels = applyPalette(photoData, palette);
 
                 // Create a bitmap from the raw image data for efficient drawing
                 const imageData = ctx.createImageData(width, height);
@@ -43,7 +44,7 @@ function Photo({ data, photoIndex, paletteId }) {
         };
 
         renderImage();
-    }, [data, photoIndex, paletteId]); // The effect depends on the `data` prop.
+    }, [data, photoIndex, palette]); // The effect depends on the `data` prop.
 
     return (
         <>
