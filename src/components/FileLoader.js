@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { styles } from '../assets/styles.js';
 
 const FileLoader = ({ setFileBuffer }) => {
     const reader = new FileReader();
@@ -18,7 +19,7 @@ const FileLoader = ({ setFileBuffer }) => {
 
     return (
         <>
-            <input style={{ margin: '10px' }} type="file" className="files" id="images" accept="" multiple onChange={handleFileChange} />
+            <input style={styles.input} type="file" className="files" id="images" accept="" multiple onChange={handleFileChange} />
         </>
     );
 };

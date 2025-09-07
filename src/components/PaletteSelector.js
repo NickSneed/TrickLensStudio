@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import palettes from '../assets/palettes.js';
+import palettes from '../../../GBCamExtractionTool/src/assets/palettes.js';
+import { styles } from '../assets/styles.js';
 
 const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,35 +14,31 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
     return (
         <>
             <div>
-                <button style={{ margin: '10px' }} onClick={() => setIsOpen(!isOpen)}>
+                <button style={styles.button} onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? 'Hide palettes' : 'Select palette'}
                 </button>
 
                 {isOpen && (
-                    <div style={{ display: 'grid', 'grid-template-columns': 'auto auto auto auto', margin: '10px 5px', position: 'absolute', backgroundColor: 'rgba(0,0,0,0.9)' }}>
+                    <div style={styles.dropdownContainer}>
                         {Object.keys(palettes).map((paletteId) => {
                             const palette = palettes[paletteId];
+                            const isSelected = selectedPalette === paletteId;
+
+                            // Combine base and dynamic styles for the swatch border
+                            const swatchStyle = {
+                                ...styles.swatchContainer,
+                                border: isSelected ? '2px solid #5a0ae5ff' : '2px solid #ccc'
+                            };
 
                             return (
-                                <label key={paletteId} style={{ display: 'block', margin: '5px', cursor: 'pointer' }}>
-                                    <input type="radio" name="palette" value={paletteId} checked={selectedPalette === paletteId} onChange={(e) => handleSelect(e.target.value)} style={{ display: 'none' }} />
-                                    <span
-                                        style={{
-                                            display: 'inline-flex',
-                                            width: '40px',
-                                            height: '16px',
-                                            border: selectedPalette === paletteId ? '1px solid #5a0ae5ff' : '1px solid #ccc',
-                                            marginRight: '5px',
-                                            verticalAlign: 'middle',
-                                            overflow: 'hidden'
-                                        }}
-                                    >
+                                <label key={paletteId} style={styles.label}>
+                                    <input type="radio" name="palette" value={paletteId} checked={isSelected} onChange={(e) => handleSelect(e.target.value)} style={styles.radioInput} />
+                                    <span style={swatchStyle}>
                                         {palette.map((c, index) => (
                                             <span
                                                 key={index}
                                                 style={{
-                                                    width: '25%',
-                                                    height: '100%',
+                                                    ...styles.swatchColorBlock,
                                                     backgroundColor: `rgb(${c.r},${c.g},${c.b})`
                                                 }}
                                             ></span>
