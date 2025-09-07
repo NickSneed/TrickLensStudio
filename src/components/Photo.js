@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import { useRef, useEffect } from 'react';
-import { palettes } from 'gbcam-js';
+import { applyPalette } from 'gbcam-js';
 
 function Photo({ data, photoIndex, paletteId }) {
     const canvasRef = useRef(null);
-    const palette = palettes[paletteId];
     const scale = 1;
 
     // Check if within range
@@ -23,20 +22,12 @@ function Photo({ data, photoIndex, paletteId }) {
                 // Decode the photo to get palette indices
                 const { width, height, photoData } = data.images[photoIndex];
 
-                // Render the decoded data with the selected palette
-                const imageData = ctx.createImageData(width, height);
-
-                for (let i = 0; i < photoData.length; i++) {
-                    const val = photoData[i];
-                    const color = palette[val];
-                    const pixelIndex = i * 4;
-                    imageData.data[pixelIndex] = color.r;
-                    imageData.data[pixelIndex + 1] = color.g;
-                    imageData.data[pixelIndex + 2] = color.b;
-                    imageData.data[pixelIndex + 3] = 0xff; // Alpha
-                }
+                // Apply the color palette to the photo
+                const pixels = applyPalette(photoData, paletteId);
 
                 // Create a bitmap from the raw image data for efficient drawing
+                const imageData = ctx.createImageData(width, height);
+                imageData.data.set(pixels);
                 const imageBitmap = await createImageBitmap(imageData);
 
                 // Set canvas dimensions to 2x the original image size
@@ -52,7 +43,7 @@ function Photo({ data, photoIndex, paletteId }) {
         };
 
         renderImage();
-    }, [data, photoIndex, palette]); // The effect depends on the `data` prop.
+    }, [data, photoIndex, paletteId]); // The effect depends on the `data` prop.
 
     return (
         <>
@@ -63,7 +54,7 @@ function Photo({ data, photoIndex, paletteId }) {
 }
 
 Photo.propTypes = {
-    data: PropTypes.instanceOf(Uint8Array),
+    data: PropTypes.object,
     photoIndex: PropTypes.number,
     paletteId: PropTypes.string
 };
