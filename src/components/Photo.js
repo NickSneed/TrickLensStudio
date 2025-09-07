@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { useRef, useEffect } from 'react';
 import { palettes, applyPalette } from 'gbcam-js';
 
-function Photo({ data, photoIndex, paletteId, frame }) {
+function Photo({ data, photoIndex, paletteId, frame, scaleFactor }) {
     const canvasRef = useRef(null);
-    const scale = 2;
+    const scale = scaleFactor;
     const palette = palettes[paletteId];
 
     // Check if within range
@@ -95,7 +95,7 @@ function Photo({ data, photoIndex, paletteId, frame }) {
         };
 
         renderImage();
-    }, [data, photoIndex, palette, frame]); // The effect depends on the `data` prop.
+    }, [data, photoIndex, palette, frame, scaleFactor]); // The effect depends on the `data` prop.
 
     if (!data) {
         return null;
@@ -113,7 +113,8 @@ Photo.propTypes = {
     data: PropTypes.object,
     photoIndex: PropTypes.number,
     paletteId: PropTypes.string,
-    frame: PropTypes.object
+    frame: PropTypes.object,
+    scaleFactor: PropTypes.number
 };
 
 export default Photo;

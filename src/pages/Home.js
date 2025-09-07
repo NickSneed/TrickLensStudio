@@ -6,16 +6,17 @@ const Home = () => {
     const [saveData, setSaveData] = useState(null);
     const [palette, setPalette] = useState('sgb2h');
     const [frame, setFrame] = useState(null);
+    const [scaleFactor, setScaleFactor] = useState(1);
 
     return (
         <>
             <div style={{ padding: '0 0 70px' }}>
                 {Array.from({ length: 30 }, (_, i) => (
-                    <Photo key={i} data={saveData} photoIndex={i} paletteId={palette} frame={frame} />
+                    <Photo key={i} data={saveData} photoIndex={i} paletteId={palette} frame={frame} scaleFactor={scaleFactor} />
                 ))}
                 <div style={{ clear: 'both' }}></div>
             </div>
-            <ToolBar palette={palette} setPalette={setPalette} setSaveData={setSaveData} setFrame={setFrame} />
+            <ToolBar palette={palette} setPalette={setPalette} setSaveData={setSaveData} setFrame={setFrame} setScaleFactor={setScaleFactor} />
         </>
     );
 };
