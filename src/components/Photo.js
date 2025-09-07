@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useRef, useEffect } from 'react';
 import { palettes, applyPalette } from 'gbcam-js';
 
-function Photo({ data, photoIndex, paletteId }) {
+function Photo({ data, photoIndex, paletteId, frame }) {
     const canvasRef = useRef(null);
     const scale = 1;
     const palette = palettes[paletteId];
@@ -31,20 +31,25 @@ function Photo({ data, photoIndex, paletteId }) {
                 imageData.data.set(pixels);
                 const imageBitmap = await createImageBitmap(imageData);
 
+                const frameBitmap = frame ? await createImageBitmap(new Blob([frame])) : null;
+
                 // Set canvas dimensions to 2x the original image size
-                canvas.width = imageData.width * scale;
-                canvas.height = imageData.height * scale;
+                canvas.width = (imageData.width + 32) * scale;
+                canvas.height = (imageData.height + 32) * scale;
 
                 // Disable anti-aliasing to get crisp, hard-edge pixels
                 ctx.imageSmoothingEnabled = false;
 
                 // Draw the bitmap onto the canvas, scaling it up
-                ctx.drawImage(imageBitmap, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(imageBitmap, 16, 16, imageData.width, imageData.height);
+                if (frameBitmap) {
+                    ctx.drawImage(frameBitmap, 0, 0, canvas.width, canvas.height);
+                }
             }
         };
 
         renderImage();
-    }, [data, photoIndex, palette]); // The effect depends on the `data` prop.
+    }, [data, photoIndex, palette, frame]); // The effect depends on the `data` prop.
 
     return (
         <>
@@ -57,7 +62,8 @@ function Photo({ data, photoIndex, paletteId }) {
 Photo.propTypes = {
     data: PropTypes.object,
     photoIndex: PropTypes.number,
-    paletteId: PropTypes.string
+    paletteId: PropTypes.string,
+    frame: PropTypes.object
 };
 
 export default Photo;
