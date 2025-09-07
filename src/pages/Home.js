@@ -9,9 +9,12 @@ const Home = () => {
 
     return (
         <>
-            {Array.from({ length: 30 }, (_, i) => (
-                <Photo key={i} data={saveData} photoIndex={i} paletteId={palette} frame={frame} />
-            ))}
+            <div style={{ padding: '0 0 80px' }}>
+                {Array.from({ length: 30 }, (_, i) => (
+                    <Photo key={i} data={saveData} photoIndex={i} paletteId={palette} frame={frame} />
+                ))}
+                <div style={{ clear: 'both' }}></div>
+            </div>
             <ToolBar palette={palette} setPalette={setPalette} setSaveData={setSaveData} setFrame={setFrame} />
         </>
     );

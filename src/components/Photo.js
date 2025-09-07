@@ -31,17 +31,61 @@ function Photo({ data, photoIndex, paletteId, frame }) {
                 imageData.data.set(pixels);
                 const imageBitmap = await createImageBitmap(imageData);
 
-                const frameBitmap = frame ? await createImageBitmap(new Blob([frame])) : null;
+                let frameBitmap = null;
+                if (frame) {
+                    const originalFrameBitmap = await createImageBitmap(new Blob([frame]));
+
+                    // Use an OffscreenCanvas for recoloring the frame
+                    const offscreenCanvas = new OffscreenCanvas(originalFrameBitmap.width, originalFrameBitmap.height);
+                    const offscreenCtx = offscreenCanvas.getContext('2d');
+
+                    // Draw the original frame to the offscreen canvas to get its pixel data
+                    offscreenCtx.drawImage(originalFrameBitmap, 0, 0);
+                    const frameImageData = offscreenCtx.getImageData(0, 0, originalFrameBitmap.width, originalFrameBitmap.height);
+                    const frameData = frameImageData.data;
+
+                    // The original grayscale palette of the frame file.
+                    // This assumes frames are created with these specific shades.
+                    const originalFramePalette = [
+                        [255, 255, 255, 255], // White
+                        [160, 160, 160, 255], // Light Gray
+                        [80, 80, 80, 255], // Dark Gray
+                        [0, 0, 0, 255] // Black
+                    ];
+
+                    // The new palette to apply
+                    const newPalette = palette.map((c) => [c.r, c.g, c.b, 255]);
+
+                    // Helper to compare colors
+                    const colorsMatch = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+
+                    // Iterate over each pixel and replace the color
+                    for (let i = 0; i < frameData.length; i += 4) {
+                        const pixel = [frameData[i], frameData[i + 1], frameData[i + 2], frameData[i + 3]];
+                        for (let j = 0; j < originalFramePalette.length; j++) {
+                            if (colorsMatch(pixel, originalFramePalette[j])) {
+                                frameData[i] = newPalette[j][0];
+                                frameData[i + 1] = newPalette[j][1];
+                                frameData[i + 2] = newPalette[j][2];
+                                break; // Move to the next pixel
+                            }
+                        }
+                    }
+
+                    // Create a new bitmap from the recolored image data
+                    frameBitmap = await createImageBitmap(frameImageData);
+                }
+                const frameOffset = frame ? 32 : 0;
 
                 // Set canvas dimensions to 2x the original image size
-                canvas.width = (imageData.width + 32) * scale;
-                canvas.height = (imageData.height + 32) * scale;
+                canvas.width = (imageData.width + frameOffset) * scale;
+                canvas.height = (imageData.height + frameOffset) * scale;
 
                 // Disable anti-aliasing to get crisp, hard-edge pixels
                 ctx.imageSmoothingEnabled = false;
 
                 // Draw the bitmap onto the canvas, scaling it up
-                ctx.drawImage(imageBitmap, 16, 16, imageData.width, imageData.height);
+                ctx.drawImage(imageBitmap, frameOffset / 2, frameOffset / 2, imageData.width, imageData.height);
                 if (frameBitmap) {
                     ctx.drawImage(frameBitmap, 0, 0, canvas.width, canvas.height);
                 }
