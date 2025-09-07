@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useRef, useEffect } from 'react';
 import palettes from '../assets/palettes.js';
-import { getImgData } from '../utils/saveparser.js';
+import { getImgData } from '../../../GBCamExtractionTool/src/core/saveparser.js';
 
 function Photo({ data, photoIndex, paletteId }) {
     const canvasRef = useRef(null);
