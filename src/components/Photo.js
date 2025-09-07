@@ -95,6 +95,10 @@ function Photo({ data, photoIndex, paletteId, frame }) {
         renderImage();
     }, [data, photoIndex, palette, frame]); // The effect depends on the `data` prop.
 
+    if (!data) {
+        return null;
+    }
+
     return (
         <>
             {data?.images ? data.images[photoIndex].comment : null}
