@@ -2,8 +2,8 @@
     margin: 10px;
     padding: 10px;
     cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid var(--c-white);
+    border-radius: var(--b-radius-1);
     font-family: sans-serif;
     font-size: 14px;
     float: left;

@@ -1,6 +1,12 @@
-body {
-    background-color: #000;
-    color: #fff;
-    font-family: sans-serif;
+:root {
+    --c-black: #000;
+    --c-white: #fff;
+    --b-radius-1: 8px;
+    --b-radius-2: 10px;
 }
 
+body {
+    background-color: var(--c-black);
+    color: var(--c-white);
+    font-family: sans-serif;
+}

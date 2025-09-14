@@ -1,14 +1,14 @@
 .dropdownContainer {
     display: grid;
     grid-template-columns: auto auto auto auto auto auto auto auto;
-    margin: 10px 5px;
+    margin: 10px 0;
     padding: 5px;
-    position: absolute;
     background-color: rgba(0, 0, 0, 0.9);
-    border: 1px solid #444;
-    border-radius: 4px;
-    bottom: 60px;
+    border: 2px solid #444;
+    border-radius: var(--b-radius-2);
+    bottom: 66px;
     left: 0;
+    position: absolute;
     right: 0;
     z-index: 10;
 }
@@ -19,7 +19,7 @@
     margin: 0 auto 5px auto;
     vertical-align: middle;
     overflow: hidden;
-    border-radius: 2px;
+    border-radius: var(--b-radius-1);
     display: flex;
 }
 
@@ -42,13 +42,15 @@
 }
 
 .button {
-    margin: 10px;
-    padding: 13px;
+    color: var(--c-white);
     cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f0f0f0;
+    border: 2px solid var(--c-white);
+    border-radius: var(--b-radius-1);
+    background-color: transparent;
     font-family: sans-serif;
     font-size: 14px;
     float: left;
+    margin: 10px;
+    padding: 13px;
+    width: 150px
 }

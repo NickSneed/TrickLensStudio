@@ -18,7 +18,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
                     className={styles.button}
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    {isOpen ? 'Hide palettes' : 'Select palette'}
+                    {`Palette: ${selectedPalette}`}
                 </button>
 
                 {isOpen && (

@@ -1,7 +1,7 @@
 .toolbar {
     background: #169e78;
     bottom: 10px;
-    border-radius: 10px;
+    border-radius: var(--b-radius-2);
     box-sizing: border-box;
     color: #fff;
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
