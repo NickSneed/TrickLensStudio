@@ -1,25 +1,35 @@
+import { useRef } from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './FileLoader.module.css';
 
 const FileLoader = ({ onChange, onRemove, showRemove }) => {
     const reader = new FileReader();
+    const inputRef = useRef(null);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            // On load
             reader.onload = (loadEvent) => {
                 onChange(loadEvent);
             };
 
-            // Read the file
             reader.readAsArrayBuffer(file);
+        }
+    };
+
+    const handleRemove = () => {
+        if (onRemove) {
+            onRemove();
+        }
+        if (inputRef.current) {
+            inputRef.current.value = null;
         }
     };
 
     return (
         <>
             <input
+                ref={inputRef}
                 className={styles.input}
                 type="file"
                 id="images"
@@ -29,7 +39,7 @@ const FileLoader = ({ onChange, onRemove, showRemove }) => {
             />
             <button
                 className={styles.remove}
-                onClick={() => onRemove()}
+                onClick={handleRemove}
                 style={{ display: showRemove ? 'block' : 'none' }}
             >
                 x
