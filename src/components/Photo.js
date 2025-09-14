@@ -4,24 +4,25 @@ import { palettes, applyPalette } from 'gbcam-js';
 import * as styles from './Photo.module.css';
 
 function Photo({ image, paletteId, frame, scaleFactor }) {
+    const canvasRefOriginal = useRef(null);
     const canvasRefSave = useRef(null);
     const canvasRefDisplay = useRef(null);
-    const scale = scaleFactor;
+    const saveScale = 4;
     const palette = palettes[paletteId];
 
-    const displayScale = 2; // The factor to scale the display canvas
+    const displayScale = scaleFactor; // The factor to scale the display canvas
     const imageBaseWidth = frame ? 160 : 128;
     const imageBaseHeight = frame ? 144 : 112;
-    const canvasPadding = frame ? '0' : 16 * scaleFactor + 'px';
-    const canvasWidth = imageBaseWidth * scaleFactor;
-    const canvasHeight = imageBaseHeight * scaleFactor;
+    const canvasPadding = frame ? '0' : 16 * displayScale + 'px';
+    const canvasWidth = imageBaseWidth * displayScale;
+    const canvasHeight = imageBaseHeight * displayScale;
 
     useEffect(() => {
         const renderImage = async () => {
             try {
                 // We need to check for both `data` and the canvas `ref` to be ready.
-                if (image && canvasRefSave.current) {
-                    const canvas = canvasRefSave.current;
+                if (image && canvasRefOriginal.current) {
+                    const canvas = canvasRefOriginal.current;
                     const ctx = canvas.getContext('2d');
 
                     // Now we can get the imageData because we have the context
@@ -81,32 +82,37 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
                         // Create a new bitmap from the recolored image data
                         frameBitmap = await createImageBitmap(frameImageData);
                     }
-                    const frameOffset = frame ? 32 * scale : 0;
+                    const frameOffset = frame ? 32 : 0;
 
                     // Set canvas dimensions to 2x the original image size
-                    canvas.width = imageData.width * scale + frameOffset;
-                    canvas.height = imageData.height * scale + frameOffset;
+                    canvas.width = imageData.width + frameOffset;
+                    canvas.height = imageData.height + frameOffset;
 
                     // Disable anti-aliasing to get crisp, hard-edge pixels
                     ctx.imageSmoothingEnabled = false;
 
                     // Draw the bitmap onto the canvas, scaling it up
-                    ctx.drawImage(imageBitmap, frameOffset / 2, frameOffset / 2, imageData.width * scale, imageData.height * scale);
+                    ctx.drawImage(imageBitmap, frameOffset / 2, frameOffset / 2, imageData.width, imageData.height);
 
                     // Draw frame
                     if (frameBitmap) {
                         ctx.drawImage(frameBitmap, 0, 0, canvas.width, canvas.height);
                     }
 
-                    // Copy the save canvas to the display canvas, scaling it up
-                    const displayCanvas = canvasRefDisplay.current;
-                    if (displayCanvas) {
-                        const displayCtx = displayCanvas.getContext('2d');
-                        displayCanvas.width = canvas.width * displayScale;
-                        displayCanvas.height = canvas.height * displayScale;
-                        displayCtx.imageSmoothingEnabled = false;
-                        displayCtx.drawImage(canvas, 0, 0, displayCanvas.width, displayCanvas.height);
-                    }
+                    // Helper to scale and copy a canvas
+                    const scaleAndCopyCanvas = (targetRef, sourceCanvas, scale) => {
+                        const targetCanvas = targetRef.current;
+                        if (targetCanvas) {
+                            const targetCtx = targetCanvas.getContext('2d');
+                            targetCanvas.width = sourceCanvas.width * scale;
+                            targetCanvas.height = sourceCanvas.height * scale;
+                            targetCtx.imageSmoothingEnabled = false;
+                            targetCtx.drawImage(sourceCanvas, 0, 0, targetCanvas.width, targetCanvas.height);
+                        }
+                    };
+
+                    scaleAndCopyCanvas(canvasRefDisplay, canvas, displayScale * 2);
+                    scaleAndCopyCanvas(canvasRefSave, canvas, saveScale);
                 }
             } catch (error) {
                 console.log(error);
@@ -114,7 +120,7 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
         };
 
         renderImage();
-    }, [image, palette, frame, scale, canvasRefDisplay, displayScale]); // The effect depends on the `data` prop.
+    }, [image, palette, frame, saveScale, displayScale]); // The effect depends on the `data` prop.
 
     const handleExport = () => {
         const canvas = canvasRefSave.current;
@@ -165,6 +171,18 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
                         height: canvasHeight + 'px'
                     }}
                     ref={canvasRefSave}
+                ></canvas>
+                <canvas
+                    className={styles.canvas}
+                    width={canvasWidth}
+                    height={canvasHeight}
+                    style={{
+                        display: 'none',
+                        padding: canvasPadding,
+                        width: canvasWidth + 'px',
+                        height: canvasHeight + 'px'
+                    }}
+                    ref={canvasRefOriginal}
                 ></canvas>
                 <button
                     onClick={handleExport}
