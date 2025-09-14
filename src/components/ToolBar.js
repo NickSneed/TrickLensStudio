@@ -4,12 +4,28 @@ import FileLoader from '../components/FileLoader.js';
 import FrameLoader from '../components/FrameLoader.js';
 
 const toolbarStyles = {
-    background: '#272727ff',
+    background: '#169e78',
+    bottom: '10px',
+    borderRadius: '10px',
+    boxSizing: 'border-box',
+    color: '#fff',
+    boxShadow: '0 0 5px rgba(0,0,0,0.5)',
+    left: '10px',
     position: 'fixed',
-    bottom: '0',
-    left: '0',
-    right: '0',
-    width: '100%'
+    width: 'calc(100% - 20px)',
+    zIndex: 2
+};
+
+const blurStyles = {
+    background: 'rgba(255,255,255,0.1)',
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: '150px',
+    zIndex: 1,
+    mask: 'linear-gradient(to bottom, transparent, white 90%)',
+    backdropFilter: 'blur(5px)'
 };
 
 const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor }) => {
@@ -27,6 +43,7 @@ const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor })
                 </select>
                 <span style={{ float: 'right', margin: '23px 40px 0', fontWeight: 'bold', color: '#fff' }}>GBCam Studio</span>
             </div>
+            <div style={blurStyles}></div>
         </>
     );
 };

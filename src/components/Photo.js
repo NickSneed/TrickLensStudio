@@ -6,6 +6,9 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
     const canvasRef = useRef(null);
     const scale = scaleFactor;
     const palette = palettes[paletteId];
+    const canvasPadding = frame ? '0' : 16 * scaleFactor + 'px';
+    const canvasWidth = frame ? 160 * scaleFactor + 'px' : 128 * scaleFactor + 'px';
+    const canvasHeight = frame ? 144 * scaleFactor + 'px' : 112 * scaleFactor + 'px';
 
     useEffect(() => {
         const renderImage = async () => {
@@ -101,7 +104,18 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
     return (
         <>
             {image.comment || null}
-            <canvas style={{ display: 'block', float: 'left', margin: '10px', padding: 0 }} ref={canvasRef}></canvas>
+            <canvas
+                width={canvasWidth}
+                height={canvasHeight}
+                style={{
+                    display: 'block',
+                    margin: 'auto',
+                    padding: canvasPadding,
+                    width: canvasWidth,
+                    height: canvasHeight
+                }}
+                ref={canvasRef}
+            ></canvas>
         </>
     );
 }

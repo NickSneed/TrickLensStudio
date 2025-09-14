@@ -32,7 +32,11 @@ export default {
                 }
             },
             {
-                test: /\.s[ac]ss$/i
+                test: /\.css$/, // Regular expression to match .css files
+                use: [
+                    'style-loader', // Injects CSS into the DOM
+                    'css-loader' // Interprets and transforms CSS
+                ]
             }
         ]
     },
