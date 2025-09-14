@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as styles from './FileLoader.module.css';
 
-const FileLoader = ({ onChange }) => {
+const FileLoader = ({ onChange, onRemove, showRemove }) => {
     const reader = new FileReader();
 
     const handleFileChange = (event) => {
@@ -27,6 +27,13 @@ const FileLoader = ({ onChange }) => {
                 multiple
                 onChange={handleFileChange}
             />
+            <button
+                className={styles.remove}
+                onClick={() => onRemove()}
+                style={{ display: showRemove ? 'block' : 'none' }}
+            >
+                x
+            </button>
         </>
     );
 };
@@ -34,5 +41,7 @@ const FileLoader = ({ onChange }) => {
 export default FileLoader;
 
 FileLoader.propTypes = {
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onRemove: PropTypes.func,
+    showRemove: PropTypes.bool
 };

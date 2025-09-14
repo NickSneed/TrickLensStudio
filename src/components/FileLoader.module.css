@@ -1,5 +1,21 @@
 .input {
     margin: 10px;
-    padding: 10px;
+    padding: 10px 60px 10px 10px;
     float: left;
+    width: 200px
+}
+
+.remove {
+    display: none;
+    background: var(--c-white);
+    border-radius: 4px;
+    color: var(--c-green);
+    font-weight: bold;
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+    height: 30px;
+    margin: 18px 10px 10px -48px;
+    padding: 0;
+    width: 30px;
 }

@@ -4,7 +4,7 @@ import FileLoader from '../components/FileLoader.js';
 import { parseSave } from 'gbcam-js';
 import * as styles from './ToolBar.module.css';
 
-const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor }) => {
+const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor, frame, scaleFactor }) => {
     // Parses the save data
     const loadSave = (event) => {
         const saveData = parseSave(event.target.result);
@@ -21,14 +21,19 @@ const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor })
         <>
             <div className={styles.toolbar}>
                 <FileLoader onChange={loadSave} />
-                <FileLoader onChange={loadFrame} />
+                <FileLoader
+                    onChange={loadFrame}
+                    onRemove={() => setFrame(null)}
+                    showRemove={frame ? true : false}
+                />
                 <PaletteSelector
                     selectedPalette={palette}
                     onPaletteChange={setPalette}
                 />
                 <select
                     className={styles.select}
-                    onChange={(e) => setScaleFactor(e.target.value)}
+                    value={scaleFactor}
+                    onChange={(e) => setScaleFactor(Number(e.target.value))}
                 >
                     <option>1</option>
                     <option>2</option>
@@ -49,5 +54,7 @@ ToolBar.propTypes = {
     setPalette: PropTypes.func.isRequired,
     setSaveData: PropTypes.func.isRequired,
     setFrame: PropTypes.func.isRequired,
-    setScaleFactor: PropTypes.func.isRequired
+    setScaleFactor: PropTypes.func.isRequired,
+    frame: PropTypes.object,
+    scaleFactor: PropTypes.number.isRequired
 };

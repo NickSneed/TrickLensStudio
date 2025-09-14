@@ -1,25 +1,45 @@
 :root {
     --c-black: #000;
+    --c-darkgray: #151515;
     --c-gray: #aaa;
     --c-white: #fff;
     --c-green: #169e78;
+    --c-green-t: rgba(22, 158, 120, 0.95);
     --b-radius-1: 8px;
     --b-radius-2: 10px;
 }
 
 body {
-    background-color: var(--c-black);
+    background-color: var(--c-darkgray);
     color: var(--c-white);
     font-family: sans-serif;
     font-size: 14px;
+    padding: 40px 20px;
 }
 
 input,
-button {
+button,
+select {
     background-color: transparent;
     color: var(--c-white);
     cursor: pointer;
     font-size: 14px;
     border: 2px solid var(--c-white);
     border-radius: var(--b-radius-1);
+    line-height: 1;
+}
+
+button {
+    padding: 13px;
+}
+
+option {
+    background-color: var(--c-black);
+    color: var(--c-white);
+}
+
+.photo-grid {
+    padding: 0 0 70px;
+    display: grid;
+    gap: 20px;
 }
