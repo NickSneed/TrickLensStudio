@@ -1,4 +1,14 @@
+.photo {
+    text-align: center;
+}
+
 .canvas {
     display: block;
-    margin: auto;
+    margin: 0 auto 10px;
+}
+
+.exportButton {
+    margin: 0 auto;
+    max-width: 200px;
+    width: 100%;
 }

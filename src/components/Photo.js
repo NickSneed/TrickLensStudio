@@ -4,19 +4,24 @@ import { palettes, applyPalette } from 'gbcam-js';
 import * as styles from './Photo.module.css';
 
 function Photo({ image, paletteId, frame, scaleFactor }) {
-    const canvasRef = useRef(null);
+    const canvasRefSave = useRef(null);
+    const canvasRefDisplay = useRef(null);
     const scale = scaleFactor;
     const palette = palettes[paletteId];
+
+    const displayScale = 2; // The factor to scale the display canvas
+    const imageBaseWidth = frame ? 160 : 128;
+    const imageBaseHeight = frame ? 144 : 112;
     const canvasPadding = frame ? '0' : 16 * scaleFactor + 'px';
-    const canvasWidth = frame ? 160 * scaleFactor + 'px' : 128 * scaleFactor + 'px';
-    const canvasHeight = frame ? 144 * scaleFactor + 'px' : 112 * scaleFactor + 'px';
+    const canvasWidth = imageBaseWidth * scaleFactor;
+    const canvasHeight = imageBaseHeight * scaleFactor;
 
     useEffect(() => {
         const renderImage = async () => {
             try {
                 // We need to check for both `data` and the canvas `ref` to be ready.
-                if (image && canvasRef.current) {
-                    const canvas = canvasRef.current;
+                if (image && canvasRefSave.current) {
+                    const canvas = canvasRefSave.current;
                     const ctx = canvas.getContext('2d');
 
                     // Now we can get the imageData because we have the context
@@ -92,6 +97,16 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
                     if (frameBitmap) {
                         ctx.drawImage(frameBitmap, 0, 0, canvas.width, canvas.height);
                     }
+
+                    // Copy the save canvas to the display canvas, scaling it up
+                    const displayCanvas = canvasRefDisplay.current;
+                    if (displayCanvas) {
+                        const displayCtx = displayCanvas.getContext('2d');
+                        displayCanvas.width = canvas.width * displayScale;
+                        displayCanvas.height = canvas.height * displayScale;
+                        displayCtx.imageSmoothingEnabled = false;
+                        displayCtx.drawImage(canvas, 0, 0, displayCanvas.width, displayCanvas.height);
+                    }
                 }
             } catch (error) {
                 console.log(error);
@@ -99,7 +114,25 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
         };
 
         renderImage();
-    }, [image, palette, frame, scaleFactor]); // The effect depends on the `data` prop.
+    }, [image, palette, frame, scale, canvasRefDisplay, displayScale]); // The effect depends on the `data` prop.
+
+    const handleExport = () => {
+        const canvas = canvasRefSave.current;
+        if (!canvas) {
+            console.error('Canvas element not found for export.');
+            return;
+        }
+
+        canvas.toBlob((blob) => {
+            const link = document.createElement('a');
+            // Using a timestamp for a unique filename. You could use an image ID if available.
+            link.download = `gb-photo-${Date.now()}.png`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            // Clean up by revoking the object URL.
+            URL.revokeObjectURL(link.href);
+        }, 'image/png');
+    };
 
     // Return if there is no image
     if (!image || image.isDeleted) {
@@ -108,18 +141,38 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
 
     return (
         <>
-            {image.comment || null}
-            <canvas
-                className={styles.canvas}
-                width={canvasWidth}
-                height={canvasHeight}
-                style={{
-                    padding: canvasPadding,
-                    width: canvasWidth,
-                    height: canvasHeight
-                }}
-                ref={canvasRef}
-            ></canvas>
+            <div className={styles.photo}>
+                {image.comment || null}
+                <canvas
+                    className={styles.canvas}
+                    width={canvasWidth}
+                    height={canvasHeight}
+                    style={{
+                        padding: canvasPadding,
+                        width: canvasWidth + 'px',
+                        height: canvasHeight + 'px'
+                    }}
+                    ref={canvasRefDisplay}
+                ></canvas>
+                <canvas
+                    className={styles.canvas}
+                    width={canvasWidth}
+                    height={canvasHeight}
+                    style={{
+                        display: 'none',
+                        padding: canvasPadding,
+                        width: canvasWidth + 'px',
+                        height: canvasHeight + 'px'
+                    }}
+                    ref={canvasRefSave}
+                ></canvas>
+                <button
+                    onClick={handleExport}
+                    className={styles.exportButton}
+                >
+                    Export as PNG
+                </button>
+            </div>
         </>
     );
 }
