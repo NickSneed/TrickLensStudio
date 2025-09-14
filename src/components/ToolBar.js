@@ -20,11 +20,15 @@ const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor, f
     return (
         <>
             <div className={styles.toolbar}>
-                <FileLoader onChange={loadSave} />
+                <FileLoader
+                    onChange={loadSave}
+                    accept=".sav"
+                />
                 <FileLoader
                     onChange={loadFrame}
                     onRemove={() => setFrame(null)}
                     showRemove={frame ? true : false}
+                    accept=".png"
                 />
                 <PaletteSelector
                     selectedPalette={palette}
