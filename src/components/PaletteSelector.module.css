@@ -48,6 +48,6 @@
 
 .button {
     float: left;
-    margin: 10px;
+    margin: 0 10px 0 0;
     width: 150px
 }

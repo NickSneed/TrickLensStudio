@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import PaletteSelector from '../components/PaletteSelector.js';
 import FileLoader from '../components/FileLoader.js';
 import { parseSave } from 'gbcam-js';
+import settingsIcon from '../assets/svgs/settings.svg';
 import * as styles from './ToolBar.module.css';
 
 const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor, frame, scaleFactor }) => {
@@ -44,6 +45,12 @@ const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor, f
                     <option>3</option>
                     <option>4</option>
                 </select>
+                <button className={styles.settingsbutton}>
+                    <img
+                        src={settingsIcon}
+                        alt="Settings"
+                    />
+                </button>
                 <span className={styles.logo}>GBCam Studio</span>
             </div>
             <div className={styles.blur}></div>

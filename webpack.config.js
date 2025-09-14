@@ -53,6 +53,14 @@ export default {
                         }
                     }
                 ]
+            },
+            {
+                // Rule for images
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'assets/images/[name].[hash][ext]'
+                }
             }
         ]
     },

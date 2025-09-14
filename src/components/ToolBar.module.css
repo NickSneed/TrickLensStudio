@@ -1,11 +1,12 @@
 .toolbar {
     background: var(--c-green-t);
-    bottom: 10px;
     border-radius: var(--b-radius-2);
+    bottom: 10px;
     box-sizing: border-box;
-    color: var(--c-white);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    color: var(--c-white);
     left: 10px;
+    padding: 10px;
     position: fixed;
     width: calc(100% - 20px);
     z-index: 2;
@@ -24,14 +25,20 @@
 }
 
 .select {
-    margin: 12px 0 0 10px; 
-    padding: 10px 20px 10px 5px;
+    float: left;
+    margin: 0 10px 0 0;
 }
 
 .logo {
     float: right;
-    margin: 23px 40px 0;
+    margin: 14px 40px 0;
     font-weight: bold;
     color: var(--c-white);
+}
+
+.settingsbutton {
+    border: none;
+    float: left;
+    padding: 10px 7px;
 }
 

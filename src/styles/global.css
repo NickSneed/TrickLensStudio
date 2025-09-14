@@ -21,21 +21,23 @@ input,
 button,
 select {
     background-color: transparent;
+    border-radius: var(--b-radius-1);
+    border: 2px solid var(--c-white);
     color: var(--c-white);
     cursor: pointer;
     font-size: 14px;
-    border: 2px solid var(--c-white);
-    border-radius: var(--b-radius-1);
     line-height: 1;
-}
-
-button {
     padding: 13px;
 }
 
 option {
     background-color: var(--c-black);
     color: var(--c-white);
+}
+
+select {
+    height: 44px;
+    padding: 0 10px;
 }
 
 .photo-grid {
