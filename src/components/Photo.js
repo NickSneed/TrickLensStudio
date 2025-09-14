@@ -8,9 +8,11 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
     const canvasRefDisplay = useRef(null);
     const saveScale = 4;
     const palette = palettes[paletteId];
-    const displayScale = scaleFactor; // The factor to scale the display canvas
+    const displayScale = scaleFactor;
     const imageBaseWidth = frame ? 160 : 128;
     const imageBaseHeight = frame ? 144 : 112;
+
+    // CSS settings
     const canvasPadding = frame ? '0' : 16 * displayScale + 'px';
     const canvasWidth = imageBaseWidth * displayScale;
     const canvasHeight = imageBaseHeight * displayScale;
@@ -85,50 +87,52 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
                 // Disable anti-aliasing to get crisp, hard-edge pixels
                 ctx.imageSmoothingEnabled = false;
 
-                // Draw the bitmap onto the canvas
+                // Draw the image onto the OffscreenCanvas
                 ctx.drawImage(imageBitmap, frameOffset / 2, frameOffset / 2, width, height);
 
-                // Draw frame
+                // Draw the frame onto the OffscreenCanvas
                 if (frameBitmap) {
                     ctx.drawImage(frameBitmap, 0, 0, compositeWidth, compositeHeight);
                 }
 
-                // Helper to scale and copy a canvas
-                const scaleAndCopyCanvas = (targetRef, sourceCanvas, scale) => {
-                    const targetCanvas = targetRef.current;
-                    if (targetCanvas) {
-                        const targetCtx = targetCanvas.getContext('2d');
-                        targetCanvas.width = sourceCanvas.width * scale;
-                        targetCanvas.height = sourceCanvas.height * scale;
-                        targetCtx.imageSmoothingEnabled = false;
-                        targetCtx.drawImage(sourceCanvas, 0, 0, targetCanvas.width, targetCanvas.height);
-                    }
-                };
+                // Create and prepare the save canvas in memory
+                const saveCanvas = new OffscreenCanvas(compositionCanvas.width * saveScale, compositionCanvas.height * saveScale);
+                const saveCtx = saveCanvas.getContext('2d');
+                saveCtx.imageSmoothingEnabled = false;
+                saveCtx.drawImage(compositionCanvas, 0, 0, saveCanvas.width, saveCanvas.height);
+                canvasRefSave.current = saveCanvas;
 
-                scaleAndCopyCanvas(canvasRefDisplay, compositionCanvas, displayScale * 2);
-                scaleAndCopyCanvas(canvasRefSave, compositionCanvas, saveScale);
+                // Scale and draw to the display canvas
+                const displayCanvas = canvasRefDisplay.current;
+                if (displayCanvas) {
+                    const displayCtx = displayCanvas.getContext('2d');
+                    const scale = displayScale * 2;
+                    displayCanvas.width = compositionCanvas.width * scale;
+                    displayCanvas.height = compositionCanvas.height * scale;
+                    displayCtx.imageSmoothingEnabled = false;
+                    displayCtx.drawImage(compositionCanvas, 0, 0, displayCanvas.width, displayCanvas.height);
+                }
             } catch (error) {
                 console.log(error);
             }
         })();
     }, [image, palette, frame, saveScale, displayScale]); // The effect depends on the `data` prop.
 
-    const handleExport = () => {
+    const handleExport = async () => {
         const canvas = canvasRefSave.current;
         if (!canvas) {
-            console.error('Canvas element not found for export.');
+            console.error('Save canvas not ready for export.');
             return;
         }
 
-        canvas.toBlob((blob) => {
-            const link = document.createElement('a');
-            // Using a timestamp for a unique filename. You could use an image ID if available.
-            link.download = `gb-photo-${Date.now()}.png`;
-            link.href = URL.createObjectURL(blob);
-            link.click();
-            // Clean up by revoking the object URL.
-            URL.revokeObjectURL(link.href);
-        }, 'image/png');
+        const blob = await canvas.convertToBlob({ type: 'image/png' });
+        const link = document.createElement('a');
+        // Using a timestamp for a unique filename. You could use an image ID if available.
+        link.download = `gb-photo-${Date.now()}.png`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        // Clean up by revoking the object URL.
+        URL.revokeObjectURL(link.href);
     };
 
     // Return if there is no image
@@ -150,18 +154,6 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
                         height: canvasHeight + 'px'
                     }}
                     ref={canvasRefDisplay}
-                ></canvas>
-                <canvas
-                    className={styles.canvas}
-                    width={canvasWidth}
-                    height={canvasHeight}
-                    style={{
-                        display: 'none',
-                        padding: canvasPadding,
-                        width: canvasWidth + 'px',
-                        height: canvasHeight + 'px'
-                    }}
-                    ref={canvasRefSave}
                 ></canvas>
                 <button
                     onClick={handleExport}
