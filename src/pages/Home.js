@@ -7,6 +7,7 @@ const Home = () => {
     const [palette, setPalette] = useState('sgb2h');
     const [frame, setFrame] = useState(null);
     const [scaleFactor, setScaleFactor] = useState(2);
+    const [mainMessage, setMainMessage] = useState('Select a .sav file');
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -27,12 +28,21 @@ const Home = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
+    useEffect(() => {
+        if (saveData) {
+            setMainMessage('');
+            if (!(saveData.images && saveData.images.some((image) => image && !image.isDeleted))) {
+                setMainMessage('No images found');
+            }
+        }
+    }, [saveData]);
+
     return (
         <>
             {saveData ? (
                 <div
                     className="photo-grid"
-                    style={{ 'grid-template-columns': 'repeat(auto-fit, minmax(' + 160 * scaleFactor + 'px, 1fr))' }}
+                    style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(' + 160 * scaleFactor + 'px, 1fr))' }}
                 >
                     {Array.from({ length: 30 }, (_, i) => (
                         <Photo
@@ -46,6 +56,8 @@ const Home = () => {
                     <div style={{ clear: 'both' }}></div>
                 </div>
             ) : null}
+            {mainMessage ? <div className="main-message">{mainMessage}</div> : null}
+            <div className="main-message">{mainMessage}</div>
             <ToolBar
                 palette={palette}
                 setPalette={setPalette}
