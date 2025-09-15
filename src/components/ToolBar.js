@@ -5,7 +5,17 @@ import { parseSave } from 'gbcam-js';
 import settingsIcon from '../assets/svgs/settings.svg';
 import * as styles from './ToolBar.module.css';
 
-const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor, frame, scaleFactor }) => {
+const ToolBar = ({
+    palette,
+    setPalette,
+    setSaveData,
+    setFrame,
+    setScaleFactor,
+    setIsSettingsOpen,
+    isSettingsOpen,
+    frame,
+    scaleFactor
+}) => {
     // Parses the save data
     const loadSave = (event) => {
         const saveData = parseSave(event.target.result);
@@ -45,7 +55,10 @@ const ToolBar = ({ palette, setPalette, setSaveData, setFrame, setScaleFactor, f
                     <option>3</option>
                     <option>4</option>
                 </select>
-                <button className={styles.settingsbutton}>
+                <button
+                    className={styles.settingsbutton}
+                    onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                >
                     <img
                         src={settingsIcon}
                         alt="Settings"

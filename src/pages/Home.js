@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Photo from '../components/Photo.js';
 import ToolBar from '../components/ToolBar.js';
+import Modal from '../components/Modal.js';
 
 const Home = () => {
     const [saveData, setSaveData] = useState(null);
@@ -8,6 +9,7 @@ const Home = () => {
     const [frame, setFrame] = useState(null);
     const [scaleFactor, setScaleFactor] = useState(2);
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -42,7 +44,10 @@ const Home = () => {
             {saveData ? (
                 <div
                     className="photo-grid"
-                    style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(' + 160 * scaleFactor + 'px, 1fr))' }}
+                    style={{
+                        gridTemplateColumns:
+                            'repeat(auto-fit, minmax(' + 160 * scaleFactor + 'px, 1fr))'
+                    }}
                 >
                     {Array.from({ length: 30 }, (_, i) => (
                         <Photo
@@ -58,6 +63,7 @@ const Home = () => {
             ) : null}
             {mainMessage ? <div className="main-message">{mainMessage}</div> : null}
             <div className="main-message">{mainMessage}</div>
+            <Modal isOpen={isSettingsOpen} />
             <ToolBar
                 palette={palette}
                 setPalette={setPalette}
@@ -66,6 +72,8 @@ const Home = () => {
                 setFrame={setFrame}
                 scaleFactor={scaleFactor}
                 setScaleFactor={setScaleFactor}
+                setIsSettingsOpen={setIsSettingsOpen}
+                isSettingsOpen={isSettingsOpen}
             />
         </>
     );
