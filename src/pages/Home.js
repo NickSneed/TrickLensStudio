@@ -34,11 +34,16 @@ const Home = () => {
     useEffect(() => {
         if (saveData) {
             setMainMessage('');
-            if (!(saveData.images && saveData.images.some((image) => image && !image.isDeleted))) {
+            if (
+                !(
+                    saveData.images &&
+                    saveData.images.some((image) => image && (!image.isDeleted || isShowDeleted))
+                )
+            ) {
                 setMainMessage('No images found');
             }
         }
-    }, [saveData]);
+    }, [saveData, isShowDeleted]);
 
     return (
         <>
