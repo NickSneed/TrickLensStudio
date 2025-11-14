@@ -13,6 +13,7 @@ body {
     color: var(--c-white);
     font-family: sans-serif;
     font-size: 14px;
+    font-weight: bold;
     padding: 40px 10px;
 }
 
@@ -37,7 +38,6 @@ input {
     border-style: solid;
     border-width: 4px;
     border-color: var(--c-lightgray) var(--c-black) var(--c-black) var(--c-lightgray);
-    font-weight: 600;
 }
 
 button:hover,
@@ -56,6 +56,11 @@ input:active {
     border: none;
     margin: 0;
     padding: 4px;
+}
+
+.img-button:hover,
+.img-button:active {
+    background: none;
 }
 
 .img-button img {
@@ -85,7 +90,6 @@ select {
 
 .main-message {
     color: var(--c-darkgray);
-    font-weight: bold;
     left: 0;
     position: fixed;
     text-align: center;

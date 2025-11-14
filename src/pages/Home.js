@@ -91,6 +91,7 @@ const Home = () => {
                 isOpen={isSettingsOpen}
                 setIsSettingsOpen={setIsSettingsOpen}
                 title="Settings"
+                type="small"
             >
                 <SettingsMenu
                     isShowDeleted={isShowDeleted}

@@ -7,5 +7,7 @@
     width: auto;
 }
 .select {
+    border-color: var(--c-black);
+    color: var(--c-black);
     margin: 20px 0 0;
 }
