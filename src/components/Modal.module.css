@@ -1,5 +1,4 @@
 .modalwrapper {
-    backdrop-filter: blur(0.8em);
     display: none;
     height: 100vh;
     left: 0;
@@ -11,8 +10,7 @@
 }
 
 .modal {
-    background: rgba(0, 0, 0, 0.92);
-    border-radius: var(--b-radius-2);
+    background: var(--c-black);
     bottom: 256px;
     height: 100%;
     padding: 0.4em 2em;

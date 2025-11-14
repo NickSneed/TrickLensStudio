@@ -3,11 +3,9 @@
     --c-darkestgray: #151515;
     --c-darkgray: #4b4b4b;
     --c-gray: #aaa;
+    --c-lightgray: #d6d6d6;
     --c-white: #fff;
     --c-green: #169e78;
-    --c-green-t: rgba(22, 158, 120, 0.95);
-    --b-radius-1: 8px;
-    --b-radius-2: 10px;
 }
 
 body {
@@ -22,7 +20,6 @@ input,
 button,
 select {
     background-color: transparent;
-    border-radius: var(--b-radius-1);
     border: 2px solid var(--c-white);
     box-sizing: border-box;
     color: var(--c-white);
@@ -33,7 +30,18 @@ select {
     width: 100%;
 }
 
+button,
+input {
+    background-color: var(--c-gray);
+    color: var(--c-black);
+    border-style: solid;
+    border-width: 4px;
+    border-color: var(--c-lightgray) var(--c-black) var(--c-black) var(--c-lightgray);
+    font-weight: 600;
+}
+
 .img-button {
+    background: none;
     border: none;
     margin: 0;
     padding: 4px;

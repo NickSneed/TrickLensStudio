@@ -62,7 +62,6 @@ const ToolBar = ({
                 </div>
                 <span className={styles.logo}>GBCam Studio</span>
             </div>
-            <div className={styles.blur}></div>
         </>
     );
 };

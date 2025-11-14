@@ -97,17 +97,19 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
         <>
             <div className={styles.photo}>
                 {image.comment || null}
-                <canvas
-                    className={styles.canvas}
-                    width={canvasWidth}
-                    height={canvasHeight}
-                    style={{
-                        padding: canvasPadding,
-                        width: canvasWidth + 'px',
-                        height: canvasHeight + 'px'
-                    }}
-                    ref={canvasRefDisplay}
-                ></canvas>
+                <div className={styles.canvasContainer}>
+                    <canvas
+                        className={styles.canvas}
+                        width={canvasWidth}
+                        height={canvasHeight}
+                        style={{
+                            padding: canvasPadding,
+                            width: canvasWidth + 'px',
+                            height: canvasHeight + 'px'
+                        }}
+                        ref={canvasRefDisplay}
+                    ></canvas>
+                </div>
                 <button
                     onClick={handleExport}
                     className={styles.exportButton}

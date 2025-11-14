@@ -1,26 +1,13 @@
 .toolbar {
-    background: var(--c-green-t);
-    border-radius: var(--b-radius-2);
+    background: var(--c-green);
     bottom: 1em;
     box-sizing: border-box;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     color: var(--c-white);
     left: 1em;
     padding: 1em;
     position: fixed;
     width: calc(100% - 2em);
     z-index: 2;
-}
-
-.blur {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 18em;
-    z-index: 1;
-    mask: linear-gradient(to bottom, transparent, white 10%);
-    backdrop-filter: blur(5px);
 }
 
 .toolbaritem {
@@ -31,6 +18,7 @@
 
 .settingsbutton {
     float: right;
+    margin-top: 2px;
     width: auto;
 }
 
@@ -38,7 +26,7 @@
     color: var(--c-white);
     float: left;
     font-weight: bold;
-    line-height: 3em;
+    line-height: 3.5em;
 }
 
 @media (min-width: 1280px) {
@@ -52,9 +40,5 @@
     .logo {
         float: right;
         margin-right: 2em;
-    }
-
-    .blur {
-        height: 6em;
     }
 }

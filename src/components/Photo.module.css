@@ -5,6 +5,14 @@
 
 .canvas {
     display: block;
+    margin: 0;
+}
+
+.canvasContainer {
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--c-black) var(--c-darkgray) var(--c-darkgray) var(--c-black);
+    display: inline-block;
     margin: 0 auto 10px;
 }
 
