@@ -3,15 +3,27 @@ import Photo from '../components/Photo.js';
 import ToolBar from '../components/ToolBar.js';
 import Modal from '../components/Modal.js';
 import SettingsMenu from '../components/SettingsMenu.js';
+import { getItem, setItem } from '../utils/storageUtils.js';
 
 const Home = () => {
     const [saveData, setSaveData] = useState(null);
-    const [palette, setPalette] = useState('sgb2h');
+    const [palette, setPalette] = useState(getItem('palette') || 'sgb2h');
     const [frame, setFrame] = useState(null);
-    const [scaleFactor, setScaleFactor] = useState(2);
+    const [scaleFactor, setScaleFactor] = useState(getItem('scaleFactor') || 2);
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [isShowDeleted, setIsShowDeleted] = useState(false);
+    const [isShowDeleted, setIsShowDeleted] = useState(getItem('isShowDeleted') || false);
+
+    // Save settings to cookies whenever they change
+    useEffect(() => {
+        setItem('palette', palette);
+    }, [palette]);
+    useEffect(() => {
+        setItem('scaleFactor', scaleFactor);
+    }, [scaleFactor]);
+    useEffect(() => {
+        setItem('isShowDeleted', isShowDeleted);
+    }, [isShowDeleted]);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
