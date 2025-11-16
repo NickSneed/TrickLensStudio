@@ -9,16 +9,7 @@
 
 .remove {
     display: none;
-    background: var(--c-white);
-    color: var(--c-green);
-    font-weight: bold;
-    float: left;
-    font-size: 20px;
-    font-weight: bold;
-    height: 30px;
-    padding: 0;
     position: absolute;
-    right: 8px;
-    top: 8px;
-    width: 30px;
+    right: 0.3em;
+    top: 0.3em;
 }

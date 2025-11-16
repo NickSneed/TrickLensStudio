@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import PaletteSelector from '../components/PaletteSelector.js';
 import FileLoader from '../components/FileLoader.js';
 import { parseSave } from 'gbcam-js';
-import settingsIcon from '../assets/svgs/settings.svg';
 import * as styles from './ToolBar.module.css';
 
 const ToolBar = ({
@@ -54,13 +53,10 @@ const ToolBar = ({
                         className="img-button"
                         onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                     >
-                        <img
-                            src={settingsIcon}
-                            alt="Settings"
-                        />
+                        &#9965;
                     </button>
                 </div>
-                <span className={styles.logo}>GBCam Studio</span>
+                <span className={`${styles.logo} font-bold`}>GBCam Studio</span>
             </div>
         </>
     );

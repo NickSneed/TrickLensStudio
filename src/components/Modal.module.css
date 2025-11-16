@@ -5,7 +5,7 @@
     justify-content: center;
     height: 100vh;
     left: 0;
-    padding: 2em;
+    padding: 1em;
     position: fixed;
     top: 0;
     width: 100%;
@@ -14,27 +14,34 @@
 
 .modal {
     background: var(--c-gray);
-    border: 8px solid var(--c-black);
+    box-shadow: inset 0 0 0 8px var(--c-black);
+    border: 1.5em solid var(--c-gray);
     position: relative;
     margin: 0 auto;
-    padding: 0.4em 2em 2em;
+    padding: 3em 2em;
     width: 100%;
 }
 
+.modal h2 {
+    background: var(--c-gray);
+    display: inline-block;
+    font-size: 16px;
+    padding: 0 1em;
+    position: absolute;
+    top: -1em;
+}
+
 .modal.small {
-    max-width: 300px;
+    max-width: 320px;
 }
 
 .modalscroll {
     overflow: auto;
 }
 
-.modal .close,
-.modal .close:hover {
-    background: var(--c-black);
-    color: var(--c-white);
+.modal .close {
+    box-shadow: 0 0 0 0.21em var(--c-gray);
     position: absolute;
-    right: 1em;
-    top: 1em;
-    width: auto;
+    right: -0.5em;
+    top: -0.5em;
 }

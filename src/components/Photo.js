@@ -112,7 +112,7 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
                 </div>
                 <button
                     onClick={handleExport}
-                    className={styles.exportButton}
+                    className={`button ${styles.exportButton}`}
                 >
                     Export as PNG
                 </button>

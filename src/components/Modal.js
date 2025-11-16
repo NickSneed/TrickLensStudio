@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import * as styles from './Modal.module.css';
-import closeIcon from '../assets/svgs/close.svg';
 
 const Modal = ({ isOpen, setIsSettingsOpen, title, children, type }) => {
     return (
@@ -14,10 +13,10 @@ const Modal = ({ isOpen, setIsSettingsOpen, title, children, type }) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <button
-                    className={`${styles.close} img-button`}
+                    className={`closeButton ${styles.close}`}
                     onClick={() => setIsSettingsOpen(!isOpen)}
                 >
-                    <img src={closeIcon} />
+                    x
                 </button>
                 <h2>{title}</h2>
                 <div className={styles.modalscroll}>{children}</div>

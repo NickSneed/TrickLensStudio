@@ -12,21 +12,29 @@
 
 .toolbaritem {
     display: block;
-    margin: 0 0 1em;
+    margin: 0 0 0.5em;
     width: 100%;
 }
 
 .settingsbutton {
     float: right;
-    margin-top: 2px;
+    margin: 0 10px;
     width: auto;
+}
+
+.settingsbutton button {
+    color: var(--c-white);
+    display: inline-block;
+    font-size: 40px;
+    height: 1em;
+    line-height: 1;
 }
 
 .logo {
     color: var(--c-white);
     float: left;
-    font-weight: bold;
-    line-height: 3.5em;
+    font-size: 20px;
+    line-height: 2.2em;
 }
 
 @media (min-width: 1280px) {
@@ -34,11 +42,17 @@
         display: block;
         float: left;
         margin: 0 1em 0 0;
-        max-width: 19em;
+        max-width: 340px;
+        width: auto;
     }
 
     .logo {
         float: right;
-        margin-right: 2em;
+        margin-right: 1em;
+        margin-top: 2px;
+    }
+
+    .settingsbutton {
+        margin-top: 2px;
     }
 }

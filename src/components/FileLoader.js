@@ -30,7 +30,7 @@ const FileLoader = ({ onChange, onRemove, showRemove, accept }) => {
         <div className={styles.inputwrapper}>
             <input
                 ref={inputRef}
-                className={styles.input}
+                className={`input ${styles.input}`}
                 type="file"
                 id="images"
                 accept={accept}
@@ -38,7 +38,7 @@ const FileLoader = ({ onChange, onRemove, showRemove, accept }) => {
                 onChange={handleFileChange}
             />
             <button
-                className={styles.remove}
+                className={`closeButton ${styles.remove}`}
                 onClick={handleRemove}
                 style={{ display: showRemove ? 'block' : 'none' }}
             >

@@ -6,33 +6,78 @@
     --c-lightgray: #d6d6d6;
     --c-white: #fff;
     --c-green: #169e78;
+    --f-regular: 'DogicaPixel', sans-serif;
+    --f-bold: 'DogicaPixelBold', sans-serif;
+}
+
+@font-face {
+    font-family: 'DogicaPixel';
+    src: url('../assets/fonts/dogicapixel.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'DogicaPixelBold';
+    src: url('../assets/fonts/dogicapixelbold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: bold;
+    font-display: swap;
 }
 
 body {
     background-color: var(--c-darkestgray);
     color: var(--c-white);
     font-family: sans-serif;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 12px;
+    font-weight: normal;
     padding: 40px 10px;
+    font-family: var(--f-regular);
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0px;
 }
 
-input,
-button,
+div {
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--f-bold);
+}
+
 select {
+    padding: 2px;
+    width: 100%;
+}
+
+.font-bold {
+    font-family: var(--f-bold);
+}
+
+button {
+    cursor: pointer;
+}
+
+.input,
+.button {
     background-color: transparent;
     border: 2px solid var(--c-white);
     box-sizing: border-box;
     color: var(--c-white);
     cursor: pointer;
-    font-size: 14px;
-    line-height: 1;
-    padding: 13px;
+    font-size: 12px;
+    font-family: var(--f-regular);
+    height: 4em;
+    padding: 0.8em;
     width: 100%;
 }
 
-button,
-input {
+.button,
+.input {
     background-color: var(--c-gray);
     color: var(--c-black);
     border-style: solid;
@@ -40,14 +85,14 @@ input {
     border-color: var(--c-lightgray) var(--c-black) var(--c-black) var(--c-lightgray);
 }
 
-button:hover,
-input:hover {
+.button:hover,
+.input:hover {
     background-color: var(--c-lightgray);
     border-color: var(--c-white) var(--c-black) var(--c-black) var(--c-white);
 }
 
-button:active,
-input:active {
+.button:active,
+.input:active {
     border-color: var(--c-black) var(--c-lightgray) var(--c-lightgray) var(--c-black);
 }
 
@@ -55,7 +100,7 @@ input:active {
     background: none;
     border: none;
     margin: 0;
-    padding: 4px;
+    padding: 0;
 }
 
 .img-button:hover,
@@ -72,18 +117,8 @@ label {
     display: block;
 }
 
-option {
-    background-color: var(--c-black);
-    color: var(--c-white);
-}
-
-select {
-    height: 30px;
-    padding: 0 10px;
-}
-
 .photo-grid {
-    padding: 0 0 240px;
+    padding: 0 0 200px;
     display: grid;
     gap: 10px;
 }
@@ -91,14 +126,23 @@ select {
 .main-message {
     color: var(--c-darkgray);
     left: 0;
+    font-family: var(--f-bold);
     position: fixed;
     text-align: center;
-    top: 45%;
+    top: 25%;
     width: 100%;
 }
 
-div {
-    box-sizing: border-box;
+.closeButton {
+    background: var(--c-black);
+    display: block;
+    border: none;
+    color: var(--c-white);
+    font-family: var(--f-regular);
+    font-size: 2em;
+    height: 1.4em;
+    line-height: 1;
+    width: 1.4em;
 }
 
 @media (min-width: 1280px) {
@@ -107,7 +151,11 @@ div {
     }
 
     .photo-grid {
-        padding: 0 0 50px;
+        padding: 0 0 40px;
         gap: 20px;
+    }
+
+    .main-message {
+        top: 45%;
     }
 }

@@ -69,6 +69,14 @@ export default {
                 generator: {
                     filename: 'assets/images/[name].[hash][ext]'
                 }
+            },
+            {
+                // Rule for fonts
+                test: /\.(woff2)$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'assets/fonts/[name].[hash][ext]'
+                }
             }
         ]
     },
