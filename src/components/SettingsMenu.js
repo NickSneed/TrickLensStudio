@@ -1,7 +1,14 @@
 import PropTypes from 'prop-types';
 import * as styles from './SettingsMenu.module.css';
 
-const SettingsMenu = ({ isShowDeleted, setIsShowDeleted, scaleFactor, setScaleFactor }) => {
+const SettingsMenu = ({
+    isShowDeleted,
+    setIsShowDeleted,
+    scaleFactor,
+    setScaleFactor,
+    color,
+    setColor
+}) => {
     return (
         <div className={styles.settings}>
             <label>
@@ -15,7 +22,7 @@ const SettingsMenu = ({ isShowDeleted, setIsShowDeleted, scaleFactor, setScaleFa
             <label>
                 Scale:{' '}
                 <select
-                    className={styles.select}
+                    className="select"
                     value={scaleFactor}
                     onChange={(e) => setScaleFactor(Number(e.target.value))}
                 >
@@ -23,6 +30,19 @@ const SettingsMenu = ({ isShowDeleted, setIsShowDeleted, scaleFactor, setScaleFa
                     <option>2</option>
                     <option>3</option>
                     <option>4</option>
+                </select>
+            </label>
+            <label>
+                Color:{' '}
+                <select
+                    className="select"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                >
+                    <option>red</option>
+                    <option>green</option>
+                    <option>yellow</option>
+                    <option>blue</option>
                 </select>
             </label>
         </div>
@@ -35,5 +55,7 @@ SettingsMenu.propTypes = {
     isShowDeleted: PropTypes.bool.isRequired,
     setIsShowDeleted: PropTypes.func.isRequired,
     scaleFactor: PropTypes.number.isRequired,
-    setScaleFactor: PropTypes.func.isRequired
+    setScaleFactor: PropTypes.func.isRequired,
+    color: PropTypes.string.isRequired,
+    setColor: PropTypes.func.isRequired
 };

@@ -13,17 +13,23 @@ const Home = () => {
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isShowDeleted, setIsShowDeleted] = useState(getItem('isShowDeleted') || false);
+    const [color, setColor] = useState(getItem('color') || 'green');
 
-    // Save settings to cookies whenever they change
     useEffect(() => {
         setItem('palette', palette);
     }, [palette]);
+
     useEffect(() => {
         setItem('scaleFactor', scaleFactor);
     }, [scaleFactor]);
+
     useEffect(() => {
         setItem('isShowDeleted', isShowDeleted);
     }, [isShowDeleted]);
+
+    useEffect(() => {
+        setItem('color', color);
+    }, [color]);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -98,6 +104,8 @@ const Home = () => {
                     setIsShowDeleted={setIsShowDeleted}
                     scaleFactor={scaleFactor}
                     setScaleFactor={setScaleFactor}
+                    color={color}
+                    setColor={setColor}
                 />
             </Modal>
             <ToolBar
@@ -110,6 +118,7 @@ const Home = () => {
                 setScaleFactor={setScaleFactor}
                 setIsSettingsOpen={setIsSettingsOpen}
                 isSettingsOpen={isSettingsOpen}
+                color={color}
             />
         </>
     );

@@ -11,7 +11,8 @@ const ToolBar = ({
     setFrame,
     setIsSettingsOpen,
     isSettingsOpen,
-    frame
+    frame,
+    color
 }) => {
     // Parses the save data
     const loadSave = (event) => {
@@ -27,7 +28,7 @@ const ToolBar = ({
 
     return (
         <>
-            <div className={styles.toolbar}>
+            <div className={`${styles.toolbar} color${color}`}>
                 <div className={styles.toolbaritem}>
                     <FileLoader
                         onChange={loadSave}
@@ -73,5 +74,6 @@ ToolBar.propTypes = {
     setIsSettingsOpen: PropTypes.func.isRequired,
     isSettingsOpen: PropTypes.bool.isRequired,
     frame: PropTypes.object,
-    scaleFactor: PropTypes.number.isRequired
+    scaleFactor: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired
 };

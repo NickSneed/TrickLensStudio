@@ -6,6 +6,9 @@
     --c-lightgray: #d6d6d6;
     --c-white: #fff;
     --c-green: #169e78;
+    --c-yellow: #f4c901;
+    --c-red: #c20000;
+    --c-blue: #2c51ac;
     --f-regular: 'DogicaPixel', sans-serif;
     --f-bold: 'DogicaPixelBold', sans-serif;
 }
@@ -54,20 +57,37 @@ select {
     width: 100%;
 }
 
-.font-bold {
-    font-family: var(--f-bold);
-}
-
 button {
     cursor: pointer;
+}
+
+.colorgreen {
+    background-color: var(--c-green);
+}
+
+.coloryellow {
+    background-color: var(--c-yellow);
+    color: var(--c-black);
+}
+
+.colorred {
+    background-color: var(--c-red);
+}
+
+.colorblue {
+    background-color: var(--c-blue);
+}
+
+.font-bold {
+    font-family: var(--f-bold);
 }
 
 .input,
 .button {
     background-color: transparent;
     border: 2px solid var(--c-white);
+    color: var(--c-black);
     box-sizing: border-box;
-    color: var(--c-white);
     cursor: pointer;
     font-size: 12px;
     font-family: var(--f-regular);
@@ -79,7 +99,6 @@ button {
 .button,
 .input {
     background-color: var(--c-gray);
-    color: var(--c-black);
     border-style: solid;
     border-width: 4px;
     border-color: var(--c-lightgray) var(--c-black) var(--c-black) var(--c-lightgray);
