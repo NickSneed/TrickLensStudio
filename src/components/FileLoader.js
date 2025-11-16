@@ -66,6 +66,7 @@ export default FileLoader;
 FileLoader.displayName = 'FileLoader';
 
 FileLoader.propTypes = {
+    text: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     onRemove: PropTypes.func,
     showRemove: PropTypes.bool,
