@@ -20,12 +20,16 @@
     width: auto;
 }
 
-.settingsbutton button {
+.settingsbutton button,
+.settingsbutton button:hover {
+    background: none;
+    border: none;
     color: inherit;
     display: inline-block;
     font-size: 40px;
     height: 1em;
     line-height: 1.1;
+    padding: 0;
 }
 
 .logo {

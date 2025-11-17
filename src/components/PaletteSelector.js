@@ -23,7 +23,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
                 <Modal
                     isOpen={isOpen}
                     setIsSettingsOpen={setIsOpen}
-                    title="Select a palette"
+                    title="Palettes"
                 >
                     <div className={styles.dropdownContainer}>
                         {Object.keys(palettes).map((paletteId) => {

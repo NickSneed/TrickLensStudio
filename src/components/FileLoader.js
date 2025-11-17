@@ -33,23 +33,16 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
     };
 
     return (
-        <div className={styles.inputwrapper}>
+        <div className={styles.fileLoader}>
             <input
                 ref={inputRef}
-                // The input is hidden, as the button will trigger it
-                style={{ display: 'none' }}
                 type="file"
                 id="images"
                 accept={accept}
                 multiple
                 onChange={handleFileChange}
             />
-            <button
-                className={`button ${styles.button}`}
-                onClick={handleButtonClick}
-            >
-                {text}
-            </button>
+            <button onClick={handleButtonClick}>{text}</button>
             <button
                 className={`closeButton ${styles.remove}`}
                 onClick={handleRemove}

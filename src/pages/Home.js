@@ -75,7 +75,7 @@ const Home = () => {
         <>
             {saveData ? (
                 <div
-                    className="photoGrid"
+                    className={`photoGrid scale${scaleFactor}`}
                     style={{
                         gridTemplateColumns:
                             'repeat(auto-fit, minmax(' + 160 * scaleFactor + 'px, 1fr))'

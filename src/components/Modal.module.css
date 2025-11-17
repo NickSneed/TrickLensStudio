@@ -26,7 +26,8 @@
     background: var(--c-modal);
     display: inline-block;
     font-size: 16px;
-    padding: 0 1em;
+    left: 1em;
+    padding: 0 0.5em;
     position: absolute;
     top: -1em;
 }
@@ -35,13 +36,14 @@
     max-width: 500px;
 }
 
-.modalscroll {
-    overflow: auto;
-}
-
 .modal .close {
     box-shadow: 0 0 0 0.21em var(--c-modal);
     position: absolute;
     right: -0.5em;
     top: -0.5em;
+    z-index: 4;
+}
+
+.modalscroll {
+    overflow: auto;
 }

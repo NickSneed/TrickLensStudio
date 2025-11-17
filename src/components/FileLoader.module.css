@@ -1,18 +1,17 @@
-.input {
-    margin: 0 10px 0 0;
-    padding: 10px;
-}
-
-.inputwrapper {
+.fileLoader {
     position: relative;
 }
 
-.button {
+.fileLoader input {
+    display: none;
+}
+
+.fileLoader button:not(.remove) {
     padding-right: 50px !important;
     text-align: left;
 }
 
-.remove {
+.fileLoader .remove {
     display: none;
     position: absolute;
     right: 0.3em;

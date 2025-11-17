@@ -17,9 +17,12 @@
     margin: 0 auto 10px;
 }
 
-.exportButton {
-    display: block;
+.photo button {
     margin: 0 auto;
     max-width: 200px;
     width: 100%;
+}
+
+:global(.scale1) .photo button span {
+    display: none;
 }

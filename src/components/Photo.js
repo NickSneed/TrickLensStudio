@@ -129,11 +129,8 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
                         ref={canvasRefDisplay}
                     ></canvas>
                 </div>
-                <button
-                    onClick={handleExport}
-                    className={`button ${styles.exportButton}`}
-                >
-                    Export as PNG
+                <button onClick={handleExport}>
+                    Export<span> as PNG</span>
                 </button>
             </div>
         </>

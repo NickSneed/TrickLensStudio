@@ -70,14 +70,19 @@ h3 {
 }
 
 select {
+    border: 2px solid var(--c-copy);
     font-size: inherit;
+    font-family: var(--f-regular);
     padding: 0.5em;
     width: 100%;
 }
 
 button {
+    box-sizing: border-box;
     color: var(--c-copy);
     cursor: pointer;
+    font-size: inherit;
+    font-family: var(--f-regular);
 }
 
 .colorgreen {
@@ -101,54 +106,30 @@ button {
     font-family: var(--f-bold);
 }
 
-.input,
-.button {
-    background-color: transparent;
-    box-sizing: border-box;
-    cursor: pointer;
-    font-size: inherit;
-    font-family: var(--f-regular);
+button {
     height: 3.5em;
     padding: 0.8em;
     width: 100%;
 }
 
-.button,
-.input {
+button {
     background-color: var(--c-button);
     border-style: solid;
     border-width: 4px;
     border-color: color-mix(in srgb, var(--c-button) 40%, #fff)
         color-mix(in srgb, var(--c-button) 10%, #000) color-mix(in srgb, var(--c-button) 10%, #000)
         color-mix(in srgb, var(--c-button) 40%, #fff);
+    display: block;
 }
 
-.button:hover,
-.input:hover {
+button:hover {
     background-color: color-mix(in srgb, var(--c-button) 60%, #fff);
 }
 
-.button:active,
-.input:active {
+button:active {
     border-color: color-mix(in srgb, var(--c-button) 10%, #000)
         color-mix(in srgb, var(--c-button) 40%, #fff) color-mix(in srgb, var(--c-button) 40%, #fff)
         color-mix(in srgb, var(--c-button) 10%, #000);
-}
-
-.imgButton {
-    background: none;
-    border: none;
-    margin: 0;
-    padding: 0;
-}
-
-.imgButton:hover,
-.imgButton:active {
-    background: none;
-}
-
-.imgButton img {
-    width: 35px;
 }
 
 label {
@@ -176,7 +157,8 @@ label {
     z-index: 1;
 }
 
-.closeButton {
+.closeButton,
+.closeButton:hover {
     background: var(--c-modalcopy);
     display: block;
     border: none;
@@ -185,6 +167,7 @@ label {
     font-size: 1.8em;
     height: 1.3em;
     line-height: 1;
+    padding: 0;
     width: 1.3em;
 }
 
