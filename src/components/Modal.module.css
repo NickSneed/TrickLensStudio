@@ -37,7 +37,7 @@
 }
 
 .modal .close {
-    box-shadow: 0 0 0 0.21em var(--c-modal);
+    box-shadow: 0 0 0 0.4em var(--c-modal);
     position: absolute;
     right: -0.5em;
     top: -0.5em;
