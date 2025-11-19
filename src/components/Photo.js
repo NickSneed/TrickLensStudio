@@ -116,6 +116,7 @@ function Photo({ image, paletteId, frame, scaleFactor }) {
         <>
             <div className={styles.photo}>
                 <div className={styles.canvasContainer}>
+                    {image.isDeleted ? <div className={styles.deleted}>d</div> : null}
                     <canvas
                         className={styles.canvas}
                         width={canvasWidth}
