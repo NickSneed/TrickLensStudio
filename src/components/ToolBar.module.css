@@ -60,6 +60,18 @@
     line-height: 2.5em;
 }
 
+.imageCount {
+    background: #333;
+    border: 2px solid #fff;
+    border-bottom: none;
+    border-right: none;
+    right: 0;
+    color: #fff;
+    padding: 0.5em;
+    position: absolute;
+    top: -2em;
+}
+
 @media (min-width: 1280px) {
     .toolbar .toolbaritem {
         display: block;

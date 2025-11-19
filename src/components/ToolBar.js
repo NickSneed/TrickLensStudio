@@ -4,6 +4,7 @@ import PaletteSelector from '../components/PaletteSelector.js';
 import FileLoader from '../components/FileLoader.js';
 import { parseSave } from 'gbcam-js';
 import * as styles from './ToolBar.module.css';
+
 const ToolBar = forwardRef(
     (
         {
@@ -13,8 +14,10 @@ const ToolBar = forwardRef(
             setFrame,
             setIsSettingsOpen,
             isSettingsOpen,
+            saveData,
             frame,
-            color
+            color,
+            count
         },
         ref
     ) => {
@@ -33,10 +36,13 @@ const ToolBar = forwardRef(
         return (
             <>
                 <div className={`${styles.toolbar} color${color}`}>
+                    {count > 0 ? <div className={styles.imageCount}>{count}</div> : null}
                     <div className={styles.toolbaritem}>
                         <FileLoader
                             text="Select .sav &hellip;"
                             onChange={loadSave}
+                            onRemove={() => setSaveData(null)}
+                            showRemove={saveData ? true : false}
                             accept=".sav"
                             ref={ref}
                         />
@@ -83,7 +89,9 @@ ToolBar.propTypes = {
     setScaleFactor: PropTypes.func.isRequired,
     setIsSettingsOpen: PropTypes.func.isRequired,
     isSettingsOpen: PropTypes.bool.isRequired,
+    saveData: PropTypes.object,
     frame: PropTypes.object,
     scaleFactor: PropTypes.number.isRequired,
-    color: PropTypes.string.isRequired
+    color: PropTypes.string.isRequired,
+    count: PropTypes.number.isRequired
 };

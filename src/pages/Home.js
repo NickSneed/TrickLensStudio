@@ -70,6 +70,8 @@ const Home = () => {
             ) {
                 setMainMessage('No images found');
             }
+        } else {
+            setMainMessage('Select a .sav file');
         }
     }, [saveData, isShowDeleted]);
 
@@ -150,6 +152,7 @@ const Home = () => {
             <ToolBar
                 palette={palette}
                 setPalette={setPalette}
+                saveData={saveData}
                 setSaveData={setSaveData}
                 frame={frame}
                 setFrame={setFrame}
@@ -158,6 +161,7 @@ const Home = () => {
                 setIsSettingsOpen={setIsSettingsOpen}
                 isSettingsOpen={isSettingsOpen}
                 color={color}
+                count={imagesToRender.length}
                 ref={fileInputRef}
             />
         </>
