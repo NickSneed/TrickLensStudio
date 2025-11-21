@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as styles from './Modal.module.css';
 
-const Modal = ({ isOpen, setIsSettingsOpen, title, children, type }) => {
+const Modal = ({ isOpen, setIsSettingsOpen, title, children, type, allowScroll }) => {
     return (
         <div
             className={styles.modalwrapper}
@@ -21,7 +21,11 @@ const Modal = ({ isOpen, setIsSettingsOpen, title, children, type }) => {
                     x
                 </button>
                 <h2>{title}</h2>
-                <div className={styles.modalscroll}>{children}</div>
+                {allowScroll ? (
+                    <div className={styles.modalscroll}>{children}</div>
+                ) : (
+                    <div className={styles.modalnoscroll}>{children}</div>
+                )}
             </div>
         </div>
     );
@@ -32,7 +36,8 @@ Modal.propTypes = {
     setIsSettingsOpen: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     children: PropTypes.node,
-    type: PropTypes.string
+    type: PropTypes.string,
+    allowScroll: PropTypes.bool
 };
 
 export default Modal;

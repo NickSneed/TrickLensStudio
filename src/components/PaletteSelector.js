@@ -24,6 +24,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
                     isOpen={isOpen}
                     setIsSettingsOpen={setIsOpen}
                     title="Palettes"
+                    allowScroll={true}
                 >
                     <div className={styles.dropdownContainer}>
                         {Object.keys(palettes).map((paletteId) => {

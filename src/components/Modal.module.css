@@ -51,3 +51,7 @@
 .modalscroll {
     overflow: auto;
 }
+
+.modalnoscroll {
+    height: 100%;
+}

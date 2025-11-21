@@ -4,7 +4,7 @@ import { palettes, applyPalette } from 'gbcam-js';
 import * as styles from './Photo.module.css';
 import { recolorFrame, composeImage } from '../utils/canvasUtils.js';
 
-function Photo({ image, paletteId, frame, scaleFactor, showExport, showDeletedFlag, onClick }) {
+function Photo({ image, paletteId, frame, scaleFactor, showDeletedFlag, isScale, onClick }) {
     const canvasRefSave = useRef(null);
     const canvasRefDisplay = useRef(null);
     const saveScale = 10;
@@ -112,36 +112,42 @@ function Photo({ image, paletteId, frame, scaleFactor, showExport, showDeletedFl
         return null;
     }
 
+    const canvasMarkup = (
+        <>
+            {image.isDeleted && showDeletedFlag ? <div className={styles.deleted}>d</div> : null}
+            <canvas
+                className={styles.canvas}
+                width={canvasWidth}
+                height={canvasHeight}
+                style={{
+                    padding: canvasPadding,
+                    width: canvasWidth + 'px',
+                    height: canvasHeight + 'px'
+                }}
+                ref={canvasRefDisplay}
+            ></canvas>
+        </>
+    );
     return (
         <>
-            <div
-                className={styles.photo}
-                onClick={onClick}
-            >
-                <div className={styles.canvasContainer}>
-                    {image.isDeleted && showDeletedFlag ? (
-                        <div className={styles.deleted}>d</div>
-                    ) : null}
-                    <canvas
-                        className={styles.canvas}
-                        width={canvasWidth}
-                        height={canvasHeight}
-                        style={{
-                            padding: canvasPadding,
-                            width: canvasWidth + 'px',
-                            height: canvasHeight + 'px'
-                        }}
-                        ref={canvasRefDisplay}
-                    ></canvas>
-                </div>
-                {showExport ? (
+            <div className={`${styles.photo} ${isScale ? styles.scale : ''}`}>
+                {onClick ? (
                     <button
-                        className="button"
-                        onClick={handleExport}
+                        className={styles.canvasContainer}
+                        onClick={onClick}
                     >
-                        Export<span> as PNG</span>
+                        {canvasMarkup}
                     </button>
-                ) : null}
+                ) : (
+                    <div className={styles.canvasContainer}>{canvasMarkup}</div>
+                )}
+
+                <button
+                    className="button"
+                    onClick={handleExport}
+                >
+                    Export<span> as PNG</span>
+                </button>
             </div>
         </>
     );
@@ -152,8 +158,8 @@ Photo.propTypes = {
     paletteId: PropTypes.string,
     frame: PropTypes.object,
     scaleFactor: PropTypes.number,
-    showExport: PropTypes.bool,
     showDeletedFlag: PropTypes.bool,
+    isScale: PropTypes.bool,
     onClick: PropTypes.func
 };
 

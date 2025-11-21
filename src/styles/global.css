@@ -79,6 +79,7 @@ select {
 
 button {
     cursor: pointer;
+    padding: 0;
 }
 
 .button {
@@ -121,12 +122,12 @@ button {
 }
 
 @media (hover: hover) {
-    button:hover {
+    .button:hover {
         background-color: color-mix(in srgb, var(--c-button) 60%, #fff);
     }
 }
 
-button:active {
+.button:active {
     transform: translatey(4px);
 }
 

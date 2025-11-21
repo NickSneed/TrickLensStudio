@@ -9,6 +9,7 @@
 }
 
 .canvasContainer {
+    background: none;
     border-style: solid;
     border-width: 2px;
     border-color: var(--c-canvasoutlinedark) var(--c-canvasoutlinelight) var(--c-canvasoutlinelight)
@@ -18,7 +19,22 @@
     position: relative;
 }
 
-.photo button {
+.scale {
+    height: 100%;
+}
+
+.scale .canvas {
+    object-fit: contain;
+    padding: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.scale .canvasContainer {
+    height: calc(100% - 50px);
+}
+
+.photo :global(.button) {
     margin: 0 auto;
     max-width: 200px;
     width: 100%;

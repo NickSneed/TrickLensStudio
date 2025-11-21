@@ -118,9 +118,8 @@ const Home = () => {
                             paletteId={palette}
                             frame={frame}
                             scaleFactor={scaleFactor}
-                            showExport={true}
                             showDeletedFlag={true}
-                            //onClick={() => setEditImage(image)}
+                            onClick={() => setEditImage(image)}
                         />
                     ))}
                     <div style={{ clear: 'both' }}></div>
@@ -140,12 +139,14 @@ const Home = () => {
                 setIsSettingsOpen={setEditImage}
                 title="Edit"
                 type="full"
+                allowScroll={false}
             >
                 <Photo
                     image={editImage}
                     paletteId={palette}
                     frame={frame}
-                    scaleFactor={scaleFactor}
+                    scaleFactor={4}
+                    isScale={true}
                 />
             </Modal>
             <Modal
