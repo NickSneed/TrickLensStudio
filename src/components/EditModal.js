@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
+import { getFrameOffsets } from '../utils/frameUtils.js';
 import { applyEffect } from 'gbcam-js';
 
 const EditModal = ({ editImage, palette, frame }) => {
@@ -38,10 +39,10 @@ const EditModal = ({ editImage, palette, frame }) => {
             const x = (e.clientX - rect.left) * scaleX;
             const y = (e.clientY - rect.top) * scaleY;
             const scale = 8;
-            const frameOffset = frame ? 16 : 0;
 
-            const unscaledX = Math.floor(x / scale - frameOffset);
-            const unscaledY = Math.floor(y / scale - frameOffset);
+            const offsets = getFrameOffsets(frame);
+            const unscaledX = Math.floor(x / scale - offsets.left);
+            const unscaledY = Math.floor(y / scale - offsets.top);
             const imageWidth = 128;
             const index = unscaledY * imageWidth + unscaledX;
 

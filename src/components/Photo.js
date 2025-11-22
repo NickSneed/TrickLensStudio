@@ -3,6 +3,7 @@ import { useRef, useEffect } from 'react';
 import { palettes, applyPalette } from 'gbcam-js';
 import * as styles from './Photo.module.css';
 import { recolorFrame, composeImage } from '../utils/canvasUtils.js';
+import { getFrameOffsets } from '../utils/frameUtils.js';
 
 function Photo({ image, paletteId, frame, scaleFactor, showDeletedFlag, isScale, onClick }) {
     const canvasRefSave = useRef(null);
@@ -36,17 +37,7 @@ function Photo({ image, paletteId, frame, scaleFactor, showDeletedFlag, isScale,
                 // Recolor the frame if it exists
                 const frameBitmap = frame ? await recolorFrame(frame.data, palette) : null;
 
-                // Define offsets based on frame type
-                let offsets = {};
-                if (frame) {
-                    // Example of how to handle a special frame by its name
-                    if (isWild) {
-                        offsets = { top: 40, bottom: 72, left: 16, right: 16 };
-                    } else {
-                        offsets = { top: 16, bottom: 16, left: 16, right: 16 };
-                    }
-                }
-
+                const offsets = getFrameOffsets(frame);
                 // Use an OffscreenCanvas for composition
                 const compositionCanvas = composeImage(
                     imageBitmap,
