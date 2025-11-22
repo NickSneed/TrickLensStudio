@@ -7,6 +7,7 @@ import { applyEffect } from 'gbcam-js';
 const EditModal = ({ editImage, palette, frame }) => {
     const [editedImage, setEditedImage] = useState(editImage);
     const [effect, setEffect] = useState('none');
+    const [color, setColor] = useState(0);
 
     useEffect(() => {
         if (!editImage) {
@@ -27,6 +28,34 @@ const EditModal = ({ editImage, palette, frame }) => {
         }
     }, [effect, editImage]);
 
+    const handleCanvasClick = (e) => {
+        const canvas = e.currentTarget.querySelector('canvas');
+        if (canvas) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+            const scale = 8;
+            const frameOffset = frame ? 16 : 0;
+
+            const unscaledX = Math.floor(x / scale - frameOffset);
+            const unscaledY = Math.floor(y / scale - frameOffset);
+            const imageWidth = 128;
+            const index = unscaledY * imageWidth + unscaledX;
+
+            if (unscaledX >= 0 && unscaledX < imageWidth && unscaledY >= 0 && unscaledY < 112) {
+                const newPhotoData = [...editedImage.photoData];
+                newPhotoData[index] = Number(color);
+
+                setEditedImage({
+                    ...editedImage,
+                    photoData: newPhotoData
+                });
+            }
+        }
+    };
+
     return (
         <div className={styles.editWrapper}>
             Effect:
@@ -46,6 +75,17 @@ const EditModal = ({ editImage, palette, frame }) => {
                 <option value="zoom-v">zoom-v</option>
                 <option value="tile">tile</option>
             </select>
+            Color:
+            <select
+                className={styles.select}
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+            >
+                <option value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+            </select>
             <div className={styles.photo}>
                 <Photo
                     image={editedImage}
@@ -53,6 +93,7 @@ const EditModal = ({ editImage, palette, frame }) => {
                     frame={frame}
                     scaleFactor={4}
                     isScale={true}
+                    onClick={handleCanvasClick}
                 />
             </div>
         </div>
