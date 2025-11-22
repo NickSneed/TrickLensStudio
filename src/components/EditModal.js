@@ -72,36 +72,9 @@ const EditModal = ({ editImage, palette, frame }) => {
     const handleMouseUp = () => {
         setIsDrawing(false);
     };
+
     return (
         <div className={styles.editWrapper}>
-            Effect:
-            <select
-                className={styles.select}
-                value={effect}
-                onChange={(e) => setEffect(e.target.value)}
-            >
-                <option value="none">none</option>
-                <option value="invert">invert</option>
-                <option value="mirror-rtl">mirror-rtl</option>
-                <option value="mirror-ltr">mirror-ltr</option>
-                <option value="mirror-btt">mirror-btt</option>
-                <option value="mirror-ttb">mirror-ttb</option>
-                <option value="zoom">zoom</option>
-                <option value="zoom-h">zoom-h</option>
-                <option value="zoom-v">zoom-v</option>
-                <option value="tile">tile</option>
-            </select>
-            Color:
-            <select
-                className={styles.select}
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-            >
-                <option value="0">1</option>
-                <option value="1">2</option>
-                <option value="2">3</option>
-                <option value="3">4</option>
-            </select>
             <div
                 className={styles.photo}
                 onMouseDown={handleMouseDown}
@@ -116,6 +89,40 @@ const EditModal = ({ editImage, palette, frame }) => {
                     scaleFactor={4}
                     isScale={true}
                 />
+            </div>
+            <div className={styles.controls}>
+                <label>
+                    Effect:
+                    <select
+                        className={styles.select}
+                        value={effect}
+                        onChange={(e) => setEffect(e.target.value)}
+                    >
+                        <option value="none">none</option>
+                        <option value="invert">invert</option>
+                        <option value="mirror-rtl">mirror-rtl</option>
+                        <option value="mirror-ltr">mirror-ltr</option>
+                        <option value="mirror-btt">mirror-btt</option>
+                        <option value="mirror-ttb">mirror-ttb</option>
+                        <option value="zoom">zoom</option>
+                        <option value="zoom-h">zoom-h</option>
+                        <option value="zoom-v">zoom-v</option>
+                        <option value="tile">tile</option>
+                    </select>
+                </label>
+                <label>
+                    Color:
+                    <select
+                        className={styles.select}
+                        value={color}
+                        onChange={(e) => setColor(e.target.value)}
+                    >
+                        <option value="0">1</option>
+                        <option value="1">2</option>
+                        <option value="2">3</option>
+                        <option value="3">4</option>
+                    </select>
+                </label>
             </div>
         </div>
     );

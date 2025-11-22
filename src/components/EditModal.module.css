@@ -1,13 +1,41 @@
 .editWrapper {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     margin: 0 auto;
-    max-width: 35em;
+    max-width: 56em;
 }
 
 .photo {
-    height: calc(100% - 80px);
+    height: auto;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
 }
 
 .select {
-    margin: 0.5em 0 2em 0;
+    margin: 0.5em 0 1em 0;
+    display: block;
+    width: 100%;
+}
+
+@media (min-width: 1280px) {
+    .editWrapper {
+        flex-direction: row;
+    }
+
+    .photo {
+        max-width: 40em;
+    }
+
+    .controls {
+        flex-basis: 200px;
+        flex-shrink: 0;
+        margin-left: 2em;
+        padding-top: 0;
+    }
 }
