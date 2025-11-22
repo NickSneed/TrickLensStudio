@@ -32,12 +32,12 @@
     top: -1em;
 }
 
-.modal.small {
+.small .modal {
     max-width: 500px;
 }
 
-.modal.full {
-    height: calc(100vh - 2em);
+.full .modal {
+    height: 100%;
 }
 
 .modal .close {

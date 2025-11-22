@@ -1,0 +1,13 @@
+.editWrapper {
+    height: 100%;
+    margin: 0 auto;
+    max-width: 40em;
+}
+
+.photo {
+    height: calc(100% - 80px);
+}
+
+.select {
+    margin: 0.5em 0 2em 0;
+}

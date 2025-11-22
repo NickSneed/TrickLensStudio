@@ -4,14 +4,14 @@ import * as styles from './Modal.module.css';
 const Modal = ({ isOpen, setIsSettingsOpen, title, children, type, allowScroll }) => {
     return (
         <div
-            className={styles.modalwrapper}
+            className={`${styles.modalwrapper} ${type === 'small' ? styles.small : ''} ${
+                type === 'full' ? styles.full : ''
+            }`}
             onClick={() => setIsSettingsOpen(false)}
             style={{ display: isOpen ? 'flex' : 'none' }}
         >
             <div
-                className={`${styles.modal} ${type === 'small' ? styles.small : ''} ${
-                    type === 'full' ? styles.full : ''
-                }`}
+                className={styles.modal}
                 onClick={(e) => e.stopPropagation()}
             >
                 <button

@@ -3,6 +3,7 @@ import Photo from '../components/Photo.js';
 import ToolBar from '../components/ToolBar.js';
 import Modal from '../components/Modal.js';
 import SettingsMenu from '../components/SettingsMenu.js';
+import EditModal from '../components/EditModal.js';
 import { getItem, setItem } from '../utils/storageUtils.js';
 
 const Home = () => {
@@ -141,12 +142,10 @@ const Home = () => {
                 type="full"
                 allowScroll={false}
             >
-                <Photo
-                    image={editImage}
-                    paletteId={palette}
+                <EditModal
+                    editImage={editImage}
+                    palette={palette}
                     frame={frame}
-                    scaleFactor={4}
-                    isScale={true}
                 />
             </Modal>
             <Modal
