@@ -3,33 +3,38 @@ import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
 import { getFrameOffsets } from '../utils/frameUtils.js';
-import { applyEffect } from 'gbcam-js';
+import { applyEffect, createMontage } from 'gbcam-js';
 
-const EditModal = ({ editImage, palette, frame }) => {
+const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
     const [editedImage, setEditedImage] = useState(editImage);
     const [effect, setEffect] = useState('none');
     const [color, setColor] = useState(0);
     const [brushSize, setBrushSize] = useState(1);
     const [isDrawing, setIsDrawing] = useState(false);
+    const [montageType, setMontageType] = useState('none');
 
     useEffect(() => {
         if (!editImage) {
             return;
         }
 
-        if (editedImage && effect && effect !== 'none') {
-            let newPhotoData = editImage.photoData;
+        const isMontage = montagePhotos && montageType !== 'none';
+
+        if ((editedImage && effect && effect !== 'none') || isMontage) {
+            let newPhotoData = isMontage
+                ? createMontage([editImage.photoData, ...montagePhotos], montageType)
+                : editImage.photoData;
             newPhotoData = applyEffect(newPhotoData, effect);
             setEditedImage({
-                ...editedImage,
+                ...editImage,
                 photoData: newPhotoData
             });
         }
 
-        if (effect === 'none') {
+        if (effect === 'none' && !isMontage) {
             setEditedImage(editImage);
         }
-    }, [effect, editImage]);
+    }, [effect, editImage, montagePhotos, montageType]);
 
     const drawOnCanvas = (e) => {
         const canvas = e.currentTarget.querySelector('canvas');
@@ -78,6 +83,49 @@ const EditModal = ({ editImage, palette, frame }) => {
     const handleMouseUp = () => {
         setIsDrawing(false);
     };
+
+    let montageOptions;
+    if (montagePhotos && montagePhotos.length) {
+        montageOptions = (
+            <>
+                <option value="none">none</option>
+                <option value="vertical">vertical</option>
+                <option value="horizontal">horizontal</option>
+                <option value="quadrant">quadrant</option>
+                <option value="horizontal-2/3">horizontal-2/3</option>
+                <option value="border">border</option>
+            </>
+        );
+    }
+
+    if (montagePhotos && montagePhotos.length > 1) {
+        montageOptions = (
+            <>
+                <option value="none">none</option>
+                <option value="vertical">vertical</option>
+                <option value="horizontal">horizontal</option>
+                <option value="quadrant">quadrant</option>
+                <option value="horizontal-2/3">horizontal-2/3</option>
+                <option value="horizontal-bars">horizontal-bars</option>
+                <option value="border">border</option>
+            </>
+        );
+    }
+
+    if (montagePhotos && montagePhotos.length > 2) {
+        montageOptions = (
+            <>
+                <option value="none">none</option>
+                <option value="vertical">vertical</option>
+                <option value="horizontal">horizontal</option>
+                <option value="quadrant">quadrant</option>
+                <option value="four-quadrant">four-quadrant</option>
+                <option value="horizontal-2/3">horizontal-2/3</option>
+                <option value="horizontal-bars">horizontal-bars</option>
+                <option value="border">border</option>
+            </>
+        );
+    }
 
     return (
         <div className={styles.editWrapper}>
@@ -144,6 +192,18 @@ const EditModal = ({ editImage, palette, frame }) => {
                         <option value="6">6</option>
                     </select>
                 </label>
+                {montagePhotos ? (
+                    <label>
+                        Montage type:
+                        <select
+                            className={styles.select}
+                            value={montageType}
+                            onChange={(e) => setMontageType(e.target.value)}
+                        >
+                            {montageOptions}
+                        </select>
+                    </label>
+                ) : null}
             </div>
         </div>
     );
@@ -153,6 +213,7 @@ export default EditModal;
 
 EditModal.propTypes = {
     editImage: PropTypes.object,
+    montagePhotos: PropTypes.array,
     palette: PropTypes.string,
     frame: PropTypes.object
 };

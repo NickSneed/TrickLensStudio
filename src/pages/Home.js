@@ -20,6 +20,7 @@ const Home = () => {
     const [isReversed, setIsReversed] = useState(
         initialIsReversed === null ? true : initialIsReversed
     );
+    const [montagePhotos, setMontagePhotos] = useState(null);
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -72,6 +73,11 @@ const Home = () => {
             ) {
                 setMainMessage('No images found');
             }
+            setMontagePhotos([
+                saveData.images[0].photoData,
+                saveData.images[1].photoData,
+                saveData.images[2].photoData
+            ]);
         } else {
             setMainMessage('Select a .sav file');
         }
@@ -143,6 +149,7 @@ const Home = () => {
             >
                 <EditModal
                     editImage={editImage}
+                    montagePhotos={montagePhotos}
                     palette={palette}
                     frame={frame}
                 />
