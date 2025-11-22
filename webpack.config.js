@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 export default {
     entry: './src/app.js',
     output: {
-        filename: 'main.js',
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
     module: {
@@ -95,6 +95,11 @@ export default {
             ]
         })
     ],
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    },
     devServer: {
         port: 3000,
         open: false,
