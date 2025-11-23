@@ -175,7 +175,7 @@ const Home = () => {
             ) : null}
             <Modal
                 isOpen={editImage}
-                setIsSettingsOpen={setEditImage}
+                setIsOpen={setEditImage}
                 title="Edit"
                 type="full"
             >
@@ -188,7 +188,7 @@ const Home = () => {
             </Modal>
             <Modal
                 isOpen={isSettingsOpen}
-                setIsSettingsOpen={setIsSettingsOpen}
+                setIsOpen={setIsSettingsOpen}
                 title="Settings"
                 type="small"
             >

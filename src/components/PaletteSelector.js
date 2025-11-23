@@ -22,7 +22,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
 
                 <Modal
                     isOpen={isOpen}
-                    setIsSettingsOpen={setIsOpen}
+                    setIsOpen={setIsOpen}
                     title="Palettes"
                     allowScroll={true}
                     zindex={8}

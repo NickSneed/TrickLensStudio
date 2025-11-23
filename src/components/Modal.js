@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import * as styles from './Modal.module.css';
 
-const Modal = ({ isOpen, setIsSettingsOpen, title, children, type }) => {
+const Modal = ({ isOpen, setIsOpen, title, children, type }) => {
     return (
         <div
             className={`${styles.modalwrapper} ${type === 'small' ? styles.small : ''} ${
                 type === 'full' ? styles.full : ''
             }`}
-            onClick={() => setIsSettingsOpen(false)}
+            onClick={() => setIsOpen(false)}
             style={{ display: isOpen ? 'flex' : 'none' }}
         >
             <div
@@ -16,7 +16,7 @@ const Modal = ({ isOpen, setIsSettingsOpen, title, children, type }) => {
             >
                 <button
                     className={`closeButton ${styles.close}`}
-                    onClick={() => setIsSettingsOpen(!isOpen)}
+                    onClick={() => setIsOpen(!isOpen)}
                 >
                     x
                 </button>
@@ -29,7 +29,7 @@ const Modal = ({ isOpen, setIsSettingsOpen, title, children, type }) => {
 
 Modal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
-    setIsSettingsOpen: PropTypes.func.isRequired,
+    setIsOpen: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     children: PropTypes.node,
     type: PropTypes.string
