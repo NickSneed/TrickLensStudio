@@ -183,7 +183,7 @@ const Home = () => {
             <Modal
                 isOpen={editImage}
                 setIsOpen={setEditImage}
-                title="Edit"
+                title="Magic"
                 type="full"
             >
                 <EditModal

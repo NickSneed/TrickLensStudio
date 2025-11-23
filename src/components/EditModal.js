@@ -88,7 +88,7 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
             </div>
             <div className={styles.controls}>
                 <label>
-                    Effect:
+                    Trick Lenses:
                     <select
                         className={styles.select}
                         value={effect}
@@ -103,6 +103,21 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
                         <option value="zoom-h">zoom-h</option>
                         <option value="zoom-v">zoom-v</option>
                         <option value="tile">tile</option>
+                    </select>
+                </label>
+                <label>
+                    Palette Order:
+                    <select
+                        className={styles.select}
+                        value={paletteOrder}
+                        onChange={(e) => setPaletteOrder(e.target.value)}
+                    >
+                        <option value="normal">normal</option>
+                        <option value="i">invert</option>
+                        <option value="pa">a</option>
+                        <option value="pb">b</option>
+                        <option value="pc">c</option>
+                        <option value="pd">d</option>
                     </select>
                 </label>
                 <label>
@@ -133,24 +148,9 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
                         <option value="6">6</option>
                     </select>
                 </label>
-                <label>
-                    Palette Order:
-                    <select
-                        className={styles.select}
-                        value={paletteOrder}
-                        onChange={(e) => setPaletteOrder(e.target.value)}
-                    >
-                        <option value="normal">normal</option>
-                        <option value="i">invert</option>
-                        <option value="pa">a</option>
-                        <option value="pb">b</option>
-                        <option value="pc">c</option>
-                        <option value="pd">d</option>
-                    </select>
-                </label>
                 {montagePhotos?.length > 0 ? (
                     <label>
-                        Montage type:
+                        Montage:
                         <select
                             className={styles.select}
                             value={montageType}
