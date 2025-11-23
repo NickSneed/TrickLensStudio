@@ -56,6 +56,10 @@
     margin: 0;
 }
 
-:global(.scale1) .photo button span {
+:global(.scale1) .photo :global(.button) span {
     display: none;
+}
+
+:global(.scale1) .photo :global(.button) {
+    max-width: 7em;
 }
