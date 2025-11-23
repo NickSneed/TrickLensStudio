@@ -95,7 +95,6 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
                         onChange={(e) => setEffect(e.target.value)}
                     >
                         <option value="none">none</option>
-                        <option value="invert">invert</option>
                         <option value="mirror-rtl">mirror-rtl</option>
                         <option value="mirror-ltr">mirror-ltr</option>
                         <option value="mirror-btt">mirror-btt</option>
