@@ -15,7 +15,11 @@ function Photo({
     onClick,
     onSelect,
     isSelected,
-    isDisabled
+    isDisabled,
+    onDrawStart,
+    onDrawMove,
+    onDrawEnd,
+    onMouseLeave
 }) {
     const canvasRefSave = useRef(null);
     const canvasRefDisplay = useRef(null);
@@ -127,6 +131,13 @@ function Photo({
                     height: canvasHeight + 'px'
                 }}
                 ref={canvasRefDisplay}
+                onMouseDown={onDrawStart}
+                onMouseMove={onDrawMove}
+                onMouseUp={onDrawEnd}
+                onMouseLeave={onMouseLeave}
+                onTouchStart={onDrawStart}
+                onTouchMove={onDrawMove}
+                onTouchEnd={onDrawEnd}
             ></canvas>
         </>
     );
@@ -177,7 +188,11 @@ Photo.propTypes = {
     onClick: PropTypes.func,
     onSelect: PropTypes.func,
     isSelected: PropTypes.bool,
-    isDisabled: PropTypes.bool
+    isDisabled: PropTypes.bool,
+    onDrawStart: PropTypes.func,
+    onDrawMove: PropTypes.func,
+    onDrawEnd: PropTypes.func,
+    onMouseLeave: PropTypes.func
 };
 
 export default Photo;

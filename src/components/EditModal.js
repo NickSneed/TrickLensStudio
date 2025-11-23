@@ -44,7 +44,7 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
     };
 
     const drawOnCanvas = (e) => {
-        const canvas = e.currentTarget.querySelector('canvas');
+        const canvas = e.currentTarget;
         if (canvas) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
@@ -141,22 +141,16 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
 
     return (
         <div className={styles.editWrapper}>
-            <div
-                className={styles.photo}
-                onMouseDown={handleDrawStart}
-                onMouseMove={handleDrawMove}
-                onMouseUp={handleDrawEnd}
-                onMouseLeave={handleDrawEnd} // Stop drawing if mouse leaves the area
-                onTouchStart={handleDrawStart}
-                onTouchMove={handleDrawMove}
-                onTouchEnd={handleDrawEnd}
-            >
+            <div className={styles.photo}>
                 <Photo
                     image={editedImage}
                     paletteId={palette}
                     frame={frame}
                     scaleFactor={4}
                     isScale={true}
+                    onDrawStart={handleDrawStart}
+                    onDrawMove={handleDrawMove}
+                    onDrawEnd={handleDrawEnd}
                 />
             </div>
             <div className={styles.controls}>

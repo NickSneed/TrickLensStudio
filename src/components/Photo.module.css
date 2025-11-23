@@ -51,8 +51,8 @@
     display: inline-block;
 }
 
-.controls :global(.button) {
-    margin-right: 1.5em;
+.controls label {
+    margin-left: 1.5em;
 }
 
 .controls label span {
@@ -65,5 +65,8 @@
 
 :global(.scale1) .photo :global(.button) {
     max-width: 7em;
-    margin-right: 1em;
+}
+
+:global(.scale1) .controls label {
+    margin-left: 1em;
 }
