@@ -248,3 +248,7 @@ label {
     background-color: var(--c-button);
     border-color: var(--c-messagecopy);
 }
+
+.modal-open {
+    overflow: hidden;
+}

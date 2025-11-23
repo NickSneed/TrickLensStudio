@@ -36,14 +36,23 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
         }
     }, [effect, editImage, montagePhotos, montageType]);
 
+    const getCoords = (e) => {
+        if (e.touches && e.touches.length > 0) {
+            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+        return { x: e.clientX, y: e.clientY };
+    };
+
     const drawOnCanvas = (e) => {
         const canvas = e.currentTarget.querySelector('canvas');
         if (canvas) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
-            const x = (e.clientX - rect.left) * scaleX;
-            const y = (e.clientY - rect.top) * scaleY;
+            const { x: clientX, y: clientY } = getCoords(e);
+
+            const x = (clientX - rect.left) * scaleX;
+            const y = (clientY - rect.top) * scaleY;
             const scale = 8;
 
             const offsets = getFrameOffsets(frame);
@@ -69,18 +78,21 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
         }
     };
 
-    const handleMouseDown = (e) => {
+    const handleDrawStart = (e) => {
+        e.preventDefault();
         setIsDrawing(true);
         drawOnCanvas(e);
     };
 
-    const handleMouseMove = (e) => {
+    const handleDrawMove = (e) => {
+        e.preventDefault();
         if (isDrawing) {
             drawOnCanvas(e);
         }
     };
 
-    const handleMouseUp = () => {
+    const handleDrawEnd = (e) => {
+        e.preventDefault();
         setIsDrawing(false);
     };
 
@@ -131,10 +143,13 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
         <div className={styles.editWrapper}>
             <div
                 className={styles.photo}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp} // Stop drawing if mouse leaves the area
+                onMouseDown={handleDrawStart}
+                onMouseMove={handleDrawMove}
+                onMouseUp={handleDrawEnd}
+                onMouseLeave={handleDrawEnd} // Stop drawing if mouse leaves the area
+                onTouchStart={handleDrawStart}
+                onTouchMove={handleDrawMove}
+                onTouchEnd={handleDrawEnd}
             >
                 <Photo
                     image={editedImage}
