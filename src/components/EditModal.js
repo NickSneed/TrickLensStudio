@@ -2,16 +2,25 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
-import { getFrameOffsets } from '../utils/frameUtils.js';
 import { applyEffect, createMontage } from 'gbcam-js';
+import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 
 const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
-    const [editedImage, setEditedImage] = useState(editImage);
     const [effect, setEffect] = useState('none');
     const [color, setColor] = useState(0);
     const [brushSize, setBrushSize] = useState(1);
-    const [isDrawing, setIsDrawing] = useState(false);
     const [montageType, setMontageType] = useState('none');
+
+    const { editedImage, setEditedImage, drawHandlers } = useCanvasDrawer(
+        editImage,
+        frame,
+        color,
+        brushSize
+    );
+
+    useEffect(() => {
+        setEditedImage(editImage);
+    }, [editImage, setEditedImage]);
 
     useEffect(() => {
         if (!editImage) {
@@ -36,108 +45,36 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
         }
     }, [effect, editImage, montagePhotos, montageType]);
 
-    const getCoords = (e) => {
-        if (e.touches && e.touches.length > 0) {
-            return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    const getMontageOptions = () => {
+        const numPhotos = montagePhotos?.length || 0;
+        if (numPhotos === 0) return null;
+
+        const baseOptions = [
+            'none',
+            'vertical',
+            'horizontal',
+            'quadrant',
+            'horizontal-2/3',
+            'border'
+        ];
+        if (numPhotos > 1) {
+            baseOptions.push('horizontal-bars');
         }
-        return { x: e.clientX, y: e.clientY };
-    };
-
-    const drawOnCanvas = (e) => {
-        const canvas = e.currentTarget;
-        if (canvas) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const { x: clientX, y: clientY } = getCoords(e);
-
-            const x = (clientX - rect.left) * scaleX;
-            const y = (clientY - rect.top) * scaleY;
-            const scale = 8;
-
-            const offsets = getFrameOffsets(frame);
-            const unscaledX = Math.floor(x / scale - offsets.left);
-            const unscaledY = Math.floor(y / scale - offsets.top);
-            const imageWidth = 128;
-            const imageHeight = 112;
-
-            const newPhotoData = [...editedImage.photoData];
-            const size = Number(brushSize);
-
-            for (let i = 0; i < size; i++) {
-                for (let j = 0; j < size; j++) {
-                    const drawX = unscaledX + i;
-                    const drawY = unscaledY + j;
-                    if (drawX >= 0 && drawX < imageWidth && drawY >= 0 && drawY < imageHeight) {
-                        const index = drawY * imageWidth + drawX;
-                        newPhotoData[index] = Number(color);
-                    }
-                }
-            }
-            setEditedImage({ ...editedImage, photoData: newPhotoData });
+        if (numPhotos > 2) {
+            baseOptions.push('four-quadrant');
         }
+
+        return baseOptions.map((opt) => (
+            <option
+                key={opt}
+                value={opt}
+            >
+                {opt}
+            </option>
+        ));
     };
 
-    const handleDrawStart = (e) => {
-        e.preventDefault();
-        setIsDrawing(true);
-        drawOnCanvas(e);
-    };
-
-    const handleDrawMove = (e) => {
-        e.preventDefault();
-        if (isDrawing) {
-            drawOnCanvas(e);
-        }
-    };
-
-    const handleDrawEnd = (e) => {
-        e.preventDefault();
-        setIsDrawing(false);
-    };
-
-    let montageOptions;
-    if (montagePhotos && montagePhotos.length) {
-        montageOptions = (
-            <>
-                <option value="none">none</option>
-                <option value="vertical">vertical</option>
-                <option value="horizontal">horizontal</option>
-                <option value="quadrant">quadrant</option>
-                <option value="horizontal-2/3">horizontal-2/3</option>
-                <option value="border">border</option>
-            </>
-        );
-    }
-
-    if (montagePhotos && montagePhotos.length > 1) {
-        montageOptions = (
-            <>
-                <option value="none">none</option>
-                <option value="vertical">vertical</option>
-                <option value="horizontal">horizontal</option>
-                <option value="quadrant">quadrant</option>
-                <option value="horizontal-2/3">horizontal-2/3</option>
-                <option value="horizontal-bars">horizontal-bars</option>
-                <option value="border">border</option>
-            </>
-        );
-    }
-
-    if (montagePhotos && montagePhotos.length > 2) {
-        montageOptions = (
-            <>
-                <option value="none">none</option>
-                <option value="vertical">vertical</option>
-                <option value="horizontal">horizontal</option>
-                <option value="quadrant">quadrant</option>
-                <option value="four-quadrant">four-quadrant</option>
-                <option value="horizontal-2/3">horizontal-2/3</option>
-                <option value="horizontal-bars">horizontal-bars</option>
-                <option value="border">border</option>
-            </>
-        );
-    }
+    const montageOptions = getMontageOptions();
 
     return (
         <div className={styles.editWrapper}>
@@ -148,12 +85,7 @@ const EditModal = ({ montagePhotos, editImage, palette, frame }) => {
                     frame={frame}
                     scaleFactor={4}
                     isScale={true}
-                    drawHandlers={{
-                        onDrawStart: handleDrawStart,
-                        onDrawMove: handleDrawMove,
-                        onDrawEnd: handleDrawEnd,
-                        onMouseLeave: handleDrawEnd
-                    }}
+                    drawHandlers={drawHandlers}
                 />
             </div>
             <div className={styles.controls}>
