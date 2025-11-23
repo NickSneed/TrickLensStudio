@@ -26,3 +26,5 @@ GBCamStudio is a web-based utility that allows you to view, customize, and expor
 -   Use arrow keys to switch edit photo
 -   Add dark mode to modals
 -   Add color picker for palettes
+-   Add undo to the pixel editor
+-   Add percise cursor
