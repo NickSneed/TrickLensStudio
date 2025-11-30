@@ -37,7 +37,7 @@
         "webpack-dev-server": "^5.2.1"
     },
     "dependencies": {
-        "gbcam-js": "file:../GBCamJS",
+        "gbcam-js": "github:NickSneed/GBCamJS",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-router-dom": "^7.6.0"
