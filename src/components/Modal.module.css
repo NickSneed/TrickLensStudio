@@ -50,5 +50,5 @@
 
 .modalscroll {
     overflow: auto;
-    max-height: 100%;
+    max-height: calc(100vh - 11em);
 }

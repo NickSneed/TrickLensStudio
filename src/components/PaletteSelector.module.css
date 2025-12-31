@@ -1,6 +1,6 @@
 .dropdownContainer {
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto;
+    grid-template-columns: auto auto;
 }
 
 .swatchContainer {
@@ -32,4 +32,25 @@
     margin: 4px;
     cursor: pointer;
     text-align: center;
+}
+
+@media (min-width: 700px) {
+    .dropdownContainer {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+    }
+}
+
+@media (min-width: 900px) {
+    .dropdownContainer {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto;
+    }
+}
+
+@media (min-width: 1280px) {
+    .dropdownContainer {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto auto auto;
+    }
 }
