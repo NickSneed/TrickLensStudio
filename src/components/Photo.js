@@ -19,7 +19,8 @@ function Photo({
     paletteOrder,
     username,
     exportFormat,
-    exportQuality
+    exportQuality,
+    showShareButton = false
 }) {
     const { displayCanvasRef, saveCanvasRef } = usePhotoRenderer(
         image,
@@ -28,7 +29,7 @@ function Photo({
         scaleFactor,
         paletteOrder
     );
-    const { handleExport } = usePhotoExporter(
+    const { handleExport, handleShare } = usePhotoExporter(
         saveCanvasRef,
         username,
         paletteId,
@@ -90,6 +91,7 @@ function Photo({
                 <div className={styles.controls}>
                     <PhotoControls
                         onExport={handleExport}
+                        onShare={showShareButton ? handleShare : null}
                         onSelect={onSelect}
                         isSelected={isSelected}
                         isDisabled={isDisabled}
@@ -122,7 +124,8 @@ Photo.propTypes = {
     paletteOrder: PropTypes.string,
     username: PropTypes.string,
     exportFormat: PropTypes.string,
-    exportQuality: PropTypes.number
+    exportQuality: PropTypes.number,
+    showShareButton: PropTypes.bool
 };
 
 export default Photo;

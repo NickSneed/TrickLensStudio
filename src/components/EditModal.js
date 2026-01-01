@@ -86,6 +86,7 @@ const EditModal = ({ montagePhotos, editImage, palette, frame, exportFormat, exp
                     paletteOrder={paletteOrder}
                     exportFormat={exportFormat}
                     exportQuality={exportQuality}
+                    showShareButton={true}
                 />
             </div>
             <div className={styles.controls}>

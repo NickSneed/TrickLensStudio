@@ -31,11 +31,10 @@
 }
 
 .photo :global(.button) {
-    margin: 0 auto;
+    margin: 0.5em;
     max-width: 200px;
     width: 100%;
 }
-
 .deleted {
     background: var(--c-red);
     border: 2px solid #fff;

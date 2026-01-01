@@ -33,5 +33,30 @@ export const usePhotoExporter = (
         URL.revokeObjectURL(link.href);
     }, [saveCanvasRef, username, paletteId, format, quality]);
 
-    return { handleExport };
+    const handleShare = useCallback(async () => {
+        const canvas = saveCanvasRef.current;
+        if (!canvas) {
+            return;
+        }
+
+        try {
+            const mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
+            const extension = format === 'jpg' ? 'jpg' : 'png';
+            const blob = await canvas.convertToBlob({ type: mimeType, quality });
+            const filename = `gb-photo${getFormattedUsername(
+                username
+            )}-${paletteId}-${Date.now()}.${extension}`;
+            const file = new File([blob], filename, { type: mimeType });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file]
+                });
+            }
+        } catch (error) {
+            console.error('Error sharing:', error);
+        }
+    }, [saveCanvasRef, username, paletteId, format, quality]);
+
+    return { handleExport, handleShare };
 };

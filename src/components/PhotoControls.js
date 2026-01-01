@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 const PhotoControls = ({
     onExport,
+    onShare,
     onSelect,
     isSelected,
     isDisabled,
@@ -16,6 +17,14 @@ const PhotoControls = ({
             >
                 Export<span> as {format.toUpperCase()}</span>
             </button>
+            {onShare && typeof navigator !== 'undefined' && navigator.share ? (
+                <button
+                    className="button"
+                    onClick={onShare}
+                >
+                    Share
+                </button>
+            ) : null}
             {onSelect ? (
                 <label className="pixel-checkbox">
                     <input
@@ -33,6 +42,7 @@ const PhotoControls = ({
 
 PhotoControls.propTypes = {
     onExport: PropTypes.func.isRequired,
+    onShare: PropTypes.func,
     onSelect: PropTypes.func,
     isSelected: PropTypes.bool,
     isDisabled: PropTypes.bool,
@@ -41,6 +51,7 @@ PhotoControls.propTypes = {
 };
 
 PhotoControls.defaultProps = {
+    onShare: null,
     onSelect: null,
     isSelected: false,
     isDisabled: false,
