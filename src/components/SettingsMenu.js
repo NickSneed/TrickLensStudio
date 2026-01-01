@@ -44,6 +44,24 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                     <option value="jpg">JPG</option>
                 </select>
             </label>
+            {settings.exportFormat === 'jpg' ? (
+                <label>
+                    Quality:{' '}
+                    <span className={styles.qualityValue}>
+                        {Math.round(settings.exportQuality * 100)}%
+                    </span>
+                    <input
+                        className={styles.qualitySlider}
+                        type="range"
+                        name="exportQuality"
+                        min="0.1"
+                        max="1"
+                        step="0.1"
+                        value={settings.exportQuality}
+                        onChange={onSettingChange}
+                    />
+                </label>
+            ) : null}
             <label className="pixel-checkbox">
                 <input
                     type="checkbox"
@@ -76,7 +94,8 @@ SettingsMenu.propTypes = {
         scaleFactor: PropTypes.number.isRequired,
         color: PropTypes.string.isRequired,
         isReversed: PropTypes.bool.isRequired,
-        exportFormat: PropTypes.string
+        exportFormat: PropTypes.string,
+        exportQuality: PropTypes.number
     }).isRequired,
     onSettingChange: PropTypes.func.isRequired
 };

@@ -20,7 +20,8 @@ const Home = () => {
             isShowDeleted: getItem('isShowDeleted') || false,
             color: getItem('color') || 'green',
             isReversed: initialIsReversed === null ? true : initialIsReversed,
-            exportFormat: getItem('exportFormat') || 'png'
+            exportFormat: getItem('exportFormat') || 'png',
+            exportQuality: Number(getItem('exportQuality')) || 0.9
         };
     });
     const [selectedPhotos, setSelectedPhotos] = useState([]);
@@ -29,7 +30,11 @@ const Home = () => {
     const handleSettingChange = (event) => {
         const { name, value, type, checked } = event.target;
         const newValue =
-            type === 'checkbox' ? checked : name === 'scaleFactor' ? Number(value) : value;
+            type === 'checkbox'
+                ? checked
+                : name === 'scaleFactor' || name === 'exportQuality'
+                ? Number(value)
+                : value;
 
         setSettings((prevSettings) => ({
             ...prevSettings,
@@ -48,6 +53,7 @@ const Home = () => {
         setItem('color', settings.color);
         setItem('isReversed', settings.isReversed);
         setItem('exportFormat', settings.exportFormat);
+        setItem('exportQuality', settings.exportQuality);
     }, [palette, settings]);
 
     useEffect(() => {
@@ -169,6 +175,7 @@ const Home = () => {
                                 isDisabled={!isSelected && isSelectionFull}
                                 username={saveData.username}
                                 exportFormat={settings.exportFormat}
+                                exportQuality={settings.exportQuality}
                             />
                         );
                     })}
@@ -195,6 +202,8 @@ const Home = () => {
                     montagePhotos={montagePhotos}
                     palette={palette}
                     frame={frame}
+                    exportFormat={settings.exportFormat}
+                    exportQuality={settings.exportQuality}
                 />
             </Modal>
             <Modal

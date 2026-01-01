@@ -5,3 +5,15 @@
 .settings select {
     margin: 0.5em 0 0;
 }
+
+.qualityValue {
+    display: inline-block;
+    margin: 1em;
+    text-align: right;
+    width: 3em;
+}
+
+.qualitySlider {
+    vertical-align: middle;
+    margin-left: 0;
+}
