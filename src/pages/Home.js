@@ -228,6 +228,7 @@ const Home = () => {
                     frame={frame}
                     exportFormat={settings.exportFormat}
                     exportQuality={settings.exportQuality}
+                    username={saveData ? saveData.username : ''}
                 />
             </Modal>
             <Modal
