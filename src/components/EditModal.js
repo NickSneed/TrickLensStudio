@@ -5,7 +5,15 @@ import * as styles from './EditModal.module.css';
 import { applyEffect, createMontage } from 'gbcam-js';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 
-const EditModal = ({ montagePhotos, editImage, palette, frame, exportFormat, exportQuality }) => {
+const EditModal = ({
+    montagePhotos,
+    editImage,
+    palette,
+    frame,
+    exportFormat,
+    exportQuality,
+    username
+}) => {
     const [effect, setEffect] = useState('none');
     const [color, setColor] = useState(0);
     const [brushSize, setBrushSize] = useState(1);
@@ -87,6 +95,7 @@ const EditModal = ({ montagePhotos, editImage, palette, frame, exportFormat, exp
                     exportFormat={exportFormat}
                     exportQuality={exportQuality}
                     showShareButton={true}
+                    username={username}
                 />
             </div>
             <div className={styles.controls}>
@@ -176,5 +185,6 @@ EditModal.propTypes = {
     palette: PropTypes.string,
     frame: PropTypes.object,
     exportFormat: PropTypes.string,
-    exportQuality: PropTypes.number
+    exportQuality: PropTypes.number,
+    username: PropTypes.string
 };
