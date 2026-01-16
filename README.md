@@ -1,6 +1,6 @@
 # TrickLens Studio
 
-https://gbcs.nicksneed.com/
+https://tlstudio.nicksneed.com/
 
 TrickLens is a web-based utility that allows you to view, customize, and export your Game Boy Camera photos from a `.sav` file.
 
