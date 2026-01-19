@@ -23,7 +23,7 @@ export const usePhotoRenderer = (image, paletteId, frame, displayScale, paletteO
                 const imageBitmap = await createImageBitmap(new ImageData(pixels, width, height));
 
                 // Recolor the frame if it exists
-                const frameBitmap = frame ? await recolorFrame(frame.data, palette) : null;
+                const frameBitmap = frame ? await recolorFrame(frame.data, palette.colors) : null;
 
                 const offsets = getFrameOffsets(frame);
                 // Use an OffscreenCanvas for composition

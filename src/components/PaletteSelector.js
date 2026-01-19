@@ -29,7 +29,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
                 >
                     <div className={styles.dropdownContainer}>
                         {Object.keys(palettes).map((paletteId) => {
-                            const palette = palettes[paletteId];
+                            const palette = palettes[paletteId].colors;
                             const isSelected = selectedPalette === paletteId;
 
                             return (
