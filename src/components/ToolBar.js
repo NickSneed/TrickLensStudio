@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import PaletteSelector from '../components/PaletteSelector.js';
 import FileLoader from '../components/FileLoader.js';
 import { parseSave } from 'tricklens-js';
+import { convertFrameToData } from '../utils/canvasUtils.js';
+import { setStoredFrame, removeStoredFrame } from '../utils/storageUtils.js';
 import * as styles from './ToolBar.module.css';
 
 const ToolBar = forwardRef(
@@ -39,8 +41,11 @@ const ToolBar = forwardRef(
         };
 
         // Set the frame
-        const loadFrame = ({ data, name }) => {
-            setFrame({ data, name });
+        const loadFrame = async ({ data, name }) => {
+            const frameData = await convertFrameToData(data);
+            const newFrame = { ...frameData, name };
+            setFrame(newFrame);
+            setStoredFrame(newFrame);
         };
 
         return (
@@ -64,7 +69,10 @@ const ToolBar = forwardRef(
                         <FileLoader
                             text="Select frame &hellip;"
                             onChange={loadFrame}
-                            onRemove={() => setFrame(null)}
+                            onRemove={() => {
+                                setFrame(null);
+                                removeStoredFrame();
+                            }}
                             showRemove={frame ? true : false}
                             accept=".png"
                         />

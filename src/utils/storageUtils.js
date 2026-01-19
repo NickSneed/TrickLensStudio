@@ -65,3 +65,36 @@ export function setStoredSave(saveData) {
 export function removeStoredSave() {
     window.localStorage.removeItem('tricklens-save-data');
 }
+
+export function getStoredFrame() {
+    try {
+        const saved = window.localStorage.getItem('tricklens-frame-data');
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed.data) {
+                const data = Array.isArray(parsed.data) ? parsed.data : Object.values(parsed.data);
+                parsed.data = new Uint8Array(data);
+            }
+            return parsed;
+        }
+        return null;
+    } catch (e) {
+        console.warn('Failed to load frame data from localStorage', e);
+        return null;
+    }
+}
+
+export function setStoredFrame(frameData) {
+    try {
+        window.localStorage.setItem(
+            'tricklens-frame-data',
+            JSON.stringify(frameData, (k, v) => (v instanceof Uint8Array ? Array.from(v) : v))
+        );
+    } catch (e) {
+        console.warn('Failed to save frame to localStorage', e);
+    }
+}
+
+export function removeStoredFrame() {
+    window.localStorage.removeItem('tricklens-frame-data');
+}

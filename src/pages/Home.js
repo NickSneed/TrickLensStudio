@@ -4,12 +4,12 @@ import ToolBar from '../components/ToolBar.js';
 import Modal from '../components/Modal.js';
 import SettingsMenu from '../components/SettingsMenu.js';
 import EditModal from '../components/EditModal.js';
-import { getItem, setItem, getStoredSave } from '../utils/storageUtils.js';
+import { getItem, setItem, getStoredSave, getStoredFrame } from '../utils/storageUtils.js';
 
 const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());
+    const [frame, setFrame] = useState(() => getStoredFrame());
     const [palette, setPalette] = useState(getItem('palette') || 'sgb2h');
-    const [frame, setFrame] = useState(null);
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [editImage, setEditImage] = useState(null);

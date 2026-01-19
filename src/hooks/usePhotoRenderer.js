@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { palettes, applyPalette } from 'tricklens-js';
-import { recolorFrame, composeImage } from '../utils/canvasUtils.js';
+import { composeImage } from '../utils/canvasUtils.js';
 import { getFrameOffsets } from '../utils/frameUtils.js';
 
 export const usePhotoRenderer = (image, paletteId, frame, displayScale, paletteOrder) => {
@@ -23,7 +23,24 @@ export const usePhotoRenderer = (image, paletteId, frame, displayScale, paletteO
                 const imageBitmap = await createImageBitmap(new ImageData(pixels, width, height));
 
                 // Recolor the frame if it exists
-                const frameBitmap = frame ? await recolorFrame(frame.data, palette.colors) : null;
+                let frameBitmap = null;
+                if (frame) {
+                    const cleanData = new Uint8Array(frame.data.length);
+                    for (let i = 0; i < frame.data.length; i++) {
+                        cleanData[i] = frame.data[i] === 4 ? 0 : frame.data[i];
+                    }
+
+                    const framePixels = applyPalette(cleanData, palette, paletteOrder);
+
+                    for (let i = 0; i < frame.data.length; i++) {
+                        if (frame.data[i] === 4) {
+                            framePixels[i * 4 + 3] = 0;
+                        }
+                    }
+                    frameBitmap = await createImageBitmap(
+                        new ImageData(framePixels, frame.width, frame.height)
+                    );
+                }
 
                 const offsets = getFrameOffsets(frame);
                 // Use an OffscreenCanvas for composition
