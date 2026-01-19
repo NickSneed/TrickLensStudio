@@ -25,7 +25,7 @@ export const usePhotoExporter = (
         const extension = format === 'jpg' ? 'jpg' : 'png';
         const blob = await canvas.convertToBlob({ type: mimeType, quality });
         const link = document.createElement('a');
-        link.download = `gb-photo${getFormattedUsername(
+        link.download = `gbcam${getFormattedUsername(
             username
         )}-${paletteId}-${Date.now()}.${extension}`;
         link.href = URL.createObjectURL(blob);
@@ -43,7 +43,7 @@ export const usePhotoExporter = (
             const mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
             const extension = format === 'jpg' ? 'jpg' : 'png';
             const blob = await canvas.convertToBlob({ type: mimeType, quality });
-            const filename = `gb-photo${getFormattedUsername(
+            const filename = `gbcam${getFormattedUsername(
                 username
             )}-${paletteId}-${Date.now()}.${extension}`;
             const file = new File([blob], filename, { type: mimeType });
