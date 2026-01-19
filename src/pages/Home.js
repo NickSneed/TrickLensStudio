@@ -4,10 +4,10 @@ import ToolBar from '../components/ToolBar.js';
 import Modal from '../components/Modal.js';
 import SettingsMenu from '../components/SettingsMenu.js';
 import EditModal from '../components/EditModal.js';
-import { getItem, setItem } from '../utils/storageUtils.js';
+import { getItem, setItem, getStoredSave } from '../utils/storageUtils.js';
 
 const Home = () => {
-    const [saveData, setSaveData] = useState(null);
+    const [saveData, setSaveData] = useState(() => getStoredSave());
     const [palette, setPalette] = useState(getItem('palette') || 'sgb2h');
     const [frame, setFrame] = useState(null);
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
@@ -34,8 +34,8 @@ const Home = () => {
             type === 'checkbox'
                 ? checked
                 : name === 'scaleFactor' || name === 'exportQuality'
-                ? Number(value)
-                : value;
+                  ? Number(value)
+                  : value;
 
         setSettings((prevSettings) => ({
             ...prevSettings,

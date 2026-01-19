@@ -25,6 +25,16 @@ const ToolBar = forwardRef(
         const loadSave = ({ data }) => {
             const saveData = parseSave(data);
             setSaveData(saveData);
+            try {
+                localStorage.setItem(
+                    'tricklens-save-data',
+                    JSON.stringify(saveData, (k, v) =>
+                        v instanceof Uint8Array ? Array.from(v) : v
+                    )
+                );
+            } catch (e) {
+                console.warn('Failed to save to localStorage', e);
+            }
             window.scrollTo(0, 0);
         };
 
@@ -41,7 +51,10 @@ const ToolBar = forwardRef(
                         <FileLoader
                             text="Select .sav &hellip;"
                             onChange={loadSave}
-                            onRemove={() => setSaveData(null)}
+                            onRemove={() => {
+                                setSaveData(null);
+                                localStorage.removeItem('tricklens-save-data');
+                            }}
                             showRemove={saveData ? true : false}
                             accept=".sav"
                             ref={ref}
