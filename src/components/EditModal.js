@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
-import { applyEffect, createMontage } from 'tricklens-js';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
+import { useEffectApplier } from '../hooks/useEffectApplier.js';
 
 const EditModal = ({
     montagePhotos,
@@ -27,28 +27,7 @@ const EditModal = ({
         brushSize
     );
 
-    useEffect(() => {
-        if (!editImage) {
-            return;
-        }
-
-        const isMontage = montagePhotos?.length > 0 && montageType !== 'none';
-
-        if ((editedImage && effect && effect !== 'none') || isMontage) {
-            let newPhotoData = isMontage
-                ? createMontage([editImage.photoData, ...montagePhotos], montageType)
-                : editImage.photoData;
-            newPhotoData = applyEffect(newPhotoData, effect);
-            setEditedImage({
-                ...editImage,
-                photoData: newPhotoData
-            });
-        }
-
-        if (effect === 'none' && !isMontage) {
-            setEditedImage(editImage);
-        }
-    }, [effect, editImage, montagePhotos, montageType]);
+    useEffectApplier(editImage, editedImage, effect, montagePhotos, montageType, setEditedImage);
 
     const getMontageOptions = () => {
         const numPhotos = montagePhotos?.length || 0;
