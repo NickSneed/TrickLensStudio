@@ -30,5 +30,5 @@ export const useEffectApplier = (
         if (effect === 'none' && !isMontage) {
             setEditedImage(editImage);
         }
-    }, [effect, editImage, editedImage, montagePhotos, montageType, setEditedImage]);
+    }, [effect, editImage, montagePhotos, montageType, setEditedImage]);
 };
