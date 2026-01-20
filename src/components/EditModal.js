@@ -4,6 +4,7 @@ import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 import { useEffectApplier } from '../hooks/useEffectApplier.js';
+import { getAvailableMontageTypes } from '../utils/montageUtils.js';
 
 const EditModal = ({
     montagePhotos,
@@ -29,36 +30,14 @@ const EditModal = ({
 
     useEffectApplier(editImage, editedImage, effect, montagePhotos, montageType, setEditedImage);
 
-    const getMontageOptions = () => {
-        const numPhotos = montagePhotos?.length || 0;
-        if (numPhotos === 0) return null;
-
-        const baseOptions = [
-            'none',
-            'vertical',
-            'horizontal',
-            'quadrant',
-            'horizontal-2/3',
-            'border'
-        ];
-        if (numPhotos > 1) {
-            baseOptions.push('horizontal-bars');
-        }
-        if (numPhotos > 2) {
-            baseOptions.push('four-quadrant');
-        }
-
-        return baseOptions.map((opt) => (
-            <option
-                key={opt}
-                value={opt}
-            >
-                {opt}
-            </option>
-        ));
-    };
-
-    const montageOptions = getMontageOptions();
+    const montageOptions = getAvailableMontageTypes(montagePhotos?.length).map((opt) => (
+        <option
+            key={opt}
+            value={opt}
+        >
+            {opt}
+        </option>
+    ));
 
     return (
         <div className={styles.editWrapper}>
