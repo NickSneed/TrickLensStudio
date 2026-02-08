@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
@@ -22,6 +22,11 @@ const EditModal = ({
     const [paletteOrder, setPaletteOrder] = useState('normal');
     const [rgbBrightness, setRgbBrightness] = useState(0);
     const [rgbContrast, setRgbContrast] = useState(0);
+
+    useEffect(() => {
+        setRgbBrightness(0);
+        setRgbContrast(0);
+    }, [editImage]);
 
     const { editedImage, setEditedImage, drawHandlers } = useCanvasDrawer(
         editImage,
