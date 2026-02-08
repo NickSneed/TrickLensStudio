@@ -158,44 +158,28 @@ const EditModal = ({
                 {montagePhotos?.length > 0 && isRgb ? (
                     <>
                         <label>
-                            RGB Brightness:
-                            <select
-                                className={styles.select}
+                            Brightness: {Math.round(rgbBrightness * 20)}
+                            <input
+                                className={styles.slider}
+                                type="range"
+                                min="-0.5"
+                                max="0.5"
+                                step="0.05"
                                 value={rgbBrightness}
                                 onChange={(e) => setRgbBrightness(e.target.value)}
-                            >
-                                <option value="-0.5">-5</option>
-                                <option value="-0.4">-4</option>
-                                <option value="-0.3">-3</option>
-                                <option value="-0.2">-2</option>
-                                <option value="-0.1">-1</option>
-                                <option value="0">0</option>
-                                <option value="0.1">1</option>
-                                <option value="0.2">2</option>
-                                <option value="0.3">3</option>
-                                <option value="0.4">4</option>
-                                <option value="0.5">5</option>
-                            </select>
+                            />
                         </label>
                         <label>
-                            RGB Contrast:
-                            <select
-                                className={styles.select}
+                            Contrast: {Math.round(rgbContrast * 10)}
+                            <input
+                                className={styles.slider}
+                                type="range"
+                                min="-1"
+                                max="1"
+                                step="0.1"
                                 value={rgbContrast}
                                 onChange={(e) => setRgbContrast(e.target.value)}
-                            >
-                                <option value="-0.5">-5</option>
-                                <option value="-0.4">-4</option>
-                                <option value="-0.3">-3</option>
-                                <option value="-0.2">-2</option>
-                                <option value="-0.1">-1</option>
-                                <option value="0">0</option>
-                                <option value="0.1">1</option>
-                                <option value="0.2">2</option>
-                                <option value="0.3">3</option>
-                                <option value="0.4">4</option>
-                                <option value="0.5">5</option>
-                            </select>
+                            />
                         </label>
                     </>
                 ) : null}
