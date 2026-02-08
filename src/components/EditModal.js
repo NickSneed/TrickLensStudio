@@ -28,7 +28,16 @@ const EditModal = ({
         brushSize
     );
 
-    useEffectApplier(editImage, editedImage, effect, montagePhotos, montageType, setEditedImage);
+    const isRgb = montageType === 'rgb';
+
+    useEffectApplier(
+        editImage,
+        editedImage,
+        effect,
+        montagePhotos,
+        isRgb ? 'none' : montageType,
+        setEditedImage
+    );
 
     const montageOptions = getAvailableMontageTypes(montagePhotos?.length).map((opt) => (
         <option
@@ -44,6 +53,16 @@ const EditModal = ({
             <div className={styles.photo}>
                 <Photo
                     image={editedImage}
+                    imageR={
+                        isRgb && montagePhotos?.length >= 1
+                            ? { photoData: montagePhotos[0] }
+                            : undefined
+                    }
+                    imageG={
+                        isRgb && montagePhotos?.length >= 2
+                            ? { photoData: montagePhotos[1] }
+                            : undefined
+                    }
                     paletteId={palette}
                     frame={frame}
                     scaleFactor={4}
@@ -127,6 +146,7 @@ const EditModal = ({
                             onChange={(e) => setMontageType(e.target.value)}
                         >
                             {montageOptions}
+                            {montagePhotos.length >= 2 ? <option value="rgb">rgb</option> : null}
                         </select>
                     </label>
                 ) : null}

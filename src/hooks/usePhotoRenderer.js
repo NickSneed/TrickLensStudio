@@ -3,7 +3,15 @@ import { palettes, applyPalette } from 'tricklens-js';
 import { composeImage } from '../utils/canvasUtils.js';
 import { getFrameOffsets } from '../utils/frameUtils.js';
 
-export const usePhotoRenderer = (image, paletteId, frame, displayScale, paletteOrder) => {
+export const usePhotoRenderer = (
+    image,
+    imageR,
+    imageG,
+    paletteId,
+    frame,
+    displayScale,
+    paletteOrder
+) => {
     const displayCanvasRef = useRef(null);
     const saveCanvasRef = useRef(null);
     const saveScale = 10;
@@ -16,8 +24,22 @@ export const usePhotoRenderer = (image, paletteId, frame, displayScale, paletteO
             try {
                 const { width, height, photoData } = image;
 
-                // Apply the color palette to the photo
-                const pixels = applyPalette(photoData, palette, paletteOrder);
+                let pixels;
+
+                // If red and green images are passed apply rgb colors otherwise apply a palette
+                if (imageR && imageG) {
+                    pixels = new Uint8ClampedArray(width * height * 4);
+                    const intensity = [255, 170, 85, 0];
+                    for (let i = 0; i < width * height; i++) {
+                        pixels[i * 4] = intensity[imageR.photoData[i]]; // red
+                        pixels[i * 4 + 1] = intensity[imageG.photoData[i]]; // green
+                        pixels[i * 4 + 2] = intensity[photoData[i]]; // blue
+                        pixels[i * 4 + 3] = 255;
+                    }
+                } else {
+                    // Apply the color palette to the photo
+                    pixels = applyPalette(photoData, palette, paletteOrder);
+                }
 
                 // Create a bitmap from the raw image data for efficient drawing
                 const imageBitmap = await createImageBitmap(new ImageData(pixels, width, height));
@@ -84,7 +106,7 @@ export const usePhotoRenderer = (image, paletteId, frame, displayScale, paletteO
                 console.log(error);
             }
         })();
-    }, [image, palette, frame, displayScale, saveScale, paletteOrder]);
+    }, [image, palette, frame, displayScale, saveScale, paletteOrder, imageR, imageG]);
 
     return { displayCanvasRef, saveCanvasRef };
 };
