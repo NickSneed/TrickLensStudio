@@ -10,7 +10,9 @@ export const usePhotoRenderer = (
     paletteId,
     frame,
     displayScale,
-    paletteOrder
+    paletteOrder,
+    rgbBrightness,
+    rgbContrast
 ) => {
     const displayCanvasRef = useRef(null);
     const saveCanvasRef = useRef(null);
@@ -28,7 +30,15 @@ export const usePhotoRenderer = (
 
                 // If red and green images are passed apply rgb colors otherwise apply a palette
                 if (imageR && imageG) {
-                    pixels = applyRGB(imageR.photoData, imageG.photoData, photoData, width, height);
+                    pixels = applyRGB(
+                        imageR.photoData,
+                        imageG.photoData,
+                        photoData,
+                        width,
+                        height,
+                        rgbBrightness,
+                        rgbContrast
+                    );
                 } else {
                     // Apply the color palette to the photo
                     pixels = applyPalette(photoData, palette, paletteOrder);
@@ -99,7 +109,18 @@ export const usePhotoRenderer = (
                 console.log(error);
             }
         })();
-    }, [image, palette, frame, displayScale, saveScale, paletteOrder, imageR, imageG]);
+    }, [
+        image,
+        palette,
+        frame,
+        displayScale,
+        saveScale,
+        paletteOrder,
+        imageR,
+        imageG,
+        rgbBrightness,
+        rgbContrast
+    ]);
 
     return { displayCanvasRef, saveCanvasRef };
 };

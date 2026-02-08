@@ -20,6 +20,8 @@ const EditModal = ({
     const [brushSize, setBrushSize] = useState(1);
     const [montageType, setMontageType] = useState('none');
     const [paletteOrder, setPaletteOrder] = useState('normal');
+    const [rgbBrightness, setRgbBrightness] = useState(0);
+    const [rgbContrast, setRgbContrast] = useState(0);
 
     const { editedImage, setEditedImage, drawHandlers } = useCanvasDrawer(
         editImage,
@@ -73,6 +75,8 @@ const EditModal = ({
                     exportQuality={exportQuality}
                     showShareButton={true}
                     username={username}
+                    rgbBrightness={rgbBrightness}
+                    rgbContrast={rgbContrast}
                 />
             </div>
             <div className={styles.controls}>
@@ -149,6 +153,51 @@ const EditModal = ({
                             {montagePhotos.length >= 2 ? <option value="rgb">rgb</option> : null}
                         </select>
                     </label>
+                ) : null}
+
+                {montagePhotos?.length > 0 && isRgb ? (
+                    <>
+                        <label>
+                            RGB Brightness:
+                            <select
+                                className={styles.select}
+                                value={rgbBrightness}
+                                onChange={(e) => setRgbBrightness(e.target.value)}
+                            >
+                                <option value="-0.5">-5</option>
+                                <option value="-0.4">-4</option>
+                                <option value="-0.3">-3</option>
+                                <option value="-0.2">-2</option>
+                                <option value="-0.1">-1</option>
+                                <option value="0">0</option>
+                                <option value="0.1">1</option>
+                                <option value="0.2">2</option>
+                                <option value="0.3">3</option>
+                                <option value="0.4">4</option>
+                                <option value="0.5">5</option>
+                            </select>
+                        </label>
+                        <label>
+                            RGB Contrast:
+                            <select
+                                className={styles.select}
+                                value={rgbContrast}
+                                onChange={(e) => setRgbContrast(e.target.value)}
+                            >
+                                <option value="-0.5">-5</option>
+                                <option value="-0.4">-4</option>
+                                <option value="-0.3">-3</option>
+                                <option value="-0.2">-2</option>
+                                <option value="-0.1">-1</option>
+                                <option value="0">0</option>
+                                <option value="0.1">1</option>
+                                <option value="0.2">2</option>
+                                <option value="0.3">3</option>
+                                <option value="0.4">4</option>
+                                <option value="0.5">5</option>
+                            </select>
+                        </label>
+                    </>
                 ) : null}
             </div>
         </div>

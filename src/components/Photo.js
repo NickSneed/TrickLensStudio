@@ -22,7 +22,9 @@ function Photo({
     username,
     exportFormat,
     exportQuality,
-    showShareButton = false
+    showShareButton = false,
+    rgbBrightness,
+    rgbContrast
 }) {
     const { displayCanvasRef, saveCanvasRef } = usePhotoRenderer(
         image,
@@ -31,7 +33,9 @@ function Photo({
         paletteId,
         frame,
         scaleFactor,
-        paletteOrder
+        paletteOrder,
+        rgbBrightness,
+        rgbContrast
     );
     const { handleExport, handleShare } = usePhotoExporter(
         saveCanvasRef,
@@ -131,7 +135,9 @@ Photo.propTypes = {
     username: PropTypes.string,
     exportFormat: PropTypes.string,
     exportQuality: PropTypes.number,
-    showShareButton: PropTypes.bool
+    showShareButton: PropTypes.bool,
+    rgbBrightness: PropTypes.number,
+    rgbContrast: PropTypes.number
 };
 
 export default Photo;
