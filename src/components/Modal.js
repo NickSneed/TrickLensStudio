@@ -1,7 +1,20 @@
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import * as styles from './Modal.module.css';
 
 const Modal = ({ isOpen, setIsOpen, title, children, type }) => {
+    useEffect(() => {
+        if (isOpen) {
+            document.body.classList.add('modal-open');
+        } else {
+            document.body.classList.remove('modal-open');
+        }
+
+        return () => {
+            document.body.classList.remove('modal-open');
+        };
+    }, [isOpen]);
+
     return (
         <div
             className={`${styles.modalwrapper} ${type === 'small' ? styles.small : ''} ${

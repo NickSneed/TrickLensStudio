@@ -3,6 +3,10 @@ import * as styles from './MontageToolbar.module.css';
 import PhotoThumb from './PhotoThumb.js';
 
 const MontageToolbar = ({ montagePhotos, palette, onClick }) => {
+    if (montagePhotos.length === 0) {
+        return null;
+    }
+
     return (
         <div className={styles.montagetoolbar}>
             <button onClick={onClick}>

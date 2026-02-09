@@ -105,18 +105,6 @@ const Home = () => {
     }, [settings.theme]);
 
     useEffect(() => {
-        if (editImages || isSettingsOpen) {
-            document.body.classList.add('modal-open');
-        } else {
-            document.body.classList.remove('modal-open');
-        }
-
-        return () => {
-            document.body.classList.remove('modal-open');
-        };
-    }, [editImages, isSettingsOpen]);
-
-    useEffect(() => {
         if (saveData) {
             setMainMessage('');
             if (
