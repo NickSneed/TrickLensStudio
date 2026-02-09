@@ -1,34 +1,30 @@
 import { useEffect } from 'react';
 import { applyEffect, createMontage } from 'tricklens-js';
 
-export const useEffectApplier = (
-    editImage,
-    editedImage,
-    effect,
-    montagePhotos,
-    montageType,
-    setEditedImage
-) => {
+export const useEffectApplier = (editImage, editedImage, effect, montageType, setEditedImage) => {
     useEffect(() => {
         if (!editImage) {
             return;
         }
 
-        const isMontage = montagePhotos?.length > 0 && montageType !== 'none';
+        const isMontage = editImage?.length > 1 && montageType !== 'none';
 
         if ((editedImage && effect && effect !== 'none') || isMontage) {
             let newPhotoData = isMontage
-                ? createMontage([editImage.photoData, ...montagePhotos], montageType)
-                : editImage.photoData;
+                ? createMontage(
+                      editImage.map((image) => image.photoData),
+                      montageType
+                  )
+                : editImage[0].photoData;
             newPhotoData = applyEffect(newPhotoData, effect);
             setEditedImage({
-                ...editImage,
+                ...editImage[0],
                 photoData: newPhotoData
             });
         }
 
         if (effect === 'none' && !isMontage) {
-            setEditedImage(editImage);
+            setEditedImage(editImage[0]);
         }
-    }, [effect, editImage, montagePhotos, montageType, setEditedImage]);
+    }, [effect, editImage, montageType, setEditedImage]);
 };

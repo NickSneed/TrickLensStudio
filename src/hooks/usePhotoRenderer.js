@@ -5,8 +5,8 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
 
 export const usePhotoRenderer = (
     image,
-    imageR,
     imageG,
+    imageB,
     paletteId,
     frame,
     displayScale,
@@ -29,11 +29,11 @@ export const usePhotoRenderer = (
                 let pixels;
 
                 // If red and green images are passed apply rgb colors otherwise apply a palette
-                if (imageR && imageG) {
+                if (imageG && imageB) {
                     pixels = applyRGB(
-                        imageR.photoData,
-                        imageG.photoData,
                         photoData,
+                        imageG.photoData,
+                        imageB.photoData,
                         width,
                         height,
                         rgbBrightness,
@@ -116,8 +116,8 @@ export const usePhotoRenderer = (
         displayScale,
         saveScale,
         paletteOrder,
-        imageR,
         imageG,
+        imageB,
         rgbBrightness,
         rgbContrast
     ]);

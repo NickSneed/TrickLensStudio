@@ -5,6 +5,7 @@ import Modal from '../components/Modal.js';
 import SettingsMenu from '../components/SettingsMenu.js';
 import EditModal from '../components/EditModal.js';
 import { getItem, setItem, getStoredSave, getStoredFrame } from '../utils/storageUtils.js';
+import MontageToolbar from '../components/MontageToolbar.js';
 
 const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());
@@ -12,7 +13,7 @@ const Home = () => {
     const [palette, setPalette] = useState(getItem('palette') || 'sgb2h');
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [editImage, setEditImage] = useState(null);
+    const [editImages, setEditImages] = useState([]);
     const [settings, setSettings] = useState(() => {
         const initialIsReversed = getItem('isReversed');
         return {
@@ -104,7 +105,7 @@ const Home = () => {
     }, [settings.theme]);
 
     useEffect(() => {
-        if (editImage || isSettingsOpen) {
+        if (editImages || isSettingsOpen) {
             document.body.classList.add('modal-open');
         } else {
             document.body.classList.remove('modal-open');
@@ -113,7 +114,7 @@ const Home = () => {
         return () => {
             document.body.classList.remove('modal-open');
         };
-    }, [editImage, isSettingsOpen]);
+    }, [editImages, isSettingsOpen]);
 
     useEffect(() => {
         if (saveData) {
@@ -141,7 +142,7 @@ const Home = () => {
 
     const handlePhotoSelect = (imageIndex, isSelected) => {
         if (isSelected) {
-            if (selectedPhotos.length < 3) {
+            if (selectedPhotos.length < 4) {
                 const image = saveData.images[imageIndex];
                 setSelectedPhotos((prev) => [...prev, image]);
             }
@@ -150,9 +151,7 @@ const Home = () => {
         }
     };
 
-    const montagePhotos = selectedPhotos.map((photo) => photo.photoData);
-
-    const isSelectionFull = selectedPhotos.length >= 3;
+    const isSelectionFull = selectedPhotos.length >= 4;
 
     const allImages = Array.from({ length: 30 }, (_, i) => {
         const image = saveData?.images[i];
@@ -195,7 +194,7 @@ const Home = () => {
                                 frame={frame}
                                 scaleFactor={settings.scaleFactor}
                                 showDeletedFlag={true}
-                                onClick={() => setEditImage(image)}
+                                onClick={() => setEditImages([image])}
                                 onSelect={handlePhotoSelect}
                                 isSelected={isSelected}
                                 isDisabled={!isSelected && isSelectionFull}
@@ -218,14 +217,13 @@ const Home = () => {
                 </div>
             ) : null}
             <Modal
-                isOpen={editImage}
-                setIsOpen={setEditImage}
+                isOpen={editImages.length > 0}
+                setIsOpen={setEditImages}
                 title="Magic"
                 type="full"
             >
                 <EditModal
-                    editImage={editImage}
-                    montagePhotos={montagePhotos}
+                    editImage={editImages}
                     palette={palette}
                     frame={frame}
                     exportFormat={settings.exportFormat}
@@ -244,6 +242,11 @@ const Home = () => {
                     onSettingChange={handleSettingChange}
                 />
             </Modal>
+            <MontageToolbar
+                montagePhotos={selectedPhotos}
+                palette={palette}
+                onClick={() => setEditImages(selectedPhotos)}
+            />
             <ToolBar
                 palette={palette}
                 setPalette={setPalette}

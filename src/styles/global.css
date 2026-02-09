@@ -172,7 +172,7 @@ label {
 }
 
 .photoGrid {
-    padding: 0 0 240px;
+    padding: 0 0 19em;
     display: grid;
     gap: 10px;
 }
@@ -200,7 +200,7 @@ label {
     }
 
     .photoGrid {
-        padding: 0 0 40px;
+        padding: 0 0 6em;
         gap: 20px;
     }
 }

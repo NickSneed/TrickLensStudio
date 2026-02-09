@@ -5,10 +5,10 @@ export const getAvailableMontageTypes = (numPhotos) => {
 
     const options = ['none', 'vertical', 'horizontal', 'quadrant', 'horizontal-2/3', 'border'];
 
-    if (numPhotos > 1) {
+    if (numPhotos > 2) {
         options.push('horizontal-bars');
     }
-    if (numPhotos > 2) {
+    if (numPhotos > 3) {
         options.push('four-quadrant');
     }
 

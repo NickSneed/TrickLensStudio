@@ -6,8 +6,8 @@ import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 
 function Photo({
     image,
-    imageR,
     imageG,
+    imageB,
     paletteId,
     frame,
     scaleFactor,
@@ -28,8 +28,8 @@ function Photo({
 }) {
     const { displayCanvasRef, saveCanvasRef } = usePhotoRenderer(
         image,
-        imageR,
         imageG,
+        imageB,
         paletteId,
         frame,
         scaleFactor,
@@ -114,8 +114,8 @@ function Photo({
 
 Photo.propTypes = {
     image: PropTypes.object,
-    imageR: PropTypes.object,
     imageG: PropTypes.object,
+    imageB: PropTypes.object,
     paletteId: PropTypes.string,
     frame: PropTypes.object,
     scaleFactor: PropTypes.number,
