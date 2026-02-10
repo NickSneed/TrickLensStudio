@@ -1,32 +1,25 @@
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './Photo.module.css';
 import { usePhotoRenderer } from '../hooks/usePhotoRenderer.js';
-import PhotoControls from './PhotoControls.js';
-import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 
-function Photo({
+const Photo = ({
     image,
     imageG,
     imageB,
     paletteId,
     frame,
-    scaleFactor,
-    showDeletedFlag,
-    isScale,
-    onClick,
-    onSelect,
-    isSelected,
-    isDisabled,
-    drawHandlers,
+    isFramePadding,
     paletteOrder,
-    username,
-    exportFormat,
-    exportQuality,
-    showShareButton = false,
-    rgbBrightness,
-    rgbContrast
-}) {
-    const { displayCanvasRef, saveCanvasRef } = usePhotoRenderer(
+    scaleFactor = 0.3,
+    rgbConfig,
+    saveRef,
+    drawHandlers
+}) => {
+    const { brightness: rgbBrightness = 0, contrast: rgbContrast = 0 } = rgbConfig || {};
+    const { onDrawStart, onDrawMove, onDrawEnd } = drawHandlers || {};
+
+    const { displayCanvasRef } = usePhotoRenderer(
         image,
         imageG,
         imageB,
@@ -35,21 +28,16 @@ function Photo({
         scaleFactor,
         paletteOrder,
         rgbBrightness,
-        rgbContrast
+        rgbContrast,
+        saveRef
     );
-    const { handleExport, handleShare } = usePhotoExporter(
-        saveCanvasRef,
-        username,
-        paletteId,
-        exportFormat,
-        exportQuality
-    );
+
     const displayScale = scaleFactor;
     const imageBaseWidth = frame ? 160 : 128;
     const isWild = frame && frame.name.includes('wild');
     const frameHeight = isWild ? 224 : 144;
     const imageBaseHeight = frame ? frameHeight : 112;
-    const canvasPadding = frame ? '0' : 16 * displayScale + 'px';
+    const canvasPadding = frame || !isFramePadding ? '0' : 16 * displayScale + 'px';
     const canvasWidth = imageBaseWidth * displayScale;
     const canvasHeight = imageBaseHeight * displayScale;
 
@@ -58,86 +46,48 @@ function Photo({
         return null;
     }
 
-    const { onDrawStart, onDrawMove, onDrawEnd, onMouseLeave } = drawHandlers || {};
-
-    const canvasMarkup = (
-        <>
-            {image.isDeleted && showDeletedFlag ? <div className={styles.deleted}>d</div> : null}
-            <canvas
-                className={styles.canvas}
-                width={canvasWidth}
-                height={canvasHeight}
-                style={{
-                    padding: canvasPadding,
-                    width: canvasWidth + 'px',
-                    height: canvasHeight + 'px'
-                }}
-                ref={displayCanvasRef}
-                onMouseDown={onDrawStart}
-                onMouseMove={onDrawMove}
-                onMouseUp={onDrawEnd}
-                onMouseLeave={onMouseLeave}
-                onTouchStart={onDrawStart}
-                onTouchMove={onDrawMove}
-                onTouchEnd={onDrawEnd}
-            ></canvas>
-        </>
-    );
+    // Return canvas
     return (
-        <>
-            <div className={`${styles.photo} ${isScale ? styles.scale : ''}`}>
-                {onClick ? (
-                    <button
-                        className={styles.canvasContainer}
-                        onClick={onClick}
-                    >
-                        {canvasMarkup}
-                    </button>
-                ) : (
-                    <div className={styles.canvasContainer}>{canvasMarkup}</div>
-                )}
-                <div className={styles.controls}>
-                    <PhotoControls
-                        onExport={handleExport}
-                        onShare={showShareButton ? handleShare : null}
-                        onSelect={onSelect}
-                        isSelected={isSelected}
-                        isDisabled={isDisabled}
-                        imageIndex={image?.index}
-                        format={exportFormat}
-                    />
-                </div>
-            </div>
-        </>
+        <canvas
+            className={styles.canvas}
+            width={canvasWidth}
+            height={canvasHeight}
+            style={{
+                padding: canvasPadding,
+                width: canvasWidth + 'px',
+                height: canvasHeight + 'px'
+            }}
+            ref={displayCanvasRef}
+            onMouseDown={onDrawStart}
+            onMouseMove={onDrawMove}
+            onMouseUp={onDrawEnd}
+            onMouseLeave={onDrawEnd}
+            onTouchStart={onDrawStart}
+            onTouchMove={onDrawMove}
+            onTouchEnd={onDrawEnd}
+        ></canvas>
     );
-}
+};
 
 Photo.propTypes = {
-    image: PropTypes.object,
+    image: PropTypes.object.isRequired,
     imageG: PropTypes.object,
     imageB: PropTypes.object,
     paletteId: PropTypes.string,
     frame: PropTypes.object,
+    isFramePadding: PropTypes.bool,
+    paletteOrder: PropTypes.string,
     scaleFactor: PropTypes.number,
-    showDeletedFlag: PropTypes.bool,
-    isScale: PropTypes.bool,
-    onClick: PropTypes.func,
-    onSelect: PropTypes.func,
-    isSelected: PropTypes.bool,
-    isDisabled: PropTypes.bool,
+    rgbConfig: PropTypes.shape({
+        brightness: PropTypes.number,
+        contrast: PropTypes.number
+    }),
+    saveRef: PropTypes.object,
     drawHandlers: PropTypes.shape({
         onDrawStart: PropTypes.func,
         onDrawMove: PropTypes.func,
-        onDrawEnd: PropTypes.func,
-        onMouseLeave: PropTypes.func
-    }),
-    paletteOrder: PropTypes.string,
-    username: PropTypes.string,
-    exportFormat: PropTypes.string,
-    exportQuality: PropTypes.number,
-    showShareButton: PropTypes.bool,
-    rgbBrightness: PropTypes.number,
-    rgbContrast: PropTypes.number
+        onDrawEnd: PropTypes.func
+    })
 };
 
-export default Photo;
+export default memo(Photo);

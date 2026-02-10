@@ -12,10 +12,12 @@ export const usePhotoRenderer = (
     displayScale,
     paletteOrder,
     rgbBrightness,
-    rgbContrast
+    rgbContrast,
+    externalSaveRef
 ) => {
     const displayCanvasRef = useRef(null);
-    const saveCanvasRef = useRef(null);
+    const internalSaveRef = useRef(null);
+    const saveCanvasRef = externalSaveRef || internalSaveRef;
     const saveScale = 10;
     const palette = palettes[paletteId];
 

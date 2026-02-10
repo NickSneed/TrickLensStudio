@@ -11,12 +11,14 @@ const PhotoControls = ({
 }) => {
     return (
         <div>
-            <button
-                className="button"
-                onClick={onExport}
-            >
-                Export<span> as {format.toUpperCase()}</span>
-            </button>
+            {onExport ? (
+                <button
+                    className="button"
+                    onClick={onExport}
+                >
+                    Export<span> as {format.toUpperCase()}</span>
+                </button>
+            ) : null}
             {onShare && typeof navigator !== 'undefined' && navigator.share ? (
                 <button
                     className="button"

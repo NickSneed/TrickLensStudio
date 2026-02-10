@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as styles from './MontageToolbar.module.css';
-import PhotoThumb from './PhotoThumb.js';
+import Photo from './Photo.js';
 
 const MontageToolbar = ({ montagePhotos, palette, onClick }) => {
     if (montagePhotos.length === 0) {
@@ -11,10 +11,12 @@ const MontageToolbar = ({ montagePhotos, palette, onClick }) => {
         <div className={styles.montagetoolbar}>
             <button onClick={onClick}>
                 {montagePhotos.map((photo, index) => (
-                    <PhotoThumb
+                    <Photo
                         key={index}
                         paletteId={palette}
                         image={photo}
+                        frame={null}
+                        scaleFactor={0.4}
                     />
                 ))}
             </button>

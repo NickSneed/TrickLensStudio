@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Photo from '../components/Photo.js';
+import PhotoTile from '../components/PhotoTile.js';
 import * as styles from './EditModal.module.css';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 import { useEffectApplier } from '../hooks/useEffectApplier.js';
@@ -49,7 +49,7 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
     return (
         <div className={styles.editWrapper}>
             <div className={styles.photo}>
-                <Photo
+                <PhotoTile
                     image={editedImage}
                     imageG={isRgb && editImage?.length >= 1 ? editImage[1] : undefined}
                     imageB={isRgb && editImage?.length >= 2 ? editImage[2] : undefined}
@@ -59,12 +59,10 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
                     isScale={true}
                     drawHandlers={drawHandlers}
                     paletteOrder={paletteOrder}
-                    exportFormat={exportFormat}
-                    exportQuality={exportQuality}
+                    exportConfig={{ format: exportFormat, quality: exportQuality, username }}
                     showShareButton={true}
-                    username={username}
-                    rgbBrightness={rgbBrightness}
-                    rgbContrast={rgbContrast}
+                    showExportButton={true}
+                    rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
                 />
             </div>
             <div className={styles.controls}>

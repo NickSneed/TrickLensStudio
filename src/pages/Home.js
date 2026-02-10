@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import Photo from '../components/Photo.js';
+import PhotoTile from '../components/PhotoTile.js';
 import ToolBar from '../components/ToolBar.js';
 import Modal from '../components/Modal.js';
 import SettingsMenu from '../components/SettingsMenu.js';
@@ -175,11 +175,12 @@ const Home = () => {
                     {imagesToRender.map((image) => {
                         const isSelected = selectedPhotos.some((p) => p.index === image.index);
                         return (
-                            <Photo
+                            <PhotoTile
                                 key={image.index}
                                 image={image}
                                 paletteId={palette}
                                 frame={frame}
+                                isFramePadding={true}
                                 scaleFactor={settings.scaleFactor}
                                 showDeletedFlag={true}
                                 onClick={() => setEditImages([image])}
