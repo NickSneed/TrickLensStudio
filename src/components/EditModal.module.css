@@ -9,8 +9,14 @@
 .photo {
     height: auto;
     flex-grow: 1;
+    margin: 0 0 0.5em;
     min-height: 0;
     touch-action: none;
+}
+
+.photo button {
+    margin: 0 auto;
+    max-width: 13em;
 }
 
 .controls {
@@ -23,6 +29,12 @@
     margin: 0.5em 0 1em 0;
     display: block;
     width: 100%;
+}
+
+.scale canvas {
+    height: 100% !important;
+    margin-bottom: 2em;
+    width: 100% !important;
 }
 
 @media (min-width: 1280px) {

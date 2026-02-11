@@ -174,7 +174,8 @@ label {
 .photoGrid {
     padding: 0 0 19em;
     display: grid;
-    gap: 10px;
+    column-gap: 0.4em;
+    row-gap: 1em;
 }
 
 .mainMessage {
@@ -201,7 +202,7 @@ label {
 
     .photoGrid {
         padding: 0 0 6em;
-        gap: 20px;
+        column-gap: 1em;
     }
 }
 

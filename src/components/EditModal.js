@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import PhotoTile from '../components/PhotoTile.js';
+import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 import { useEffectApplier } from '../hooks/useEffectApplier.js';
 import { getAvailableMontageTypes } from '../utils/montageUtils.js';
+import PhotoControls from './PhotoControls.js';
+import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 
 const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, username }) => {
     const [effect, setEffect] = useState('none');
@@ -37,6 +39,16 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
         setEditedImage
     );
 
+    const saveCanvasRef = useRef(null);
+
+    const { handleExport, handleShare } = usePhotoExporter(
+        saveCanvasRef,
+        username,
+        palette,
+        exportFormat,
+        exportQuality
+    );
+
     const montageOptions = getAvailableMontageTypes(editImage?.length).map((opt) => (
         <option
             key={opt}
@@ -49,21 +61,29 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
     return (
         <div className={styles.editWrapper}>
             <div className={styles.photo}>
-                <PhotoTile
-                    image={editedImage}
-                    imageG={isRgb && editImage?.length >= 1 ? editImage[1] : undefined}
-                    imageB={isRgb && editImage?.length >= 2 ? editImage[2] : undefined}
-                    paletteId={palette}
-                    frame={frame}
-                    scaleFactor={4}
-                    isScale={true}
-                    drawHandlers={drawHandlers}
-                    paletteOrder={paletteOrder}
-                    exportConfig={{ format: exportFormat, quality: exportQuality, username }}
-                    showShareButton={true}
-                    showExportButton={true}
-                    rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
-                />
+                <div className={styles.scale}>
+                    <Photo
+                        image={editedImage}
+                        imageG={isRgb && editImage?.length >= 1 ? editImage[1] : undefined}
+                        imageB={isRgb && editImage?.length >= 2 ? editImage[2] : undefined}
+                        paletteId={palette}
+                        frame={frame}
+                        scaleFactor={4}
+                        isScale={true}
+                        drawHandlers={drawHandlers}
+                        paletteOrder={paletteOrder}
+                        exportConfig={{ format: exportFormat, quality: exportQuality, username }}
+                        showShareButton={true}
+                        showExportButton={true}
+                        saveRef={saveCanvasRef}
+                        rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
+                    />
+                    <PhotoControls
+                        onExport={handleExport}
+                        onShare={handleShare}
+                        format={exportFormat}
+                    />
+                </div>
             </div>
             <div className={styles.controls}>
                 <label>

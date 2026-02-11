@@ -14,20 +14,12 @@
     position: relative;
 }
 
-.scale {
-    height: 100%;
-}
-
-.scale canvas {
-    height: 100% !important;
-    width: 100% !important;
-}
-
 .phototile :global(.button) {
     margin: 0.5em;
     max-width: 200px;
     width: 100%;
 }
+
 .deleted {
     background: var(--c-red);
     border: 2px solid #fff;
@@ -38,11 +30,6 @@
     top: 0.3em;
 }
 
-.controls :global(.button),
-.controls label {
-    display: inline-block;
-}
-
-.controls label span {
-    margin: 0;
+.phototile label {
+    margin-top: 0.5em;
 }

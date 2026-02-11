@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types';
 
-const PhotoControls = ({
-    onExport,
-    onShare,
-    onSelect,
-    isSelected,
-    isDisabled,
-    imageIndex,
-    format = 'png'
-}) => {
+const PhotoControls = ({ onExport, onShare, format = 'png' }) => {
+    const isIOS =
+        typeof navigator !== 'undefined' &&
+        (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.userAgent.includes('Mac') &&
+                typeof document !== 'undefined' &&
+                'ontouchend' in document));
+
     return (
         <div>
-            {onExport ? (
+            {onExport && !isIOS ? (
                 <button
                     className="button"
                     onClick={onExport}
@@ -19,24 +18,13 @@ const PhotoControls = ({
                     Export<span> as {format.toUpperCase()}</span>
                 </button>
             ) : null}
-            {onShare && typeof navigator !== 'undefined' && navigator.share ? (
+            {onShare && isIOS && typeof navigator !== 'undefined' && navigator.share ? (
                 <button
                     className="button"
                     onClick={onShare}
                 >
                     Share
                 </button>
-            ) : null}
-            {onSelect ? (
-                <label className="pixel-checkbox">
-                    <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={(e) => onSelect(imageIndex, e.target.checked)}
-                        disabled={isDisabled}
-                    />
-                    <span></span>
-                </label>
             ) : null}
         </div>
     );
@@ -45,19 +33,11 @@ const PhotoControls = ({
 PhotoControls.propTypes = {
     onExport: PropTypes.func.isRequired,
     onShare: PropTypes.func,
-    onSelect: PropTypes.func,
-    isSelected: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    imageIndex: PropTypes.number,
     format: PropTypes.string
 };
 
 PhotoControls.defaultProps = {
     onShare: null,
-    onSelect: null,
-    isSelected: false,
-    isDisabled: false,
-    imageIndex: -1,
     format: 'png'
 };
 

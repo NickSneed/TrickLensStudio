@@ -187,9 +187,6 @@ const Home = () => {
                                 onSelect={handlePhotoSelect}
                                 isSelected={isSelected}
                                 isDisabled={!isSelected && isSelectionFull}
-                                username={saveData.username}
-                                exportFormat={settings.exportFormat}
-                                exportQuality={settings.exportQuality}
                             />
                         );
                     })}
