@@ -5,7 +5,6 @@ import * as styles from './EditModal.module.css';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 import { useEffectApplier } from '../hooks/useEffectApplier.js';
 import { getAvailableMontageTypes } from '../utils/montageUtils.js';
-import PhotoControls from './PhotoControls.js';
 import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 
 const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, username }) => {
@@ -58,6 +57,13 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
         </option>
     ));
 
+    const isIOS =
+        typeof navigator !== 'undefined' &&
+        (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+            (navigator.userAgent.includes('Mac') &&
+                typeof document !== 'undefined' &&
+                'ontouchend' in document));
+
     return (
         <div className={styles.editWrapper}>
             <div className={styles.photo}>
@@ -78,11 +84,27 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
                         saveRef={saveCanvasRef}
                         rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
                     />
-                    <PhotoControls
-                        onExport={handleExport}
-                        onShare={handleShare}
-                        format={exportFormat}
-                    />
+                    <div>
+                        {handleExport && !isIOS ? (
+                            <button
+                                className="button"
+                                onClick={handleExport}
+                            >
+                                Export<span> as {exportFormat.toUpperCase()}</span>
+                            </button>
+                        ) : null}
+                        {handleShare &&
+                        isIOS &&
+                        typeof navigator !== 'undefined' &&
+                        navigator.share ? (
+                            <button
+                                className="button"
+                                onClick={handleShare}
+                            >
+                                Share
+                            </button>
+                        ) : null}
+                    </div>
                 </div>
             </div>
             <div className={styles.controls}>
