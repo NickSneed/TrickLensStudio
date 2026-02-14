@@ -44,6 +44,11 @@ body[data-theme='dark'] {
     font-display: swap;
 }
 
+html,
+body {
+    scrollbar-gutter: stable !important;
+}
+
 body {
     background-color: var(--c-background);
     color: var(--c-copy);
@@ -249,7 +254,6 @@ label {
     border-color: var(--c-messagecopy);
 }
 
-.chrome.modal-open {
+.modal-open {
     overflow: hidden;
-    margin-right: 23px;
 }

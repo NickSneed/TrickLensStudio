@@ -105,13 +105,6 @@ const Home = () => {
     }, [settings.theme]);
 
     useEffect(() => {
-        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-        if (isChrome) {
-            document.body.classList.add('chrome');
-        }
-    }, []);
-
-    useEffect(() => {
         if (saveData) {
             setMainMessage('');
             if (
