@@ -35,3 +35,7 @@
     color: #828282;
     font-size: 8px;
 }
+
+.phototile label span {
+    margin: 0;
+}
