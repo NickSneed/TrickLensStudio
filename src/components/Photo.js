@@ -14,7 +14,8 @@ const Photo = ({
     scaleFactor = 0.3,
     rgbConfig,
     saveRef,
-    drawHandlers
+    drawHandlers,
+    imageSmoothing
 }) => {
     const { brightness: rgbBrightness = 0, contrast: rgbContrast = 0 } = rgbConfig || {};
     const { onDrawStart, onDrawMove, onDrawEnd } = drawHandlers || {};
@@ -29,7 +30,8 @@ const Photo = ({
         paletteOrder,
         rgbBrightness,
         rgbContrast,
-        saveRef
+        saveRef,
+        imageSmoothing
     );
 
     const displayScale = scaleFactor;
@@ -87,7 +89,8 @@ Photo.propTypes = {
         onDrawStart: PropTypes.func,
         onDrawMove: PropTypes.func,
         onDrawEnd: PropTypes.func
-    })
+    }),
+    imageSmoothing: PropTypes.bool
 };
 
 export default memo(Photo);

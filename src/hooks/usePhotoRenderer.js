@@ -13,7 +13,8 @@ export const usePhotoRenderer = (
     paletteOrder,
     rgbBrightness,
     rgbContrast,
-    externalSaveRef
+    externalSaveRef,
+    imageSmoothing = false
 ) => {
     const displayCanvasRef = useRef(null);
     const internalSaveRef = useRef(null);
@@ -85,7 +86,7 @@ export const usePhotoRenderer = (
                     compositionCanvas.height * saveScale
                 );
                 const saveCtx = saveCanvas.getContext('2d');
-                saveCtx.imageSmoothingEnabled = false;
+                saveCtx.imageSmoothingEnabled = imageSmoothing;
                 saveCtx.drawImage(compositionCanvas, 0, 0, saveCanvas.width, saveCanvas.height);
 
                 // Store the save-ready canvas
@@ -98,7 +99,7 @@ export const usePhotoRenderer = (
                     const scale = displayScale * 2;
                     displayCanvas.width = compositionCanvas.width * scale;
                     displayCanvas.height = compositionCanvas.height * scale;
-                    displayCtx.imageSmoothingEnabled = false;
+                    displayCtx.imageSmoothingEnabled = imageSmoothing;
                     displayCtx.drawImage(
                         compositionCanvas,
                         0,
@@ -121,7 +122,8 @@ export const usePhotoRenderer = (
         imageG,
         imageB,
         rgbBrightness,
-        rgbContrast
+        rgbContrast,
+        imageSmoothing
     ]);
 
     return { displayCanvasRef, saveCanvasRef };
