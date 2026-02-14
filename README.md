@@ -31,7 +31,6 @@ When editing a photo, you can select additional photos to create a montage.
 
 ## To do
 
-- Add controls to montage toolbar (remove, remove all etc)
 - Improve montage thumbnail quality
 - Use arrow keys to switch edit photo
 - Add dark mode to modals

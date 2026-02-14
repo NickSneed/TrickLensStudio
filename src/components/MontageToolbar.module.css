@@ -2,13 +2,19 @@
     bottom: 16.5em;
     left: 0;
     position: fixed;
-    width: 100%;
 }
 
-.montagetoolbar button {
+.mainbutton {
     border: none;
     border-right: 2px solid #fff;
     border-top: 2px solid #fff;
+}
+
+.close {
+    border: 2px solid #fff !important;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 @media (min-width: 1280px) {

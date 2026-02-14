@@ -137,11 +137,11 @@ button {
     border: none;
     color: var(--c-modal);
     font-family: var(--f-regular);
-    font-size: 1.4em;
-    height: 1.3em;
+    font-size: 16px;
+    height: 30px;
     line-height: 1;
     padding: 0;
-    width: 1.3em;
+    width: 30px;
 }
 
 .colorgreen {
@@ -222,21 +222,22 @@ label {
 .pixel-checkbox span {
     background-color: #fff;
     border: 2px solid var(--c-copy);
+    color: #000 !important;
     display: inline-block;
-    height: 1.5em;
+    height: 18px;
     margin-right: 0.5em;
     position: relative;
     vertical-align: middle;
-    width: 1.5em;
+    width: 18px;
 }
 
 .pixel-checkbox input:checked ~ span:after {
     content: '';
     position: absolute;
-    left: 7px;
-    top: 2px;
-    width: 6px;
-    height: 12px;
+    left: 5px;
+    top: 1px;
+    width: 4px;
+    height: 10px;
     border: solid var(--c-copy);
     border-width: 0 4px 4px 0;
     transform: rotate(45deg);
@@ -248,6 +249,7 @@ label {
     border-color: var(--c-messagecopy);
 }
 
-.modal-open {
+.chrome.modal-open {
     overflow: hidden;
+    margin-right: 23px;
 }

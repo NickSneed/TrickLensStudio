@@ -32,4 +32,6 @@
 
 .phototile label {
     margin-top: 0.5em;
+    color: #828282;
+    font-size: 8px;
 }
