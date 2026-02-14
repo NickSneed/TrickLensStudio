@@ -14,6 +14,6 @@
 .fileLoader .remove {
     display: none;
     position: absolute;
-    right: 0.4em;
-    top: 0.4em;
+    right: 0.5em;
+    top: 0.5em;
 }
