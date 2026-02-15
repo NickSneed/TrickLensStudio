@@ -14,7 +14,7 @@ const Home = () => {
     const [palette, setPalette] = useState(getItem('palette') || 'sgb2h');
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [editImages, setEditImages] = useState([]);
+    const [editPhotos, setEditPhotos] = useState([]);
 
     // Use the global settings context
     const { settings } = useSettings();
@@ -41,7 +41,7 @@ const Home = () => {
                     )
                 )
             ) {
-                setMainMessage('No images found');
+                setMainMessage('No photos found');
             }
         } else {
             setMainMessage('Select a .sav file');
@@ -54,20 +54,20 @@ const Home = () => {
         }
     };
 
-    const handlePhotoSelect = (imageIndex, isSelected) => {
+    const handlePhotoSelect = (photoIndex, isSelected) => {
         if (isSelected) {
             if (selectedPhotos.length < 4) {
-                const photo = saveData.photos[imageIndex];
+                const photo = saveData.photos[photoIndex];
                 setSelectedPhotos((prev) => [...prev, photo]);
             }
         } else {
-            setSelectedPhotos((prev) => prev.filter((p) => p.index !== imageIndex));
+            setSelectedPhotos((prev) => prev.filter((p) => p.index !== photoIndex));
         }
     };
 
     const isSelectionFull = selectedPhotos.length >= 4;
 
-    const allImages = Array.from({ length: 30 }, (_, i) => {
+    const allPhotos = Array.from({ length: 30 }, (_, i) => {
         const photos = saveData?.photos[i];
         if (photos && (!photos.isDeleted || settings.isShowDeleted)) {
             photos.index = i;
@@ -76,17 +76,17 @@ const Home = () => {
         return null;
     }).filter(Boolean);
 
-    allImages.sort((a, b) => a.index - b.index);
+    allPhotos.sort((a, b) => a.index - b.index);
 
-    const activeImages = allImages.filter((photo) => !photo.isDeleted);
-    const deletedImages = allImages.filter((photo) => photo.isDeleted);
+    const activePhotos = allPhotos.filter((photo) => !photo.isDeleted);
+    const deletedPhotos = allPhotos.filter((photo) => photo.isDeleted);
 
     if (settings.isReversed) {
-        activeImages.reverse();
-        deletedImages.reverse();
+        activePhotos.reverse();
+        deletedPhotos.reverse();
     }
 
-    const imagesToRender = [...activeImages, ...deletedImages];
+    const photosToRender = [...activePhotos, ...deletedPhotos];
 
     return (
         <>
@@ -98,18 +98,18 @@ const Home = () => {
                             'repeat(auto-fit, minmax(' + 160 * settings.scaleFactor + 'px, 1fr))'
                     }}
                 >
-                    {imagesToRender.map((photo) => {
+                    {photosToRender.map((photo) => {
                         const isSelected = selectedPhotos.some((p) => p.index === photo.index);
                         return (
                             <PhotoTile
                                 key={photo.index}
-                                image={photo}
+                                photo={photo}
                                 paletteId={palette}
                                 frame={frame}
                                 isFramePadding={true}
                                 scaleFactor={settings.scaleFactor}
                                 showDeletedFlag={true}
-                                onClick={() => setEditImages([photo])}
+                                onClick={() => setEditPhotos([photo])}
                                 onSelect={handlePhotoSelect}
                                 isSelected={isSelected}
                                 isDisabled={!isSelected && isSelectionFull}
@@ -129,13 +129,13 @@ const Home = () => {
                 </div>
             ) : null}
             <Modal
-                isOpen={editImages.length > 0}
-                setIsOpen={setEditImages}
+                isOpen={editPhotos.length > 0}
+                setIsOpen={setEditPhotos}
                 title="Magic"
                 type="full"
             >
                 <EditModal
-                    editImages={editImages}
+                    editPhotos={editPhotos}
                     palette={palette}
                     frame={frame}
                     username={saveData ? saveData.username : ''}
@@ -152,7 +152,7 @@ const Home = () => {
             <MontageToolbar
                 montagePhotos={selectedPhotos}
                 palette={palette}
-                onClick={() => setEditImages(selectedPhotos)}
+                onClick={() => setEditPhotos(selectedPhotos)}
                 onClose={() => setSelectedPhotos([])}
             />
             <ToolBar
@@ -165,7 +165,7 @@ const Home = () => {
                 setIsSettingsOpen={setIsSettingsOpen}
                 isSettingsOpen={isSettingsOpen}
                 color={settings.color}
-                count={imagesToRender.length}
+                count={photosToRender.length}
                 ref={fileInputRef}
             />
         </>

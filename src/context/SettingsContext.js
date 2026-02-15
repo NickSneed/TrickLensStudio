@@ -13,7 +13,7 @@ export const SettingsProvider = ({ children }) => {
             scaleFactor: getItem('scaleFactor') || 2,
             isShowDeleted: getItem('isShowDeleted') || false,
             color: getItem('color') || 'green',
-            isReversed: initialIsReversed === null ? true : initialIsReversed,
+            isReversed: initialIsReversed === null ? false : initialIsReversed,
             exportFormat: getItem('exportFormat') || 'png',
             exportQuality: Number(getItem('exportQuality')) || 0.9,
             theme: getItem('theme') || 'system'

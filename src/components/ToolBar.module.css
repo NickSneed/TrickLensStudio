@@ -60,7 +60,7 @@
     line-height: 2.5em;
 }
 
-.imageCount {
+.photoCount {
     background: var(--c-gray);
     border: 2px solid var(--c-white);
     border-bottom: none;

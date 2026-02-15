@@ -27,7 +27,7 @@ const MontageToolbar = ({ montagePhotos, palette, onClick, onClose }) => {
                     <Photo
                         key={index}
                         paletteId={palette}
-                        image={photo}
+                        photo={photo}
                         frame={null}
                         scaleFactor={0.4}
                         imageSmoothing={true}

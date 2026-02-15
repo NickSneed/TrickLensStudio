@@ -20,7 +20,7 @@ import * as styles from './ToolBar.module.css';
  * @param {Object} props.saveData - The currently loaded save data object.
  * @param {Object} props.frame - The currently selected frame object.
  * @param {string} props.color - The UI color theme.
- * @param {number} props.count - The number of images currently loaded.
+ * @param {number} props.count - The number of photos currently loaded.
  * @param {React.Ref} ref - Ref forwarded to the file loader input.
  */
 const ToolBar = forwardRef(
@@ -67,7 +67,7 @@ const ToolBar = forwardRef(
         return (
             <>
                 <div className={`${styles.toolbar} color${color}`}>
-                    {count > 0 ? <div className={styles.imageCount}>{count}</div> : null}
+                    {count > 0 ? <div className={styles.photoCount}>{count}</div> : null}
                     <div className={styles.toolbaritem}>
                         <FileLoader
                             text="Select .sav &hellip;"

@@ -7,9 +7,9 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
  * Hook to render the photo with applied effects, palettes, and frames.
  * Handles both display rendering and creating a high-resolution version for saving.
  *
- * @param {Object} image - The primary image data (Red channel or grayscale).
- * @param {Object} imageG - The Green channel image data (optional, for RGB mode).
- * @param {Object} imageB - The Blue channel image data (optional, for RGB mode).
+ * @param {Object} photo - The primary photo data (Red channel or grayscale).
+ * @param {Object} photoG - The Green channel photo data (optional, for RGB mode).
+ * @param {Object} photoB - The Blue channel photo data (optional, for RGB mode).
  * @param {string} paletteId - The ID of the color palette to apply.
  * @param {Object} frame - The frame data to overlay.
  * @param {number} displayScale - The scale factor for the display canvas.
@@ -20,9 +20,9 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
  * @param {boolean} imageSmoothing - Whether to enable image smoothing.
  */
 export const usePhotoRenderer = (
-    image,
-    imageG,
-    imageB,
+    photo,
+    photoG,
+    photoB,
     paletteId,
     frame,
     displayScale,
@@ -39,32 +39,32 @@ export const usePhotoRenderer = (
     const palette = palettes[paletteId];
 
     useEffect(() => {
-        if (!image) return;
+        if (!photo) return;
 
         (async () => {
             try {
-                const { width, height, pixels } = image;
+                const { width, height, pixels } = photo;
 
                 let palettePixels;
 
-                // If red and green images are passed apply rgb colors otherwise apply a palette
-                if (imageG && imageB) {
-                    // Combine R, G, B channels into a single color image
+                // If red and green photos are passed apply rgb colors otherwise apply a palette
+                if (photoG && photoB) {
+                    // Combine R, G, B channels into a single color photo
                     palettePixels = applyRGB(
                         pixels,
-                        imageG.pixels,
-                        imageB.pixels,
+                        photoG.pixels,
+                        photoB.pixels,
                         width,
                         height,
                         rgbBrightness,
                         rgbContrast
                     );
                 } else {
-                    // Apply the selected color palette to the grayscale image
+                    // Apply the selected color palette to the grayscale photo
                     palettePixels = applyPalette(pixels, palette, paletteOrder);
                 }
 
-                // Create a bitmap from the raw image data for efficient drawing
+                // Create a bitmap from the raw photo data for efficient drawing
                 const imageBitmap = await createImageBitmap(
                     new ImageData(palettePixels, width, height)
                 );
@@ -136,14 +136,14 @@ export const usePhotoRenderer = (
             }
         })();
     }, [
-        image,
+        photo,
         palette,
         frame,
         displayScale,
         saveScale,
         paletteOrder,
-        imageG,
-        imageB,
+        photoG,
+        photoB,
         rgbBrightness,
         rgbContrast,
         imageSmoothing

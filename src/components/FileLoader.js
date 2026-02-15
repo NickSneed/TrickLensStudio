@@ -49,7 +49,6 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
             <input
                 ref={inputRef}
                 type="file"
-                id="images"
                 accept={accept}
                 multiple
                 onChange={handleFileChange}

@@ -7,12 +7,12 @@ import Photo from './Photo.js';
  * It supports selection, clicking, and displaying a deleted flag.
  *
  * @param {Object} props - The component props.
- * @param {Object} props.image - The image data object.
+ * @param {Object} props.photo - The photo data object.
  * @param {string} props.paletteId - The ID of the palette to apply.
  * @param {Object} props.frame - The frame object to apply.
  * @param {boolean} props.isFramePadding - Whether to apply padding for the frame.
- * @param {number} props.scaleFactor - The scaling factor for the image.
- * @param {boolean} props.showDeletedFlag - Whether to show a flag if the image is marked as deleted.
+ * @param {number} props.scaleFactor - The scaling factor for the photo.
+ * @param {boolean} props.showDeletedFlag - Whether to show a flag if the photo is marked as deleted.
  * @param {Function} props.onClick - Handler for click events on the photo.
  * @param {Function} props.onSelect - Handler for selection events (checkbox).
  * @param {boolean} props.isSelected - Whether the tile is currently selected.
@@ -20,7 +20,7 @@ import Photo from './Photo.js';
  * @param {Object} props.rgbConfig - Configuration for RGB brightness and contrast.
  */
 function PhotoTile({
-    image,
+    photo,
     paletteId,
     frame,
     isFramePadding,
@@ -32,16 +32,16 @@ function PhotoTile({
     isDisabled,
     rgbConfig
 }) {
-    // Return if there is no image
-    if (!image) {
+    // Return if there is no photo
+    if (!photo) {
         return null;
     }
 
     const canvasMarkup = (
         <>
-            {image.isDeleted && showDeletedFlag ? <div className={styles.deleted}>d</div> : null}
+            {photo.isDeleted && showDeletedFlag ? <div className={styles.deleted}>d</div> : null}
             <Photo
-                image={image}
+                photo={photo}
                 paletteId={paletteId}
                 scaleFactor={scaleFactor}
                 frame={frame}
@@ -68,7 +68,7 @@ function PhotoTile({
                     <input
                         type="checkbox"
                         checked={isSelected}
-                        onChange={(e) => onSelect(image?.index, e.target.checked)}
+                        onChange={(e) => onSelect(photo?.index, e.target.checked)}
                         disabled={isDisabled}
                     />
                     <span></span>
@@ -79,7 +79,7 @@ function PhotoTile({
 }
 
 PhotoTile.propTypes = {
-    image: PropTypes.object,
+    photo: PropTypes.object,
     paletteId: PropTypes.string,
     frame: PropTypes.object,
     isFramePadding: PropTypes.bool,
