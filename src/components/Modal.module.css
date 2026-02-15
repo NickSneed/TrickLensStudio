@@ -5,7 +5,6 @@
     justify-content: center;
     height: 100vh;
     left: 0;
-    padding: 1em;
     position: fixed;
     top: 0;
     width: 100%;
@@ -36,7 +35,7 @@
     max-width: 500px;
 }
 
-.full .modal {
+.modal {
     height: 100%;
 }
 
@@ -51,4 +50,13 @@
 .modalscroll {
     overflow: auto;
     max-height: calc(100vh - 11em);
+}
+
+@media (min-width: 1280px) {
+    .modalwrapper {
+        padding: 1em;
+    }
+    .modal:not(.full) {
+        height: auto;
+    }
 }
