@@ -31,14 +31,14 @@ export function getStoredSave() {
         const saved = window.localStorage.getItem('tricklens-save-data');
         if (saved) {
             const parsed = JSON.parse(saved);
-            if (parsed.images) {
-                parsed.images.forEach((img) => {
-                    if (img && img.photoData) {
+            if (parsed.photos) {
+                parsed.photos.forEach((photo) => {
+                    if (photo && photo.pixels) {
                         // Convert Array (or legacy Object) back to Uint8Array
-                        const data = Array.isArray(img.photoData)
-                            ? img.photoData
-                            : Object.values(img.photoData);
-                        img.photoData = new Uint8Array(data);
+                        const data = Array.isArray(photo.pixels)
+                            ? photo.pixels
+                            : Object.values(photo.pixels);
+                        photo.pixels = new Uint8Array(data);
                     }
                 });
             }

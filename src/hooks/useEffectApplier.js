@@ -21,18 +21,18 @@ export const useEffectApplier = (editImage, editedImage, effect, montageType, se
 
         // Apply effect if selected, or generate montage if conditions met
         if ((editedImage && effect && effect !== 'none') || isMontage) {
-            let newPhotoData = isMontage
+            let newPixels = isMontage
                 ? createMontage(
-                      editImage.map((image) => image.photoData),
+                      editImage.map((photo) => photo.pixels),
                       montageType
                   )
-                : editImage[0].photoData;
+                : editImage[0].pixels;
 
             // Apply the specific effect to the pixel data
-            newPhotoData = applyEffect(newPhotoData, effect);
+            newPixels = applyEffect(newPixels, effect);
             setEditedImage({
                 ...editImage[0],
-                photoData: newPhotoData
+                pixels: newPixels
             });
         }
 

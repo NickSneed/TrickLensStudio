@@ -44,7 +44,7 @@ export const useCanvasDrawer = (initialImage, frame, color, brushSize) => {
             const imageWidth = 128;
             const imageHeight = 112;
 
-            const newPhotoData = [...editedImage.photoData];
+            const newPixels = [...editedImage.pixels];
             const size = Number(brushSize);
 
             // Apply the brush to the pixel data
@@ -55,11 +55,11 @@ export const useCanvasDrawer = (initialImage, frame, color, brushSize) => {
                     // Ensure drawing stays within image bounds
                     if (drawX >= 0 && drawX < imageWidth && drawY >= 0 && drawY < imageHeight) {
                         const index = drawY * imageWidth + drawX;
-                        newPhotoData[index] = Number(color);
+                        newPixels[index] = Number(color);
                     }
                 }
             }
-            setEditedImage({ ...editedImage, photoData: newPhotoData });
+            setEditedImage({ ...editedImage, pixels: newPixels });
         },
         [editedImage, frame, brushSize, color]
     );

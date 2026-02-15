@@ -43,17 +43,17 @@ export const usePhotoRenderer = (
 
         (async () => {
             try {
-                const { width, height, photoData } = image;
+                const { width, height, pixels } = image;
 
-                let pixels;
+                let palettePixels;
 
                 // If red and green images are passed apply rgb colors otherwise apply a palette
                 if (imageG && imageB) {
                     // Combine R, G, B channels into a single color image
-                    pixels = applyRGB(
-                        photoData,
-                        imageG.photoData,
-                        imageB.photoData,
+                    palettePixels = applyRGB(
+                        pixels,
+                        imageG.pixels,
+                        imageB.pixels,
                         width,
                         height,
                         rgbBrightness,
@@ -61,11 +61,13 @@ export const usePhotoRenderer = (
                     );
                 } else {
                     // Apply the selected color palette to the grayscale image
-                    pixels = applyPalette(photoData, palette, paletteOrder);
+                    palettePixels = applyPalette(pixels, palette, paletteOrder);
                 }
 
                 // Create a bitmap from the raw image data for efficient drawing
-                const imageBitmap = await createImageBitmap(new ImageData(pixels, width, height));
+                const imageBitmap = await createImageBitmap(
+                    new ImageData(palettePixels, width, height)
+                );
 
                 // Recolor the frame if it exists
                 let frameBitmap = null;
