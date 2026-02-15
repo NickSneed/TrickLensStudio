@@ -14,15 +14,21 @@ export const usePhotoExporter = (
     format = 'png',
     quality = 0.9
 ) => {
+    const getFormatDetails = () => {
+        const isJpg = format === 'jpg';
+        return {
+            mimeType: isJpg ? 'image/jpeg' : 'image/png',
+            extension: isJpg ? 'jpg' : 'png'
+        };
+    };
+
     const handleExport = useCallback(async () => {
         const canvas = saveCanvasRef.current;
         if (!canvas) {
             console.error('Save canvas not ready for export.');
             return;
         }
-
-        const mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
-        const extension = format === 'jpg' ? 'jpg' : 'png';
+        const { mimeType, extension } = getFormatDetails();
         const blob = await canvas.convertToBlob({ type: mimeType, quality });
         const link = document.createElement('a');
         link.download = `gbcam${getFormattedUsername(
@@ -40,8 +46,7 @@ export const usePhotoExporter = (
         }
 
         try {
-            const mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
-            const extension = format === 'jpg' ? 'jpg' : 'png';
+            const { mimeType, extension } = getFormatDetails();
             const blob = await canvas.convertToBlob({ type: mimeType, quality });
             const filename = `gbcam${getFormattedUsername(
                 username

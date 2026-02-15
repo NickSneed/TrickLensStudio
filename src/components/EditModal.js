@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
 import * as styles from './EditModal.module.css';
@@ -59,12 +59,15 @@ const EditModal = ({ editImages, palette, frame, username }) => {
         </option>
     ));
 
-    const isIOS =
-        typeof navigator !== 'undefined' &&
-        (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
-            (navigator.userAgent.includes('Mac') &&
-                typeof document !== 'undefined' &&
-                'ontouchend' in document));
+    const isIOS = useMemo(
+        () =>
+            typeof navigator !== 'undefined' &&
+            (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.userAgent.includes('Mac') &&
+                    typeof document !== 'undefined' &&
+                    'ontouchend' in document)),
+        []
+    );
 
     return (
         <div className={styles.editWrapper}>
