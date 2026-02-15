@@ -1,6 +1,13 @@
 import { useSettings } from '../context/SettingsContext.js';
 import * as styles from './SettingsMenu.module.css';
 
+/**
+ * SettingsMenu component displays a list of configurable application settings.
+ * It allows users to modify preferences such as photo scale, UI color, theme,
+ * export format, and display options.
+ *
+ * @returns {JSX.Element} The rendered settings menu.
+ */
 const SettingsMenu = () => {
     const { settings, handleSettingChange } = useSettings();
 

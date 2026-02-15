@@ -7,6 +7,22 @@ import { convertFrameToData } from '../utils/canvasUtils.js';
 import { setStoredFrame, removeStoredFrame } from '../utils/storageUtils.js';
 import * as styles from './ToolBar.module.css';
 
+/**
+ * ToolBar component containing controls for file loading, palette selection, and settings.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.palette - The ID of the currently selected palette.
+ * @param {Function} props.setPalette - Function to update the selected palette.
+ * @param {Function} props.setSaveData - Function to update the loaded save data.
+ * @param {Function} props.setFrame - Function to update the selected frame.
+ * @param {Function} props.setIsSettingsOpen - Function to toggle the settings menu.
+ * @param {boolean} props.isSettingsOpen - Whether the settings menu is currently open.
+ * @param {Object} props.saveData - The currently loaded save data object.
+ * @param {Object} props.frame - The currently selected frame object.
+ * @param {string} props.color - The UI color theme.
+ * @param {number} props.count - The number of images currently loaded.
+ * @param {React.Ref} ref - Ref forwarded to the file loader input.
+ */
 const ToolBar = forwardRef(
     (
         {

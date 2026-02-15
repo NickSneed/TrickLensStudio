@@ -4,6 +4,14 @@ import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
 import Modal from './Modal.js';
 
+/**
+ * PaletteSelector component allows users to choose a color palette from a list.
+ * It displays the current palette and opens a modal with available options.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.selectedPalette - The ID of the currently selected palette.
+ * @param {Function} props.onPaletteChange - Handler called when a new palette is selected.
+ */
 const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
     const [isOpen, setIsOpen] = useState(false);
 
