@@ -2,6 +2,23 @@ import PropTypes from 'prop-types';
 import * as styles from './PhotoTile.module.css';
 import Photo from './Photo.js';
 
+/**
+ * PhotoTile component renders a single photo within a tile layout.
+ * It supports selection, clicking, and displaying a deleted flag.
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.image - The image data object.
+ * @param {string} props.paletteId - The ID of the palette to apply.
+ * @param {Object} props.frame - The frame object to apply.
+ * @param {boolean} props.isFramePadding - Whether to apply padding for the frame.
+ * @param {number} props.scaleFactor - The scaling factor for the image.
+ * @param {boolean} props.showDeletedFlag - Whether to show a flag if the image is marked as deleted.
+ * @param {Function} props.onClick - Handler for click events on the photo.
+ * @param {Function} props.onSelect - Handler for selection events (checkbox).
+ * @param {boolean} props.isSelected - Whether the tile is currently selected.
+ * @param {boolean} props.isDisabled - Whether the selection checkbox is disabled.
+ * @param {Object} props.rgbConfig - Configuration for RGB brightness and contrast.
+ */
 function PhotoTile({
     image,
     paletteId,
