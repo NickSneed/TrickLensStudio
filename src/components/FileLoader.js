@@ -2,6 +2,18 @@ import { useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './FileLoader.module.css';
 
+/**
+ * FileLoader component handles file input operations.
+ * It provides a styled button to trigger file selection and reads the file as an ArrayBuffer.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.text - The label text for the file loader button.
+ * @param {Function} props.onChange - Handler called when a file is selected. Receives an object with `data` (ArrayBuffer) and `name`.
+ * @param {Function} [props.onRemove] - Handler called when the remove button is clicked.
+ * @param {boolean} [props.showRemove=false] - Whether to display the remove button.
+ * @param {string} [props.accept=''] - The file types to accept (e.g., ".sav", ".png").
+ * @param {React.Ref} ref - Ref forwarded to the internal file input element.
+ */
 const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept }, ref) => {
     const reader = new FileReader();
     const internalRef = useRef(null);

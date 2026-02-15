@@ -8,6 +8,16 @@ import { getAvailableMontageTypes } from '../utils/montageUtils.js';
 import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 import { useSettings } from '../context/SettingsContext.js';
 
+/**
+ * EditModal component allows users to edit, apply effects, and export photos.
+ * It provides controls for trick lenses, palette order, brush settings, and montage options.
+ *
+ * @param {Object} props - The component props.
+ * @param {Array} props.editImages - Array of image objects to be edited.
+ * @param {string} props.palette - The ID of the currently selected palette.
+ * @param {Object} props.frame - The frame object to apply to the image.
+ * @param {string} props.username - The username associated with the images (used for export filename).
+ */
 const EditModal = ({ editImages, palette, frame, username }) => {
     const { settings } = useSettings();
     const [effect, setEffect] = useState('none');
