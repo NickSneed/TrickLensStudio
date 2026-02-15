@@ -209,7 +209,7 @@ const Home = () => {
                 type="full"
             >
                 <EditModal
-                    editImage={editImages}
+                    editImages={editImages}
                     palette={palette}
                     frame={frame}
                     exportFormat={settings.exportFormat}

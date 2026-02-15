@@ -7,7 +7,7 @@ import { useEffectApplier } from '../hooks/useEffectApplier.js';
 import { getAvailableMontageTypes } from '../utils/montageUtils.js';
 import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 
-const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, username }) => {
+const EditModal = ({ editImages, palette, frame, exportFormat, exportQuality, username }) => {
     const [effect, setEffect] = useState('none');
     const [color, setColor] = useState(0);
     const [brushSize, setBrushSize] = useState(1);
@@ -19,10 +19,10 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
     useEffect(() => {
         setRgbBrightness(0);
         setRgbContrast(0);
-    }, [editImage]);
+    }, [editImages]);
 
     const { editedImage, setEditedImage, drawHandlers } = useCanvasDrawer(
-        editImage ? editImage[0] : null,
+        editImages ? editImages[0] : null,
         frame,
         color,
         brushSize
@@ -31,7 +31,7 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
     const isRgb = montageType === 'rgb';
 
     useEffectApplier(
-        editImage ? editImage : null,
+        editImages ? editImages : null,
         editedImage,
         effect,
         isRgb ? 'none' : montageType,
@@ -48,7 +48,7 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
         exportQuality
     );
 
-    const montageOptions = getAvailableMontageTypes(editImage?.length).map((opt) => (
+    const montageOptions = getAvailableMontageTypes(editImages?.length).map((opt) => (
         <option
             key={opt}
             value={opt}
@@ -70,8 +70,8 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
                 <div className={styles.scale}>
                     <Photo
                         image={editedImage}
-                        imageG={isRgb && editImage?.length >= 1 ? editImage[1] : undefined}
-                        imageB={isRgb && editImage?.length >= 2 ? editImage[2] : undefined}
+                        imageG={isRgb && editImages?.length >= 1 ? editImages[1] : undefined}
+                        imageB={isRgb && editImages?.length >= 2 ? editImages[2] : undefined}
                         paletteId={palette}
                         frame={frame}
                         scaleFactor={4}
@@ -169,7 +169,7 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
                         <option value="6">6</option>
                     </select>
                 </label>
-                {editImage?.length > 1 ? (
+                {editImages?.length > 1 ? (
                     <label>
                         Montage:
                         <select
@@ -178,12 +178,12 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
                             onChange={(e) => setMontageType(e.target.value)}
                         >
                             {montageOptions}
-                            {editImage.length > 2 ? <option value="rgb">rgb</option> : null}
+                            {editImages.length > 2 ? <option value="rgb">rgb</option> : null}
                         </select>
                     </label>
                 ) : null}
 
-                {editImage?.length > 2 && isRgb ? (
+                {editImages?.length > 2 && isRgb ? (
                     <>
                         <label>
                             Brightness: {Math.round(rgbBrightness * 20)}
@@ -219,7 +219,7 @@ const EditModal = ({ editImage, palette, frame, exportFormat, exportQuality, use
 export default EditModal;
 
 EditModal.propTypes = {
-    editImage: PropTypes.object,
+    editImages: PropTypes.object,
     palette: PropTypes.string,
     frame: PropTypes.object,
     exportFormat: PropTypes.string,
