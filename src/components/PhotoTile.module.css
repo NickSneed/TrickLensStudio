@@ -22,8 +22,8 @@
 
 .deleted {
     background: var(--c-red);
-    border: 2px solid #fff;
-    color: #fff;
+    border: 2px solid var(--c-white);
+    color: var(--c-white);
     padding: 0.2em;
     position: absolute;
     right: 0.4em;
@@ -32,7 +32,6 @@
 
 .phototile label {
     margin-top: 0.5em;
-    color: #828282;
     font-size: 8px;
 }
 

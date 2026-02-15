@@ -20,12 +20,30 @@
     /* fonts */
     --f-regular: 'DogicaPixel', sans-serif;
     --f-bold: 'DogicaPixelBold', sans-serif;
+
+    /* Other */
+    --c-white: #fff;
+    --c-black: #000;
+    --c-gray: #333;
+
+    /* buttons */
+    --c-buttonoutline: color-mix(in srgb, var(--c-button) 10%, #000);
+
+    /* input */
+    --c-inputoutline: #171717;
+    --c-inputback: #fff;
+    --c-inputcolor: #171717;
 }
 
 body[data-theme='dark'] {
     --c-background: #1f1f1f;
     --c-canvasoutlinelight: color-mix(in srgb, var(--c-background) 90%, #fff);
     --c-canvasoutlinedark: color-mix(in srgb, var(--c-background) 50%, #000);
+    --c-modal: #141414;
+    --c-modalcopy: #858585;
+    --c-inputback: #2b2b2b;
+    --c-inputoutline: #8c8c8c;
+    --c-inputcolor: #cacaca;
 }
 
 @font-face {
@@ -73,7 +91,9 @@ h3 {
 }
 
 select {
-    border: 2px solid var(--c-copy);
+    background: var(--c-inputback);
+    border: 2px solid var(--c-inputoutline);
+    color: var(--c-inputcolor);
     font-size: inherit;
     font-family: var(--f-regular);
     padding: 0.5em;
@@ -89,8 +109,8 @@ button {
 .button {
     background-color: var(--c-button);
     border: none;
-    border-top: 4px solid color-mix(in srgb, var(--c-button) 10%, #000);
-    border-bottom: 4px solid color-mix(in srgb, var(--c-button) 10%, #000);
+    border-top: 4px solid var(--c-buttonoutline);
+    border-bottom: 4px solid var(--c-buttonoutline);
     box-sizing: border-box;
     box-shadow: inset 0 -4px 0 0 color-mix(in srgb, var(--c-button) 50%, #000);
     color: var(--c-copy);
@@ -110,8 +130,8 @@ button {
     left: -4px;
     width: 100%;
     height: 100%;
-    border-right: 4px solid color-mix(in srgb, var(--c-button) 10%, #000);
-    border-left: 4px solid color-mix(in srgb, var(--c-button) 10%, #000);
+    border-right: 4px solid var(--c-buttonoutline);
+    border-left: 4px solid var(--c-buttonoutline);
 }
 
 .button:before {
@@ -225,9 +245,8 @@ label {
 }
 
 .pixel-checkbox span {
-    background-color: #fff;
-    border: 2px solid var(--c-copy);
-    color: #000 !important;
+    background-color: var(--c-inputback);
+    border: 2px solid var(--c-inputoutline);
     display: inline-block;
     height: 18px;
     margin-right: 0.5em;
@@ -243,15 +262,15 @@ label {
     top: 1px;
     width: 4px;
     height: 10px;
-    border: solid var(--c-copy);
-    border-width: 0 4px 4px 0;
+    border: solid var(--c-inputcolor);
+    border-width: 0 3px 3px 0;
     transform: rotate(45deg);
 }
 
 .pixel-checkbox input:disabled ~ span {
     cursor: not-allowed;
-    background-color: var(--c-button);
-    border-color: var(--c-messagecopy);
+    background-color: color-mix(in srgb, var(--c-inputback) 50%, #000);
+    border-color: color-mix(in srgb, var(--c-inputoutline) 50%, #000);
 }
 
 .modal-open {

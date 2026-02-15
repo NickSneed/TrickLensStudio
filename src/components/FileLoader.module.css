@@ -12,6 +12,8 @@
 }
 
 .fileLoader .remove {
+    background: var(--c-buttonoutline);
+    color: var(--c-white);
     display: none;
     position: absolute;
     right: 0.5em;

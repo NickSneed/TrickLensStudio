@@ -1,26 +1,25 @@
 .dropdownContainer {
     display: grid;
+    gap: 0.4em;
     grid-template-columns: auto auto;
 }
 
 .swatchContainer {
-    border: 2px solid var(--c-modalcopy);
     display: flex;
-    height: 20px;
-    margin: 0 auto 4px auto;
-    overflow: hidden;
+    height: 1.4em;
+    margin: 0 auto 0.5em;
     vertical-align: middle;
-    width: 80px;
+    width: 5em;
 }
 
 .swatchContainer:hover,
 .swatchContainer:active {
-    border-color: color-mix(in srgb, var(--c-modalcopy) 40%, #fff);
+    border-color: color-mix(in srgb, var(--c-modalcopy) 40%, var(--c-white));
 }
 
 .swatchColorBlock {
-    width: 25%;
     height: 100%;
+    width: 25%;
 }
 
 .radioInput {

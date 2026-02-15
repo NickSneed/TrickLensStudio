@@ -6,15 +6,23 @@
 
 .mainbutton {
     border: none;
-    border-right: 2px solid #fff;
-    border-top: 2px solid #fff;
+    border-right: 2px solid var(--c-white);
+    border-top: 2px solid var(--c-white);
 }
 
 .close {
-    border: 2px solid #fff !important;
+    background: var(--c-black);
+    border: 2px solid var(--c-white);
+    color: var(--c-white);
     position: absolute;
     right: 0;
     top: 0;
+}
+
+.close:hover {
+    background: var(--c-black);
+    border: 2px solid var(--c-white);
+    color: var(--c-white);
 }
 
 @media (min-width: 1280px) {
