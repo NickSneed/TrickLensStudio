@@ -17,7 +17,7 @@ const Home = () => {
     const [editImages, setEditImages] = useState([]);
 
     // Use the global settings context
-    const { settings, handleSettingChange } = useSettings();
+    const { settings } = useSettings();
 
     const [selectedPhotos, setSelectedPhotos] = useState([]);
     const fileInputRef = useRef(null);
