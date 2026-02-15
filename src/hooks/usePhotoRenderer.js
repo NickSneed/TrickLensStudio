@@ -3,6 +3,22 @@ import { palettes, applyPalette, applyRGB } from 'tricklens-js';
 import { composeImage } from '../utils/canvasUtils.js';
 import { getFrameOffsets } from '../utils/frameUtils.js';
 
+/**
+ * Hook to render the photo with applied effects, palettes, and frames.
+ * Handles both display rendering and creating a high-resolution version for saving.
+ *
+ * @param {Object} image - The primary image data (Red channel or grayscale).
+ * @param {Object} imageG - The Green channel image data (optional, for RGB mode).
+ * @param {Object} imageB - The Blue channel image data (optional, for RGB mode).
+ * @param {string} paletteId - The ID of the color palette to apply.
+ * @param {Object} frame - The frame data to overlay.
+ * @param {number} displayScale - The scale factor for the display canvas.
+ * @param {Array} paletteOrder - The order of colors in the palette.
+ * @param {number} rgbBrightness - Brightness adjustment for RGB mode.
+ * @param {number} rgbContrast - Contrast adjustment for RGB mode.
+ * @param {Object} externalSaveRef - Optional external ref for the save canvas.
+ * @param {boolean} imageSmoothing - Whether to enable image smoothing.
+ */
 export const usePhotoRenderer = (
     image,
     imageG,
@@ -19,7 +35,7 @@ export const usePhotoRenderer = (
     const displayCanvasRef = useRef(null);
     const internalSaveRef = useRef(null);
     const saveCanvasRef = externalSaveRef || internalSaveRef;
-    const saveScale = 10;
+    const saveScale = 10; // Scale factor for the high-resolution export
     const palette = palettes[paletteId];
 
     useEffect(() => {
@@ -33,6 +49,7 @@ export const usePhotoRenderer = (
 
                 // If red and green images are passed apply rgb colors otherwise apply a palette
                 if (imageG && imageB) {
+                    // Combine R, G, B channels into a single color image
                     pixels = applyRGB(
                         photoData,
                         imageG.photoData,
@@ -43,7 +60,7 @@ export const usePhotoRenderer = (
                         rgbContrast
                     );
                 } else {
-                    // Apply the color palette to the photo
+                    // Apply the selected color palette to the grayscale image
                     pixels = applyPalette(photoData, palette, paletteOrder);
                 }
 
@@ -53,16 +70,20 @@ export const usePhotoRenderer = (
                 // Recolor the frame if it exists
                 let frameBitmap = null;
                 if (frame) {
+                    // Create a clean copy of frame data to apply palette
                     const cleanData = new Uint8Array(frame.data.length);
                     for (let i = 0; i < frame.data.length; i++) {
+                        // Replace transparent index (4) with 0 for palette application
                         cleanData[i] = frame.data[i] === 4 ? 0 : frame.data[i];
                     }
 
+                    // Apply palette to frame data
                     const framePixels = applyPalette(cleanData, palette, paletteOrder);
 
+                    // Restore transparency for index 4
                     for (let i = 0; i < frame.data.length; i++) {
                         if (frame.data[i] === 4) {
-                            framePixels[i * 4 + 3] = 0;
+                            framePixels[i * 4 + 3] = 0; // Set Alpha to 0
                         }
                     }
                     frameBitmap = await createImageBitmap(
