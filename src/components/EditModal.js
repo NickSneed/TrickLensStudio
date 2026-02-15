@@ -6,8 +6,10 @@ import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 import { useEffectApplier } from '../hooks/useEffectApplier.js';
 import { getAvailableMontageTypes } from '../utils/montageUtils.js';
 import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
+import { useSettings } from '../context/SettingsContext.js';
 
-const EditModal = ({ editImages, palette, frame, exportFormat, exportQuality, username }) => {
+const EditModal = ({ editImages, palette, frame, username }) => {
+    const { settings } = useSettings();
     const [effect, setEffect] = useState('none');
     const [color, setColor] = useState(0);
     const [brushSize, setBrushSize] = useState(1);
@@ -44,8 +46,8 @@ const EditModal = ({ editImages, palette, frame, exportFormat, exportQuality, us
         saveCanvasRef,
         username,
         palette,
-        exportFormat,
-        exportQuality
+        settings.exportFormat,
+        settings.exportQuality
     );
 
     const montageOptions = getAvailableMontageTypes(editImages?.length).map((opt) => (
@@ -78,7 +80,11 @@ const EditModal = ({ editImages, palette, frame, exportFormat, exportQuality, us
                         isScale={true}
                         drawHandlers={drawHandlers}
                         paletteOrder={paletteOrder}
-                        exportConfig={{ format: exportFormat, quality: exportQuality, username }}
+                        exportConfig={{
+                            format: settings.exportFormat,
+                            quality: settings.exportQuality,
+                            username
+                        }}
                         showShareButton={true}
                         showExportButton={true}
                         saveRef={saveCanvasRef}
@@ -90,7 +96,7 @@ const EditModal = ({ editImages, palette, frame, exportFormat, exportQuality, us
                                 className="button"
                                 onClick={handleExport}
                             >
-                                Export<span> as {exportFormat.toUpperCase()}</span>
+                                Export<span> as {settings.exportFormat.toUpperCase()}</span>
                             </button>
                         ) : null}
                         {handleShare &&
@@ -222,7 +228,5 @@ EditModal.propTypes = {
     editImages: PropTypes.object,
     palette: PropTypes.string,
     frame: PropTypes.object,
-    exportFormat: PropTypes.string,
-    exportQuality: PropTypes.number,
     username: PropTypes.string
 };

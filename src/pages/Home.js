@@ -6,6 +6,7 @@ import SettingsMenu from '../components/SettingsMenu.js';
 import EditModal from '../components/EditModal.js';
 import { getItem, setItem, getStoredSave, getStoredFrame } from '../utils/storageUtils.js';
 import MontageToolbar from '../components/MontageToolbar.js';
+import { useSettings } from '../context/SettingsContext.js';
 
 const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());
@@ -14,35 +15,12 @@ const Home = () => {
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [editImages, setEditImages] = useState([]);
-    const [settings, setSettings] = useState(() => {
-        const initialIsReversed = getItem('isReversed');
-        return {
-            scaleFactor: getItem('scaleFactor') || 2,
-            isShowDeleted: getItem('isShowDeleted') || false,
-            color: getItem('color') || 'green',
-            isReversed: initialIsReversed === null ? true : initialIsReversed,
-            exportFormat: getItem('exportFormat') || 'png',
-            exportQuality: Number(getItem('exportQuality')) || 0.9,
-            theme: getItem('theme') || 'system'
-        };
-    });
+
+    // Use the global settings context
+    const { settings, handleSettingChange } = useSettings();
+
     const [selectedPhotos, setSelectedPhotos] = useState([]);
     const fileInputRef = useRef(null);
-
-    const handleSettingChange = (event) => {
-        const { name, value, type, checked } = event.target;
-        const newValue =
-            type === 'checkbox'
-                ? checked
-                : name === 'scaleFactor' || name === 'exportQuality'
-                  ? Number(value)
-                  : value;
-
-        setSettings((prevSettings) => ({
-            ...prevSettings,
-            [name]: newValue
-        }));
-    };
 
     useEffect(() => {
         setSelectedPhotos([]);
@@ -50,59 +28,7 @@ const Home = () => {
 
     useEffect(() => {
         setItem('palette', palette);
-        setItem('scaleFactor', settings.scaleFactor);
-        setItem('isShowDeleted', settings.isShowDeleted);
-        setItem('color', settings.color);
-        setItem('isReversed', settings.isReversed);
-        setItem('exportFormat', settings.exportFormat);
-        setItem('exportQuality', settings.exportQuality);
-        setItem('theme', settings.theme);
-    }, [palette, settings]);
-
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            // Use Ctrl on Windows/Linux and Meta (Cmd) on macOS
-            const isModKey = event.ctrlKey || event.metaKey;
-
-            if ((event.key === '+' || event.key === '=') && isModKey) {
-                event.preventDefault(); // Prevent browser zoom in
-                handleSettingChange({
-                    target: { name: 'scaleFactor', value: Math.min(settings.scaleFactor + 1, 4) }
-                });
-            } else if (event.key === '-' && isModKey) {
-                event.preventDefault(); // Prevent browser zoom out
-                handleSettingChange({
-                    target: { name: 'scaleFactor', value: Math.max(settings.scaleFactor - 1, 1) }
-                });
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
-
-    useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const applyTheme = () => {
-            let themeToApply = settings.theme;
-            if (themeToApply === 'system') {
-                themeToApply = mediaQuery.matches ? 'dark' : 'light';
-            }
-            document.body.setAttribute('data-theme', themeToApply);
-        };
-
-        applyTheme();
-
-        const handleSystemChange = () => {
-            if (settings.theme === 'system') {
-                applyTheme();
-            }
-        };
-
-        mediaQuery.addEventListener('change', handleSystemChange);
-        return () => mediaQuery.removeEventListener('change', handleSystemChange);
-    }, [settings.theme]);
+    }, [palette]);
 
     useEffect(() => {
         if (saveData) {
@@ -212,8 +138,6 @@ const Home = () => {
                     editImages={editImages}
                     palette={palette}
                     frame={frame}
-                    exportFormat={settings.exportFormat}
-                    exportQuality={settings.exportQuality}
                     username={saveData ? saveData.username : ''}
                 />
             </Modal>
@@ -223,10 +147,7 @@ const Home = () => {
                 title="Settings"
                 type="small"
             >
-                <SettingsMenu
-                    settings={settings}
-                    onSettingChange={handleSettingChange}
-                />
+                <SettingsMenu />
             </Modal>
             <MontageToolbar
                 montagePhotos={selectedPhotos}

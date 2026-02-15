@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types';
+import { useSettings } from '../context/SettingsContext.js';
 import * as styles from './SettingsMenu.module.css';
 
-const SettingsMenu = ({ settings, onSettingChange }) => {
+const SettingsMenu = () => {
+    const { settings, handleSettingChange } = useSettings();
+
     return (
         <div className={styles.settings}>
             <label>
@@ -10,7 +12,7 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                     className="select"
                     name="scaleFactor"
                     value={settings.scaleFactor}
-                    onChange={onSettingChange}
+                    onChange={handleSettingChange}
                 >
                     <option value={1}>1</option>
                     <option value={2}>2</option>
@@ -24,7 +26,7 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                     className="select"
                     name="color"
                     value={settings.color}
-                    onChange={onSettingChange}
+                    onChange={handleSettingChange}
                 >
                     <option>red</option>
                     <option>green</option>
@@ -38,7 +40,7 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                     className="select"
                     name="theme"
                     value={settings.theme}
-                    onChange={onSettingChange}
+                    onChange={handleSettingChange}
                 >
                     <option value="system">System</option>
                     <option value="light">Light</option>
@@ -51,7 +53,7 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                     className="select"
                     name="exportFormat"
                     value={settings.exportFormat}
-                    onChange={onSettingChange}
+                    onChange={handleSettingChange}
                 >
                     <option value="png">PNG</option>
                     <option value="jpg">JPG</option>
@@ -71,7 +73,7 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                         max="1"
                         step="0.1"
                         value={settings.exportQuality}
-                        onChange={onSettingChange}
+                        onChange={handleSettingChange}
                     />
                 </label>
             ) : null}
@@ -80,7 +82,7 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                     type="checkbox"
                     name="isReversed"
                     checked={settings.isReversed}
-                    onChange={onSettingChange}
+                    onChange={handleSettingChange}
                 />
                 <span></span>
                 Reverse order
@@ -90,7 +92,7 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
                     type="checkbox"
                     name="isShowDeleted"
                     checked={settings.isShowDeleted}
-                    onChange={onSettingChange}
+                    onChange={handleSettingChange}
                 />
                 <span></span>
                 Show deleted
@@ -100,16 +102,3 @@ const SettingsMenu = ({ settings, onSettingChange }) => {
 };
 
 export default SettingsMenu;
-
-SettingsMenu.propTypes = {
-    settings: PropTypes.shape({
-        isShowDeleted: PropTypes.bool.isRequired,
-        scaleFactor: PropTypes.number.isRequired,
-        color: PropTypes.string.isRequired,
-        isReversed: PropTypes.bool.isRequired,
-        exportFormat: PropTypes.string,
-        exportQuality: PropTypes.number,
-        theme: PropTypes.string
-    }).isRequired,
-    onSettingChange: PropTypes.func.isRequired
-};

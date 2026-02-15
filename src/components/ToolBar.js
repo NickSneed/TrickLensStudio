@@ -107,12 +107,10 @@ ToolBar.propTypes = {
     setPalette: PropTypes.func.isRequired,
     setSaveData: PropTypes.func.isRequired,
     setFrame: PropTypes.func.isRequired,
-    setScaleFactor: PropTypes.func.isRequired,
     setIsSettingsOpen: PropTypes.func.isRequired,
     isSettingsOpen: PropTypes.bool.isRequired,
     saveData: PropTypes.object,
     frame: PropTypes.object,
-    scaleFactor: PropTypes.number.isRequired,
     color: PropTypes.string.isRequired,
     count: PropTypes.number.isRequired
 };
