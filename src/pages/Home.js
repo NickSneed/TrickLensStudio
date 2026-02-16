@@ -150,7 +150,7 @@ const Home = () => {
                 <SettingsMenu />
             </Modal>
             <MontageToolbar
-                montagePhotos={selectedPhotos}
+                photos={selectedPhotos}
                 palette={palette}
                 onClick={() => setEditPhotos(selectedPhotos)}
                 onClose={() => setSelectedPhotos([])}

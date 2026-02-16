@@ -9,10 +9,10 @@ import Modal from './Modal.js';
  * It displays the current palette and opens a modal with available options.
  *
  * @param {Object} props - The component props.
- * @param {string} props.selectedPalette - The ID of the currently selected palette.
+ * @param {string} props.currentPalette - The ID of the currently selected palette.
  * @param {Function} props.onPaletteChange - Handler called when a new palette is selected.
  */
-const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
+const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleSelect = (paletteId) => {
@@ -26,7 +26,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
                 <button
                     onClick={() => setIsOpen(!isOpen)}
                     className="button"
-                >{`Palette: ${selectedPalette}`}</button>
+                >{`Palette: ${currentPalette}`}</button>
 
                 <Modal
                     isOpen={isOpen}
@@ -38,7 +38,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
                     <div className={styles.dropdownContainer}>
                         {Object.keys(palettes).map((paletteId) => {
                             const palette = palettes[paletteId].colors;
-                            const isSelected = selectedPalette === paletteId;
+                            const isSelected = currentPalette === paletteId;
 
                             return (
                                 <label
@@ -86,7 +86,7 @@ const PaletteSelector = ({ selectedPalette, onPaletteChange }) => {
 };
 
 PaletteSelector.propTypes = {
-    selectedPalette: PropTypes.string.isRequired,
+    currentPalette: PropTypes.string.isRequired,
     onPaletteChange: PropTypes.func.isRequired
 };
 

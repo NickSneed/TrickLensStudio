@@ -95,7 +95,7 @@ const ToolBar = forwardRef(
                     </div>
                     <div className={styles.toolbaritem}>
                         <PaletteSelector
-                            selectedPalette={palette}
+                            currentPalette={palette}
                             onPaletteChange={setPalette}
                         />
                     </div>
