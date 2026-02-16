@@ -20,19 +20,23 @@ import { useSettings } from '../context/SettingsContext.js';
  */
 const EditModal = ({ photos, palette, frame, username }) => {
     const { settings } = useSettings();
-    const [effect, setEffect] = useState('none');
-    const [color, setColor] = useState(0);
-    const [brushSize, setBrushSize] = useState(1);
-    const [montageType, setMontageType] = useState('none');
-    const [paletteOrder, setPaletteOrder] = useState('normal');
-    const [rgbBrightness, setRgbBrightness] = useState(0);
-    const [rgbContrast, setRgbContrast] = useState(0);
 
+    // State definitions for editing controls
+    const [effect, setEffect] = useState('none'); // Current trick lens effect
+    const [color, setColor] = useState(0); // Brush color index
+    const [brushSize, setBrushSize] = useState(1); // Brush size
+    const [montageType, setMontageType] = useState('none'); // Selected montage layout
+    const [paletteOrder, setPaletteOrder] = useState('normal'); // Palette color mapping order
+    const [rgbBrightness, setRgbBrightness] = useState(0); // Brightness for RGB mode
+    const [rgbContrast, setRgbContrast] = useState(0); // Contrast for RGB mode
+
+    // Reset RGB settings when photos change
     useEffect(() => {
         setRgbBrightness(0);
         setRgbContrast(0);
     }, [photos]);
 
+    // Initialize canvas drawing hook
     const { drawPhoto, setDrawPhoto, drawHandlers } = useCanvasDrawer(
         photos ? photos[0] : null,
         frame,
@@ -40,8 +44,10 @@ const EditModal = ({ photos, palette, frame, username }) => {
         brushSize
     );
 
+    // Set idRgb flag for RGB montages
     const isRgb = montageType === 'rgb';
 
+    // Apply selected effects and montage settings to the photo
     useEffectApplier(
         photos ? photos : null,
         effect,
@@ -50,8 +56,10 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setDrawPhoto
     );
 
+    // Set saveCanvasRef
     const saveCanvasRef = useRef(null);
 
+    // Initialize photo export hook
     const { handleExport, handleShare } = usePhotoExporter(
         saveCanvasRef,
         username,
@@ -60,6 +68,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
         settings.exportQuality
     );
 
+    // Generate montage dropdown options based on photo count
     const montageOptions = getAvailableMontageTypes(photos?.length).map((opt) => (
         <option
             key={opt}
@@ -69,6 +78,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
         </option>
     ));
 
+    // Detect iOS devices to conditionally show the Share button
     const isIOS = useMemo(
         () =>
             typeof navigator !== 'undefined' &&
