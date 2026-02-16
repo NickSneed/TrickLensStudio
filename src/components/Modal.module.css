@@ -17,7 +17,7 @@
     border: 1.5em solid var(--c-modal);
     position: relative;
     margin: 0 auto;
-    padding: 3em 2em;
+    padding: 2em;
     width: 100%;
 }
 
@@ -49,7 +49,7 @@
 
 .modalscroll {
     overflow: auto;
-    max-height: calc(100vh - 11em);
+    max-height: 100%;
 }
 
 @media (min-width: 1280px) {

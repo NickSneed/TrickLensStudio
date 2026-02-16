@@ -5,11 +5,16 @@
 }
 
 .swatchContainer {
+    border: 2px solid var(--c-modalcopy);
     display: flex;
     height: 1.4em;
     margin: 0 auto 0.5em;
     vertical-align: middle;
     width: 5em;
+}
+
+.swatchContainer.selected {
+    border-color: color-mix(in srgb, var(--c-modalcopy) 10%, #fff);
 }
 
 .swatchContainer:hover,

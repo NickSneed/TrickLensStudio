@@ -54,15 +54,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                         className={styles.radioInput}
                                     />
                                     <span
-                                        className={styles.swatchContainer}
-                                        style={
-                                            isSelected
-                                                ? {
-                                                      borderColor:
-                                                          'color-mix(in srgb, var(--c-modalcopy) 20%, #fff)'
-                                                  }
-                                                : null
-                                        }
+                                        className={`${styles.swatchContainer} ${isSelected ? styles.selected : ''}`}
                                     >
                                         {palette.map((c, index) => (
                                             <span
