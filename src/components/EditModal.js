@@ -13,12 +13,12 @@ import { useSettings } from '../context/SettingsContext.js';
  * It provides controls for trick lenses, palette order, brush settings, and montage options.
  *
  * @param {Object} props - The component props.
- * @param {Array} props.editPhotos - Array of photo objects to be edited.
+ * @param {Array} props.photos - Array of photo objects to be edited.
  * @param {string} props.palette - The ID of the currently selected palette.
  * @param {Object} props.frame - The frame object to apply to the photo.
  * @param {string} props.username - The username associated with the photos (used for export filename).
  */
-const EditModal = ({ editPhotos, palette, frame, username }) => {
+const EditModal = ({ photos, palette, frame, username }) => {
     const { settings } = useSettings();
     const [effect, setEffect] = useState('none');
     const [color, setColor] = useState(0);
@@ -31,10 +31,10 @@ const EditModal = ({ editPhotos, palette, frame, username }) => {
     useEffect(() => {
         setRgbBrightness(0);
         setRgbContrast(0);
-    }, [editPhotos]);
+    }, [photos]);
 
-    const { editedPhoto, setEditedPhoto, drawHandlers } = useCanvasDrawer(
-        editPhotos ? editPhotos[0] : null,
+    const { drawPhoto, setDrawPhoto, drawHandlers } = useCanvasDrawer(
+        photos ? photos[0] : null,
         frame,
         color,
         brushSize
@@ -43,11 +43,11 @@ const EditModal = ({ editPhotos, palette, frame, username }) => {
     const isRgb = montageType === 'rgb';
 
     useEffectApplier(
-        editPhotos ? editPhotos : null,
-        editedPhoto,
+        photos ? photos : null,
         effect,
         isRgb ? 'none' : montageType,
-        setEditedPhoto
+        drawPhoto,
+        setDrawPhoto
     );
 
     const saveCanvasRef = useRef(null);
@@ -60,7 +60,7 @@ const EditModal = ({ editPhotos, palette, frame, username }) => {
         settings.exportQuality
     );
 
-    const montageOptions = getAvailableMontageTypes(editPhotos?.length).map((opt) => (
+    const montageOptions = getAvailableMontageTypes(photos?.length).map((opt) => (
         <option
             key={opt}
             value={opt}
@@ -84,9 +84,9 @@ const EditModal = ({ editPhotos, palette, frame, username }) => {
             <div className={styles.photo}>
                 <div className={styles.scale}>
                     <Photo
-                        photo={editedPhoto}
-                        photoG={isRgb && editPhotos?.length >= 1 ? editPhotos[1] : undefined}
-                        photoB={isRgb && editPhotos?.length >= 2 ? editPhotos[2] : undefined}
+                        photo={drawPhoto}
+                        photoG={isRgb && photos?.length >= 1 ? photos[1] : undefined}
+                        photoB={isRgb && photos?.length >= 2 ? photos[2] : undefined}
                         paletteId={palette}
                         frame={frame}
                         scaleFactor={4}
@@ -188,7 +188,7 @@ const EditModal = ({ editPhotos, palette, frame, username }) => {
                         <option value="6">6</option>
                     </select>
                 </label>
-                {editPhotos?.length > 1 ? (
+                {photos?.length > 1 ? (
                     <label>
                         Montage:
                         <select
@@ -197,12 +197,12 @@ const EditModal = ({ editPhotos, palette, frame, username }) => {
                             onChange={(e) => setMontageType(e.target.value)}
                         >
                             {montageOptions}
-                            {editPhotos.length > 2 ? <option value="rgb">rgb</option> : null}
+                            {photos.length > 2 ? <option value="rgb">rgb</option> : null}
                         </select>
                     </label>
                 ) : null}
 
-                {editPhotos?.length > 2 && isRgb ? (
+                {photos?.length > 2 && isRgb ? (
                     <>
                         <label>
                             Brightness: {Math.round(rgbBrightness * 20)}
@@ -238,7 +238,7 @@ const EditModal = ({ editPhotos, palette, frame, username }) => {
 export default EditModal;
 
 EditModal.propTypes = {
-    editPhotos: PropTypes.object,
+    photos: PropTypes.object,
     palette: PropTypes.string,
     frame: PropTypes.object,
     username: PropTypes.string

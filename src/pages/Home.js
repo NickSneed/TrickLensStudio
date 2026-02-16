@@ -135,7 +135,7 @@ const Home = () => {
                 type="full"
             >
                 <EditModal
-                    editPhotos={editPhotos}
+                    photos={editPhotos}
                     palette={palette}
                     frame={frame}
                     username={saveData ? saveData.username : ''}

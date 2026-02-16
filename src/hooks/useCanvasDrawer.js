@@ -11,7 +11,7 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
  * @param {number} brushSize - The size of the drawing brush in pixels.
  */
 export const useCanvasDrawer = (initialPhoto, frame, color, brushSize) => {
-    const [editedPhoto, setEditedPhoto] = useState(initialPhoto);
+    const [drawPhoto, setDrawPhoto] = useState(initialPhoto);
     const [isDrawing, setIsDrawing] = useState(false);
 
     const getCoords = (e) => {
@@ -25,7 +25,7 @@ export const useCanvasDrawer = (initialPhoto, frame, color, brushSize) => {
     const drawOnCanvas = useCallback(
         (e) => {
             const canvas = e.currentTarget;
-            if (!canvas || !editedPhoto) return;
+            if (!canvas || !drawPhoto) return;
 
             // Calculate coordinates relative to the canvas element
             const rect = canvas.getBoundingClientRect();
@@ -44,7 +44,7 @@ export const useCanvasDrawer = (initialPhoto, frame, color, brushSize) => {
             const photoWidth = 128;
             const photoHeight = 112;
 
-            const newPixels = [...editedPhoto.pixels];
+            const newPixels = [...drawPhoto.pixels];
             const size = Number(brushSize);
 
             // Apply the brush to the pixel data
@@ -59,9 +59,9 @@ export const useCanvasDrawer = (initialPhoto, frame, color, brushSize) => {
                     }
                 }
             }
-            setEditedPhoto({ ...editedPhoto, pixels: newPixels });
+            setDrawPhoto({ ...drawPhoto, pixels: newPixels });
         },
-        [editedPhoto, frame, brushSize, color]
+        [drawPhoto, frame, brushSize, color]
     );
 
     const handleDrawStart = useCallback(
@@ -101,5 +101,5 @@ export const useCanvasDrawer = (initialPhoto, frame, color, brushSize) => {
         onMouseLeave: handleDrawEnd
     };
 
-    return { editedPhoto, setEditedPhoto, drawHandlers };
+    return { drawPhoto, setDrawPhoto, drawHandlers };
 };
