@@ -76,7 +76,7 @@ const Home = () => {
         return null;
     }).filter(Boolean);
 
-    allPhotos.sort((a, b) => a.index - b.index);
+    allPhotos.sort((a, b) => a.slot - b.slot);
 
     const activePhotos = allPhotos.filter((photo) => !photo.isDeleted);
     const deletedPhotos = allPhotos.filter((photo) => photo.isDeleted);
