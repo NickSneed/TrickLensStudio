@@ -153,6 +153,9 @@ const EditModal = ({ photos, palette, frame, username }) => {
                         <option value="zoom-h">zoom-h</option>
                         <option value="zoom-v">zoom-v</option>
                         <option value="tile">tile</option>
+                        <option value="flip-h">flip-h</option>
+                        <option value="flip-v">flip-v</option>
+                        <option value="flip-vh">flip-vh</option>
                     </select>
                 </label>
                 <label>
