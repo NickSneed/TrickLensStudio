@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import * as styles from './Modal.module.css';
 
+let openModalCount = 0;
+
 /**
  * Modal component for displaying content in an overlay.
  *
@@ -11,18 +13,25 @@ import * as styles from './Modal.module.css';
  * @param {string} props.title - The title displayed in the modal header.
  * @param {React.ReactNode} props.children - The content to display inside the modal.
  * @param {string} [props.type] - Optional type to adjust modal size ('small', 'full').
+ * @param {number} [props.zindex] - Optional z-index for the modal wrapper.
  */
-const Modal = ({ isOpen, setIsOpen, title, children, type }) => {
+const Modal = ({ isOpen, setIsOpen, title, children, type, zindex }) => {
     // Adds class to body to prevent scrolling
     useEffect(() => {
         if (isOpen) {
-            document.body.classList.add('modal-open');
-        } else {
-            document.body.classList.remove('modal-open');
+            openModalCount++;
+            if (openModalCount === 1) {
+                document.body.classList.add('modal-open');
+            }
         }
 
         return () => {
-            document.body.classList.remove('modal-open');
+            if (isOpen) {
+                openModalCount--;
+                if (openModalCount === 0) {
+                    document.body.classList.remove('modal-open');
+                }
+            }
         };
     }, [isOpen]);
 
@@ -31,8 +40,13 @@ const Modal = ({ isOpen, setIsOpen, title, children, type }) => {
             className={`${styles.modalwrapper} ${type === 'small' ? styles.small : ''} ${
                 type === 'full' ? styles.full : ''
             }`}
-            onClick={() => setIsOpen(false)}
-            style={{ display: isOpen ? 'flex' : 'none' }}
+            onClick={(e) => {
+                e.stopPropagation();
+                if (e.target === e.currentTarget) {
+                    setIsOpen(false);
+                }
+            }}
+            style={{ display: isOpen ? 'flex' : 'none', zIndex: zindex }}
         >
             <div
                 className={styles.modal}
@@ -40,7 +54,10 @@ const Modal = ({ isOpen, setIsOpen, title, children, type }) => {
             >
                 <button
                     className={`closeButton ${styles.close}`}
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(!isOpen);
+                    }}
                 >
                     x
                 </button>
@@ -56,7 +73,8 @@ Modal.propTypes = {
     setIsOpen: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     children: PropTypes.node,
-    type: PropTypes.string
+    type: PropTypes.string,
+    zindex: PropTypes.number
 };
 
 export default Modal;

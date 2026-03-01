@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
+import PaletteSelector from '../components/PaletteSelector.js';
 import * as styles from './EditModal.module.css';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 import { useEffectApplier } from '../hooks/useEffectApplier.js';
@@ -15,10 +16,11 @@ import { useSettings } from '../context/SettingsContext.js';
  * @param {Object} props - The component props.
  * @param {Array} props.photos - Array of photo objects to be edited.
  * @param {string} props.palette - The ID of the currently selected palette.
+ * @param {Function} props.setPalette - Function to update the selected palette.
  * @param {Object} props.frame - The frame object to apply to the photo.
  * @param {string} props.username - The username associated with the photos (used for export filename).
  */
-const EditModal = ({ photos, palette, frame, username }) => {
+const EditModal = ({ photos, palette, setPalette, frame, username }) => {
     const { settings } = useSettings();
 
     // State definitions for editing controls
@@ -243,6 +245,12 @@ const EditModal = ({ photos, palette, frame, username }) => {
                         </label>
                     </>
                 ) : null}
+                <div className={styles.paletteselector}>
+                    <PaletteSelector
+                        currentPalette={palette}
+                        onPaletteChange={setPalette}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -251,8 +259,9 @@ const EditModal = ({ photos, palette, frame, username }) => {
 export default EditModal;
 
 EditModal.propTypes = {
-    photos: PropTypes.object,
+    photos: PropTypes.array,
     palette: PropTypes.string,
+    setPalette: PropTypes.func,
     frame: PropTypes.object,
     username: PropTypes.string
 };

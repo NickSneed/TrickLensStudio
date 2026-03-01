@@ -38,6 +38,10 @@
     width: 100% !important;
 }
 
+.paletteselector {
+    width: calc(100% - 4px);
+}
+
 @media (min-width: 1280px) {
     .editWrapper {
         flex-direction: row;
@@ -52,5 +56,9 @@
         flex-shrink: 0;
         margin-left: 2em;
         padding-top: 0;
+    }
+
+    .paletteselector {
+        width: 100%;
     }
 }

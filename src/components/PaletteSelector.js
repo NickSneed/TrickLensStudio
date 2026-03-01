@@ -45,6 +45,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     setIsOpen={setIsOpen}
                     title="Palettes"
                     allowScroll={true}
+                    type="full"
                     zindex={8}
                 >
                     <div className={styles.dropdownContainer}>
