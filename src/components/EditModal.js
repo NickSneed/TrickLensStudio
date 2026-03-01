@@ -139,6 +139,27 @@ const EditModal = ({ photos, palette, setPalette, frame, username }) => {
                 </div>
             </div>
             <div className={styles.controls}>
+                <div className={styles.paletteselector}>
+                    <PaletteSelector
+                        currentPalette={palette}
+                        onPaletteChange={setPalette}
+                    />
+                </div>
+                <label>
+                    Palette Order:
+                    <select
+                        className={styles.select}
+                        value={paletteOrder}
+                        onChange={(e) => setPaletteOrder(e.target.value)}
+                    >
+                        <option value="normal">normal</option>
+                        <option value="i">invert</option>
+                        <option value="pa">a</option>
+                        <option value="pb">b</option>
+                        <option value="pc">c</option>
+                        <option value="pd">d</option>
+                    </select>
+                </label>
                 <label>
                     Trick Lenses:
                     <select
@@ -161,22 +182,7 @@ const EditModal = ({ photos, palette, setPalette, frame, username }) => {
                     </select>
                 </label>
                 <label>
-                    Palette Order:
-                    <select
-                        className={styles.select}
-                        value={paletteOrder}
-                        onChange={(e) => setPaletteOrder(e.target.value)}
-                    >
-                        <option value="normal">normal</option>
-                        <option value="i">invert</option>
-                        <option value="pa">a</option>
-                        <option value="pb">b</option>
-                        <option value="pc">c</option>
-                        <option value="pd">d</option>
-                    </select>
-                </label>
-                <label>
-                    Color:
+                    Brush Color:
                     <select
                         className={styles.select}
                         value={color}
@@ -245,12 +251,6 @@ const EditModal = ({ photos, palette, setPalette, frame, username }) => {
                         </label>
                     </>
                 ) : null}
-                <div className={styles.paletteselector}>
-                    <PaletteSelector
-                        currentPalette={palette}
-                        onPaletteChange={setPalette}
-                    />
-                </div>
             </div>
         </div>
     );

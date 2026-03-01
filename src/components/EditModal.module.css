@@ -39,6 +39,7 @@
 }
 
 .paletteselector {
+    padding: 0 0 1em;
     width: calc(100% - 4px);
 }
 
