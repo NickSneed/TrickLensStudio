@@ -118,9 +118,10 @@ button {
     font-size: inherit;
     font-family: var(--f-regular);
     height: 3.5em;
+    margin: 0 4px;
     padding: 0.8em 0.8em 1.5em 0.8em;
     position: relative;
-    width: 100%;
+    width: calc(100% - 8px);
 }
 
 .button:after {

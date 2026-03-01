@@ -16,13 +16,12 @@
 
 .photo button {
     margin: 0 auto 0;
-    max-width: 13em;
 }
 
 .controls {
     display: flex;
     flex-direction: column;
-    padding: 2em 0 0;
+    padding: 0.5em 0 0;
 }
 
 .select,
@@ -40,7 +39,6 @@
 
 .paletteselector {
     padding: 0 0 1em;
-    width: calc(100% - 4px);
 }
 
 @media (min-width: 1280px) {
@@ -59,7 +57,7 @@
         padding-top: 0;
     }
 
-    .paletteselector {
-        width: 100%;
+    .photo button {
+        max-width: 16em;
     }
 }
