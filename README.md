@@ -31,6 +31,7 @@ When editing a photo, you can select additional photos to create a montage.
 
 ## To do
 
+- Add bulk export
 - Fix effects and drawing when applying rgb
 - Use arrow keys to switch edit photo
 - Add color picker for palettes
@@ -38,4 +39,5 @@ When editing a photo, you can select additional photos to create a montage.
 - Add undo to the pixel editor
 - Add percise cursor
 - Add stamps
+- Add frame change to edit modal
 - Add help docs
