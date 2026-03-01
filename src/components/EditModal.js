@@ -20,8 +20,9 @@ import { useSettings } from '../context/SettingsContext.js';
  * @param {Object} props.frame - The frame object to apply to the photo.
  * @param {string} props.username - The username associated with the photos (used for export filename).
  */
-const EditModal = ({ photos, palette, setPalette, frame, username }) => {
+const EditModal = ({ photos, palette, frame, username }) => {
     const { settings } = useSettings();
+    const [localPalette, setLocalPalette] = useState(palette);
 
     // State definitions for editing controls
     const [effect, setEffect] = useState('none'); // Current trick lens effect
@@ -32,11 +33,12 @@ const EditModal = ({ photos, palette, setPalette, frame, username }) => {
     const [rgbBrightness, setRgbBrightness] = useState(0); // Brightness for RGB mode
     const [rgbContrast, setRgbContrast] = useState(0); // Contrast for RGB mode
 
-    // Reset RGB settings when photos change
+    // Reset RGB settings and palette when photos change
     useEffect(() => {
         setRgbBrightness(0);
         setRgbContrast(0);
-    }, [photos]);
+        setLocalPalette(palette);
+    }, [photos, palette]);
 
     // Initialize canvas drawing hook
     const { drawPhoto, setDrawPhoto, drawHandlers } = useCanvasDrawer(
@@ -65,7 +67,7 @@ const EditModal = ({ photos, palette, setPalette, frame, username }) => {
     const { handleExport, handleShare } = usePhotoExporter(
         saveCanvasRef,
         username,
-        palette,
+        localPalette,
         settings.exportFormat,
         settings.exportQuality
     );
@@ -99,7 +101,7 @@ const EditModal = ({ photos, palette, setPalette, frame, username }) => {
                         photo={drawPhoto}
                         photoG={isRgb && photos?.length >= 1 ? photos[1] : undefined}
                         photoB={isRgb && photos?.length >= 2 ? photos[2] : undefined}
-                        paletteId={palette}
+                        paletteId={localPalette}
                         frame={frame}
                         scaleFactor={4}
                         isScale={true}
@@ -141,8 +143,8 @@ const EditModal = ({ photos, palette, setPalette, frame, username }) => {
             <div className={styles.controls}>
                 <div className={styles.paletteselector}>
                     <PaletteSelector
-                        currentPalette={palette}
-                        onPaletteChange={setPalette}
+                        currentPalette={localPalette}
+                        onPaletteChange={setLocalPalette}
                     />
                 </div>
                 <label>
@@ -261,7 +263,6 @@ export default EditModal;
 EditModal.propTypes = {
     photos: PropTypes.array,
     palette: PropTypes.string,
-    setPalette: PropTypes.func,
     frame: PropTypes.object,
     username: PropTypes.string
 };

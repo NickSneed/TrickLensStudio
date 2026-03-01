@@ -137,7 +137,6 @@ const Home = () => {
                 <EditModal
                     photos={editPhotos}
                     palette={palette}
-                    setPalette={setPalette}
                     frame={frame}
                     username={saveData ? saveData.username : ''}
                 />
