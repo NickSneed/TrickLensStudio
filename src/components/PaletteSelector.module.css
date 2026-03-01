@@ -38,6 +38,25 @@
     text-align: center;
 }
 
+.paletteicon {
+    border: 2px solid var(--c-black);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 1.9em;
+    margin-top: 2px;
+    position: absolute;
+    right: 0.5em;
+    top: 0.1em;
+    width: 1.9em;
+}
+
+.paletteselector {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    padding-right: 3.5em;
+}
+
 @media (min-width: 700px) {
     .dropdownContainer {
         display: grid;

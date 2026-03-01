@@ -20,13 +20,25 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         setIsOpen(false); // Close the selector after choosing a palette
     };
 
+    const currentColors = palettes[currentPalette]?.colors || [];
+
     return (
         <>
             <div>
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="button"
-                >{`Palette: ${currentPalette}`}</button>
+                    className={`${styles.paletteselector} button`}
+                >
+                    Palette
+                    <div className={styles.paletteicon}>
+                        {currentColors.map((c, index) => (
+                            <div
+                                key={index}
+                                style={{ backgroundColor: `rgb(${c.r},${c.g},${c.b})` }}
+                            />
+                        ))}
+                    </div>
+                </button>
 
                 <Modal
                     isOpen={isOpen}
