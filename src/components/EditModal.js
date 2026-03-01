@@ -26,17 +26,21 @@ const EditModal = ({ photos, palette, frame, username }) => {
 
     // State definitions for editing controls
     const [effect, setEffect] = useState('none'); // Current trick lens effect
-    const [color, setColor] = useState(0); // Brush color index
+    const [brushColor, setBrushColor] = useState(0); // Brush color index
     const [brushSize, setBrushSize] = useState(1); // Brush size
     const [montageType, setMontageType] = useState('none'); // Selected montage layout
     const [paletteOrder, setPaletteOrder] = useState('normal'); // Palette color mapping order
     const [rgbBrightness, setRgbBrightness] = useState(0); // Brightness for RGB mode
     const [rgbContrast, setRgbContrast] = useState(0); // Contrast for RGB mode
 
-    // Reset RGB settings and palette when photos change
+    // Reset settings when the edit modal opens
     useEffect(() => {
+        setEffect('none');
+        setBrushColor(0);
+        setBrushSize(1);
         setRgbBrightness(0);
         setRgbContrast(0);
+        setPaletteOrder('normal');
         setLocalPalette(palette);
     }, [photos, palette]);
 
@@ -44,7 +48,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
     const { drawPhoto, setDrawPhoto, drawHandlers } = useCanvasDrawer(
         photos ? photos[0] : null,
         frame,
-        color,
+        brushColor,
         brushSize
     );
 
@@ -187,8 +191,8 @@ const EditModal = ({ photos, palette, frame, username }) => {
                     Brush Color:
                     <select
                         className={styles.select}
-                        value={color}
-                        onChange={(e) => setColor(e.target.value)}
+                        value={brushColor}
+                        onChange={(e) => setBrushColor(e.target.value)}
                     >
                         <option value="0">Lightest</option>
                         <option value="1">Light</option>

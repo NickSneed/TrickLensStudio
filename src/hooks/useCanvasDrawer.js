@@ -7,10 +7,10 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
  *
  * @param {Object} initialPhoto - The starting photo data.
  * @param {Object} frame - The current frame (used for offset calculations).
- * @param {number} color - The color index to draw with (0-3).
+ * @param {number} brushColor - The color index to draw with (0-3).
  * @param {number} brushSize - The size of the drawing brush in pixels.
  */
-export const useCanvasDrawer = (initialPhoto, frame, color, brushSize) => {
+export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     const [drawPhoto, setDrawPhoto] = useState(initialPhoto);
     const [isDrawing, setIsDrawing] = useState(false);
 
@@ -55,13 +55,13 @@ export const useCanvasDrawer = (initialPhoto, frame, color, brushSize) => {
                     // Ensure drawing stays within photo bounds
                     if (drawX >= 0 && drawX < photoWidth && drawY >= 0 && drawY < photoHeight) {
                         const index = drawY * photoWidth + drawX;
-                        newPixels[index] = Number(color);
+                        newPixels[index] = Number(brushColor);
                     }
                 }
             }
             setDrawPhoto({ ...drawPhoto, pixels: newPixels });
         },
-        [drawPhoto, frame, brushSize, color]
+        [drawPhoto, frame, brushSize, brushColor]
     );
 
     const handleDrawStart = useCallback(
