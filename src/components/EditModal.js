@@ -42,6 +42,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setRgbContrast(0);
         setPaletteOrder('normal');
         setLocalPalette(palette);
+        setMontageType('none');
     }, [photos, palette]);
 
     // Initialize canvas drawing hook
