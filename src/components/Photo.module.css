@@ -2,3 +2,7 @@
     margin: 0;
     object-fit: contain;
 }
+
+.drawcanvas {
+    touch-action: none;
+}

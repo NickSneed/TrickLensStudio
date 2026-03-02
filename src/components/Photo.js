@@ -89,7 +89,7 @@ const Photo = ({
     // Return canvas
     return (
         <canvas
-            className={styles.canvas}
+            className={`${styles.canvas} ${drawHandlers?.onDrawStart ? styles.drawcanvas : ''}`}
             width={canvasWidth}
             height={canvasHeight}
             style={{
