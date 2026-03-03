@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import * as styles from './Modal.module.css';
 
 let openModalCount = 0;
@@ -15,7 +16,7 @@ let openModalCount = 0;
  * @param {string} [props.type] - Optional type to adjust modal size ('small', 'full').
  * @param {number} [props.zindex] - Optional z-index for the modal wrapper.
  */
-const Modal = ({ isOpen, setIsOpen, title, children, type, zindex }) => {
+const Modal = ({ isOpen, setIsOpen, title, children, type, zindex = 3 }) => {
     const scrollRef = useRef(null);
 
     // Adds class to body to prevent scrolling and scrolls modal to top on open
@@ -41,18 +42,21 @@ const Modal = ({ isOpen, setIsOpen, title, children, type, zindex }) => {
         };
     }, [isOpen]);
 
-    return (
+    return createPortal(
         <div
-            className={`${styles.modalwrapper} ${type === 'small' ? styles.small : ''} ${
-                type === 'full' ? styles.full : ''
-            }`}
+            className={`
+                ${styles.modalwrapper} 
+                ${type === 'small' ? styles.small : ''} 
+                ${type === 'full' ? styles.full : ''} 
+                ${isOpen ? styles.open : ''}
+            `}
             onClick={(e) => {
                 e.stopPropagation();
                 if (e.target === e.currentTarget) {
                     setIsOpen(false);
                 }
             }}
-            style={{ display: isOpen ? 'flex' : 'none', zIndex: zindex }}
+            style={{ zIndex: zindex }}
         >
             <div
                 className={styles.modal}
@@ -75,7 +79,8 @@ const Modal = ({ isOpen, setIsOpen, title, children, type, zindex }) => {
                     {children}
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 
