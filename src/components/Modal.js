@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import * as styles from './Modal.module.css';
 
 let openModalCount = 0;
@@ -16,12 +16,18 @@ let openModalCount = 0;
  * @param {number} [props.zindex] - Optional z-index for the modal wrapper.
  */
 const Modal = ({ isOpen, setIsOpen, title, children, type, zindex }) => {
-    // Adds class to body to prevent scrolling
+    const scrollRef = useRef(null);
+
+    // Adds class to body to prevent scrolling and scrolls modal to top on open
     useEffect(() => {
         if (isOpen) {
             openModalCount++;
             if (openModalCount === 1) {
                 document.body.classList.add('modal-open');
+            }
+
+            if (scrollRef.current) {
+                scrollRef.current.scrollTop = 0;
             }
         }
 
@@ -62,7 +68,12 @@ const Modal = ({ isOpen, setIsOpen, title, children, type, zindex }) => {
                     x
                 </button>
                 <h2>{title}</h2>
-                <div className={styles.modalscroll}>{children}</div>
+                <div
+                    ref={scrollRef}
+                    className={styles.modalscroll}
+                >
+                    {children}
+                </div>
             </div>
         </div>
     );
