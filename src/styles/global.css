@@ -62,22 +62,34 @@ body[data-theme='dark'] {
     font-display: swap;
 }
 
+html {
+    overflow: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
 html,
 body {
-    scrollbar-gutter: stable !important;
+    margin: 0;
+    padding: 0;
 }
 
 body {
+    scrollbar-gutter: stable !important;
     background-color: var(--c-background);
     color: var(--c-copy);
     font-family: sans-serif;
     font-size: 16px;
     font-weight: normal;
-    padding: 20px 10px;
     font-family: var(--f-regular);
     font-weight: 400;
     font-style: normal;
+    height: 100%;
     letter-spacing: 0;
+    overflow-y: scroll;
+    position: fixed;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
 }
 
 div {
@@ -198,10 +210,15 @@ label {
 }
 
 .photoGrid {
-    padding: 0 0 19em;
+    padding: 2em 1.5em 18em;
     display: grid;
     column-gap: 0.4em;
     row-gap: 1em;
+
+    @media (min-width: 1280px) {
+        padding: 4em 3em 8em;
+        column-gap: 1em;
+    }
 }
 
 .mainMessage {
@@ -216,20 +233,11 @@ label {
     top: 0;
     width: 100%;
     z-index: 1;
-}
 
-@media (min-width: 1280px) {
-    body {
-        padding: 40px 20px;
-    }
-
-    .mainMessage {
-        height: 100%;
-    }
-
-    .photoGrid {
-        padding: 0 0 6em;
-        column-gap: 1em;
+    @media (min-width: 1280px) {
+        .mainMessage {
+            height: 100%;
+        }
     }
 }
 
