@@ -123,14 +123,6 @@ const EditModal = ({ photos, palette, frame, username }) => {
                         rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
                     />
                     <div>
-                        {handleExport && !isIOS ? (
-                            <button
-                                className="button"
-                                onClick={handleExport}
-                            >
-                                Export<span> as {settings.exportFormat.toUpperCase()}</span>
-                            </button>
-                        ) : null}
                         {handleShare &&
                         isIOS &&
                         typeof navigator !== 'undefined' &&
@@ -141,7 +133,14 @@ const EditModal = ({ photos, palette, frame, username }) => {
                             >
                                 Share
                             </button>
-                        ) : null}
+                        ) : (
+                            <button
+                                className="button"
+                                onClick={handleExport}
+                            >
+                                Export<span> as {settings.exportFormat.toUpperCase()}</span>
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
