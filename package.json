@@ -21,7 +21,7 @@
         "@babel/preset-react": "^7.26.3",
         "babel-loader": "^9.2.1",
         "console-clear": "^1.1.1",
-        "copy-webpack-plugin": "^13.0.1",
+        "copy-webpack-plugin": "^14.0.0",
         "css-loader": "^7.1.2",
         "eslint": "^9.25.1",
         "eslint-plugin-react": "^7.37.5",
