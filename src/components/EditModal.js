@@ -8,6 +8,8 @@ import { useEffectApplier } from '../hooks/useEffectApplier.js';
 import { getAvailableMontageTypes } from '../utils/montageUtils.js';
 import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 import { useSettings } from '../context/SettingsContext.js';
+import { convertFrameToData } from '../utils/canvasUtils.js';
+import FileLoader from '../components/FileLoader.js';
 
 /**
  * EditModal component allows users to edit, apply effects, and export photos.
@@ -23,6 +25,7 @@ import { useSettings } from '../context/SettingsContext.js';
 const EditModal = ({ photos, palette, frame, username }) => {
     const { settings } = useSettings();
     const [localPalette, setLocalPalette] = useState(palette);
+    const [localFrame, setLocalFrame] = useState(frame);
 
     // State definitions for editing controls
     const [effect, setEffect] = useState('none'); // Current trick lens effect
@@ -43,6 +46,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setPaletteOrder('normal');
         setLocalPalette(palette);
         setMontageType('none');
+        setLocalFrame(frame);
     }, [photos, palette]);
 
     // Initialize canvas drawing hook
@@ -87,6 +91,13 @@ const EditModal = ({ photos, palette, frame, username }) => {
         </option>
     ));
 
+    // Set the local frame
+    const loadFrame = async ({ data, name }) => {
+        const frameData = await convertFrameToData(data);
+        const newFrame = { ...frameData, name };
+        setLocalFrame(newFrame);
+    };
+
     // Detect iOS devices to conditionally show the Share button
     const isIOS = useMemo(
         () =>
@@ -107,7 +118,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
                         photoG={isRgb && photos?.length >= 1 ? photos[1] : undefined}
                         photoB={isRgb && photos?.length >= 2 ? photos[2] : undefined}
                         paletteId={localPalette}
-                        frame={frame}
+                        frame={localFrame}
                         scaleFactor={4}
                         isScale={true}
                         drawHandlers={drawHandlers}
@@ -122,35 +133,37 @@ const EditModal = ({ photos, palette, frame, username }) => {
                         saveRef={saveCanvasRef}
                         rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
                     />
-                    <div>
-                        {handleShare &&
-                        isIOS &&
-                        typeof navigator !== 'undefined' &&
-                        navigator.share ? (
-                            <button
-                                className="button"
-                                onClick={handleShare}
-                            >
-                                Share
-                            </button>
-                        ) : (
-                            <button
-                                className="button"
-                                onClick={handleExport}
-                            >
-                                Export<span> as {settings.exportFormat.toUpperCase()}</span>
-                            </button>
-                        )}
-                    </div>
+                    {handleShare && isIOS && typeof navigator !== 'undefined' && navigator.share ? (
+                        <button
+                            className="button"
+                            onClick={handleShare}
+                        >
+                            Share
+                        </button>
+                    ) : (
+                        <button
+                            className="button"
+                            onClick={handleExport}
+                        >
+                            Export<span> as {settings.exportFormat.toUpperCase()}</span>
+                        </button>
+                    )}
                 </div>
             </div>
             <div className={styles.controls}>
-                <div className={styles.paletteselector}>
-                    <PaletteSelector
-                        currentPalette={localPalette}
-                        onPaletteChange={setLocalPalette}
-                    />
-                </div>
+                <FileLoader
+                    text="Select frame &hellip;"
+                    onChange={loadFrame}
+                    onRemove={() => {
+                        setLocalFrame(null);
+                    }}
+                    showRemove={frame ? true : false}
+                    accept=".png"
+                />
+                <PaletteSelector
+                    currentPalette={localPalette}
+                    onPaletteChange={setLocalPalette}
+                />
                 <label>
                     Palette Order:
                     <select

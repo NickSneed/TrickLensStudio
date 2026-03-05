@@ -36,8 +36,8 @@
     width: 100% !important;
 }
 
-.paletteselector {
-    padding: 0 0 1em;
+.controls :global(.button) {
+    margin-bottom: 1em;
 }
 
 @media (min-width: 1280px) {
@@ -50,7 +50,7 @@
     }
 
     .controls {
-        flex-basis: 200px;
+        flex-basis: 260px;
         flex-shrink: 0;
         margin-left: 2em;
         padding-top: 0;
