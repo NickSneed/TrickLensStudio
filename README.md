@@ -39,5 +39,4 @@ When editing a photo, you can select additional photos to create a montage.
 - Add undo to the pixel editor
 - Add percise cursor
 - Add stamps
-- Add frame change to edit modal
 - Add help docs
