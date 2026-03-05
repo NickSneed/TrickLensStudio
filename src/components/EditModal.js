@@ -52,7 +52,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
     // Initialize canvas drawing hook
     const { drawPhoto, setDrawPhoto, drawHandlers } = useCanvasDrawer(
         photos ? photos[0] : null,
-        frame,
+        localFrame,
         brushColor,
         brushSize
     );
