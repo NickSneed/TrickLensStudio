@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { getFrameOffsets } from '../utils/frameUtils.js';
 
 /**
@@ -11,8 +11,18 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
  * @param {number} brushSize - The size of the drawing brush in pixels.
  */
 export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
-    const [drawPhoto, setDrawPhoto] = useState(initialPhoto);
+    const [drawPhoto, setDrawPhoto] = useState(initialPhoto); // The "saved" photo state
+    const [previewPhoto, setPreviewPhoto] = useState(initialPhoto); // The photo state for rendering, including hover previews
     const [isDrawing, setIsDrawing] = useState(false);
+
+    useEffect(() => {
+        setDrawPhoto(initialPhoto);
+        setPreviewPhoto(initialPhoto);
+    }, [initialPhoto]);
+
+    useEffect(() => {
+        setPreviewPhoto(drawPhoto);
+    }, [drawPhoto]);
 
     const getCoords = (e) => {
         // Normalizes touch and mouse coordinates
@@ -22,12 +32,11 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
         return { x: e.clientX, y: e.clientY };
     };
 
-    const drawOnCanvas = useCallback(
+    const getCanvasRelativeCoords = useCallback(
         (e) => {
             const canvas = e.currentTarget;
-            if (!canvas || !drawPhoto) return;
+            if (!canvas) return null;
 
-            // Calculate coordinates relative to the canvas element
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
@@ -37,21 +46,27 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
             const y = (clientY - rect.top) * scaleY;
             const scale = 8; // Internal scaling factor for the Game Boy resolution
 
-            // Adjust for frame borders to find the actual photo coordinates
             const offsets = getFrameOffsets(frame);
             const unscaledX = Math.floor(x / scale - offsets.left);
             const unscaledY = Math.floor(y / scale - offsets.top);
+            return { unscaledX, unscaledY };
+        },
+        [frame]
+    );
+
+    const applyBrush = useCallback(
+        (pixels, x, y) => {
             const photoWidth = 128;
             const photoHeight = 112;
 
-            const newPixels = [...drawPhoto.pixels];
+            const newPixels = [...pixels];
             const size = Number(brushSize);
 
             // Apply the brush to the pixel data
             for (let i = 0; i < size; i++) {
                 for (let j = 0; j < size; j++) {
-                    const drawX = unscaledX + i;
-                    const drawY = unscaledY + j;
+                    const drawX = x + i;
+                    const drawY = y + j;
                     // Ensure drawing stays within photo bounds
                     if (drawX >= 0 && drawX < photoWidth && drawY >= 0 && drawY < photoHeight) {
                         const index = drawY * photoWidth + drawX;
@@ -59,9 +74,35 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
                     }
                 }
             }
+            return newPixels;
+        },
+        [brushColor, brushSize]
+    );
+
+    const drawOnCanvas = useCallback(
+        (e) => {
+            if (!drawPhoto) return;
+            const coords = getCanvasRelativeCoords(e);
+            if (!coords) return;
+            const { unscaledX, unscaledY } = coords;
+
+            const newPixels = applyBrush(drawPhoto.pixels, unscaledX, unscaledY);
             setDrawPhoto({ ...drawPhoto, pixels: newPixels });
         },
-        [drawPhoto, frame, brushSize, brushColor]
+        [drawPhoto, getCanvasRelativeCoords, applyBrush]
+    );
+
+    const handleHover = useCallback(
+        (e) => {
+            if (!drawPhoto) return;
+            const coords = getCanvasRelativeCoords(e);
+            if (!coords) return;
+            const { unscaledX, unscaledY } = coords;
+
+            const newPixels = applyBrush(drawPhoto.pixels, unscaledX, unscaledY);
+            setPreviewPhoto({ ...drawPhoto, pixels: newPixels });
+        },
+        [drawPhoto, getCanvasRelativeCoords, applyBrush]
     );
 
     const handleDrawStart = useCallback(
@@ -82,9 +123,11 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
             }
             if (isDrawing) {
                 drawOnCanvas(e);
+            } else {
+                handleHover(e);
             }
         },
-        [isDrawing, drawOnCanvas]
+        [isDrawing, drawOnCanvas, handleHover]
     );
 
     const handleDrawEnd = useCallback((e) => {
@@ -94,12 +137,19 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
         setIsDrawing(false);
     }, []);
 
+    const handleMouseLeave = useCallback(() => {
+        setIsDrawing(false);
+        if (drawPhoto) {
+            setPreviewPhoto(drawPhoto);
+        }
+    }, [drawPhoto]);
+
     const drawHandlers = {
         onDrawStart: handleDrawStart,
         onDrawMove: handleDrawMove,
         onDrawEnd: handleDrawEnd,
-        onMouseLeave: handleDrawEnd
+        onMouseLeave: handleMouseLeave
     };
 
-    return { drawPhoto, setDrawPhoto, drawHandlers };
+    return { drawPhoto, photoToRender: previewPhoto, setDrawPhoto, drawHandlers };
 };

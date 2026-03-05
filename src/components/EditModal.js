@@ -50,7 +50,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
     }, [photos, palette]);
 
     // Initialize canvas drawing hook
-    const { drawPhoto, setDrawPhoto, drawHandlers } = useCanvasDrawer(
+    const { drawPhoto, photoToRender, setDrawPhoto, drawHandlers } = useCanvasDrawer(
         photos ? photos[0] : null,
         localFrame,
         brushColor,
@@ -114,7 +114,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
             <div className={styles.photo}>
                 <div className={styles.scale}>
                     <Photo
-                        photo={drawPhoto}
+                        photo={photoToRender}
                         photoG={isRgb && photos?.length >= 1 ? photos[1] : undefined}
                         photoB={isRgb && photos?.length >= 2 ? photos[2] : undefined}
                         paletteId={localPalette}
