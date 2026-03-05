@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { getFrameOffsets } from '../utils/frameUtils.js';
 
 /**
@@ -14,6 +14,13 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     const [drawPhoto, setDrawPhoto] = useState(initialPhoto); // The "saved" photo state
     const [previewPhoto, setPreviewPhoto] = useState(initialPhoto); // The photo state for rendering, including hover previews
     const [isDrawing, setIsDrawing] = useState(false);
+    const requestRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         setDrawPhoto(initialPhoto);
@@ -59,7 +66,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
             const photoWidth = 128;
             const photoHeight = 112;
 
-            const newPixels = [...pixels];
+            const newPixels = new Uint8Array(pixels);
             const size = Number(brushSize);
 
             // Apply the brush to the pixel data
@@ -92,19 +99,6 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
         [drawPhoto, getCanvasRelativeCoords, applyBrush]
     );
 
-    const handleHover = useCallback(
-        (e) => {
-            if (!drawPhoto) return;
-            const coords = getCanvasRelativeCoords(e);
-            if (!coords) return;
-            const { unscaledX, unscaledY } = coords;
-
-            const newPixels = applyBrush(drawPhoto.pixels, unscaledX, unscaledY);
-            setPreviewPhoto({ ...drawPhoto, pixels: newPixels });
-        },
-        [drawPhoto, getCanvasRelativeCoords, applyBrush]
-    );
-
     const handleDrawStart = useCallback(
         (e) => {
             if (e.cancelable) {
@@ -121,13 +115,24 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
             if (e.cancelable) {
                 e.preventDefault();
             }
-            if (isDrawing) {
-                drawOnCanvas(e);
-            } else {
-                handleHover(e);
-            }
+
+            if (requestRef.current) return;
+
+            const coords = getCanvasRelativeCoords(e);
+            if (!coords || !drawPhoto) return;
+
+            requestRef.current = requestAnimationFrame(() => {
+                requestRef.current = null;
+                const { unscaledX, unscaledY } = coords;
+                const newPixels = applyBrush(drawPhoto.pixels, unscaledX, unscaledY);
+                if (isDrawing) {
+                    setDrawPhoto({ ...drawPhoto, pixels: newPixels });
+                } else {
+                    setPreviewPhoto({ ...drawPhoto, pixels: newPixels });
+                }
+            });
         },
-        [isDrawing, drawOnCanvas, handleHover]
+        [isDrawing, drawPhoto, getCanvasRelativeCoords, applyBrush]
     );
 
     const handleDrawEnd = useCallback((e) => {
@@ -138,6 +143,10 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     }, []);
 
     const handleMouseLeave = useCallback(() => {
+        if (requestRef.current) {
+            cancelAnimationFrame(requestRef.current);
+            requestRef.current = null;
+        }
         setIsDrawing(false);
         if (drawPhoto) {
             setPreviewPhoto(drawPhoto);
