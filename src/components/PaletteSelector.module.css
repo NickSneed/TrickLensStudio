@@ -57,6 +57,10 @@
     padding-right: 3.5em;
 }
 
+.randombutton {
+    margin: 2em auto 1em;
+}
+
 @media (min-width: 700px) {
     .dropdownContainer {
         display: grid;

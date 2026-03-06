@@ -20,6 +20,14 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         setIsOpen(false); // Close the selector after choosing a palette
     };
 
+    const handleRandom = () => {
+        const paletteKeys = Object.keys(palettes);
+        const randomIndex = Math.floor(Math.random() * paletteKeys.length);
+        const randomPalette = paletteKeys[randomIndex];
+        onPaletteChange(randomPalette);
+        setIsOpen(false);
+    };
+
     const currentColors = palettes[currentPalette]?.colors || [];
 
     return (
@@ -83,6 +91,14 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 </label>
                             );
                         })}
+                    </div>
+                    <div className={styles.randombutton}>
+                        <button
+                            onClick={handleRandom}
+                            className="button"
+                        >
+                            Random
+                        </button>
                     </div>
                 </Modal>
             </div>
