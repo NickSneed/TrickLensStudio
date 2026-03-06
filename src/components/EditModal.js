@@ -157,7 +157,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
                     onRemove={() => {
                         setLocalFrame(null);
                     }}
-                    showRemove={frame ? true : false}
+                    showRemove={localFrame ? true : false}
                     accept=".png"
                 />
                 <PaletteSelector
