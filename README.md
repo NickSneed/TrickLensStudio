@@ -33,7 +33,7 @@ When editing a photo, you can select additional photos to create a montage.
 
 - Add bulk export
 - Fix effects and drawing when applying rgb
-- Use arrow keys to switch edit photo
+- Add hold shift while drawing
 - Add color picker for palettes
 - Add undo to the pixel editor
 - Add stamps

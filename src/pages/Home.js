@@ -88,6 +88,43 @@ const Home = () => {
 
     const photosToRender = [...activePhotos, ...deletedPhotos];
 
+    // Handler for arrow keys
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (editPhotos.length === 1) {
+                if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                    return;
+                }
+
+                const currentPhoto = editPhotos[0];
+                const currentIndex = photosToRender.findIndex(
+                    (p) => p.index === currentPhoto.index
+                );
+
+                if (currentIndex !== -1) {
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        const prevIndex =
+                            (currentIndex - 1 + photosToRender.length) % photosToRender.length;
+                        setEditPhotos([photosToRender[prevIndex]]);
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        const nextIndex = (currentIndex + 1) % photosToRender.length;
+                        setEditPhotos([photosToRender[nextIndex]]);
+                    }
+                }
+            }
+        };
+
+        if (editPhotos.length > 0) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [editPhotos, photosToRender]);
+
     return (
         <>
             {saveData ? (

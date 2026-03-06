@@ -96,7 +96,7 @@ const Photo = ({
                 padding: canvasPadding,
                 width: `${canvasWidth}px`,
                 height: `${canvasHeight}px`,
-                cursor: drawHandlers?.onDrawStart ? 'none' : 'default'
+                cursor: drawHandlers?.onDrawStart ? 'none' : 'pointer'
             }}
             ref={displayCanvasRef}
             onMouseDown={onDrawStart}
