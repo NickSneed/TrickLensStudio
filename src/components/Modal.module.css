@@ -47,6 +47,15 @@
     overflow: auto;
     max-height: 100%;
     padding: 0 1em;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.modalscrollinner {
+    margin: auto;
+    width: 100%;
 }
 
 @media (min-width: 1280px) {

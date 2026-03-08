@@ -61,6 +61,7 @@ const Modal = ({ isOpen, setIsOpen, title, children, type, zindex = 3 }) => {
             <div
                 className={styles.modal}
                 onClick={(e) => e.stopPropagation()}
+                style={{ display: 'flex', flexDirection: 'column' }}
             >
                 <button
                     className={`closeButton ${styles.close}`}
@@ -76,7 +77,7 @@ const Modal = ({ isOpen, setIsOpen, title, children, type, zindex = 3 }) => {
                     ref={scrollRef}
                     className={styles.modalscroll}
                 >
-                    {children}
+                    <div className={styles.modalscrollinner}>{children}</div>
                 </div>
             </div>
         </div>,
