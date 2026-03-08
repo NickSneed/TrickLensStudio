@@ -104,7 +104,7 @@ const ToolBar = forwardRef(
                             className="imgButton"
                             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                         >
-                            &#9965;
+                            (S)
                         </button>
                     </div>
                     <span className={`${styles.logo} fontBold`}>TrickLens Studio</span>

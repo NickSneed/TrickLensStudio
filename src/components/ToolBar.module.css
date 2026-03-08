@@ -39,7 +39,7 @@
 
 .settingsbutton {
     float: right;
-    margin: 0 10px;
+    margin: 0 0 0 10px;
     width: auto;
 }
 
@@ -49,8 +49,10 @@
     border: none;
     color: inherit;
     display: inline-block;
-    font-size: 40px;
-    height: 1em;
+    font-family: 'DogicaPixelBold', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    height: 1.8em;
     line-height: 1.1;
     padding: 0;
 }
