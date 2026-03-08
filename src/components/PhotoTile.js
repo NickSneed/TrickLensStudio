@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import * as styles from './PhotoTile.module.css';
 import Photo from './Photo.js';
+import { useSettings } from '../context/SettingsContext.js';
 
 /**
  * PhotoTile component renders a single photo within a tile layout.
@@ -37,6 +38,9 @@ function PhotoTile({
         return null;
     }
 
+    // Use the global settings context
+    const { settings } = useSettings();
+
     const canvasMarkup = (
         <>
             {photo.isDeleted && showDeletedFlag ? <div className={styles.deleted}>d</div> : null}
@@ -52,7 +56,7 @@ function PhotoTile({
     );
     return (
         <>
-            <div className={styles.phototile}>
+            <div className={`${settings.isAnimate ? 'shake' : ''} ${styles.phototile}`}>
                 {onClick ? (
                     <button
                         className={styles.canvasContainer}

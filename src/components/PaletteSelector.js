@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
 import Modal from './Modal.js';
+import { useSettings } from '../context/SettingsContext.js';
 
 /**
  * PaletteSelector component allows users to choose a color palette from a list.
@@ -14,6 +15,9 @@ import Modal from './Modal.js';
  */
 const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    // Use the global settings context
+    const { settings } = useSettings();
 
     const handleSelect = (paletteId) => {
         onPaletteChange(paletteId);
@@ -75,7 +79,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                         className={styles.radioInput}
                                     />
                                     <span
-                                        className={`${styles.swatchContainer} ${isSelected ? styles.selected : ''}`}
+                                        className={`${styles.swatchContainer} ${isSelected ? styles.selected : ''} ${settings.isAnimate ? 'shake' : ''}`}
                                     >
                                         {palette.map((c, index) => (
                                             <span

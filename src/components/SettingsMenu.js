@@ -104,6 +104,16 @@ const SettingsMenu = () => {
                 <span></span>
                 Show deleted
             </label>
+            <label className="pixel-checkbox">
+                <input
+                    type="checkbox"
+                    name="isAnimate"
+                    checked={settings.isAnimate}
+                    onChange={handleSettingChange}
+                />
+                <span></span>
+                Enable Animations
+            </label>
         </div>
     );
 };

@@ -16,7 +16,8 @@ export const SettingsProvider = ({ children }) => {
             isReversed: initialIsReversed === null ? false : initialIsReversed,
             exportFormat: getItem('exportFormat') || 'png',
             exportQuality: Number(getItem('exportQuality')) || 0.9,
-            theme: getItem('theme') || 'system'
+            theme: getItem('theme') || 'system',
+            isAnimate: getItem('isAnimate') || false
         };
     });
 
