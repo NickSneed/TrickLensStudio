@@ -24,6 +24,10 @@ const Home = () => {
 
     useEffect(() => {
         setSelectedPhotos([]);
+        setTimeout(() => {
+            window.scrollTo(0, 0);
+            document.body.scrollTo(0, 0);
+        }, 0);
     }, [saveData]);
 
     useEffect(() => {
