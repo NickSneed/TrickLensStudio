@@ -8,6 +8,7 @@ import {
     drawScaledImage,
     calculateBaseDimensions
 } from '../utils/imageProcessingUtils.js';
+import { isIOS } from '../utils/deviceUtils.js';
 
 /**
  * ImageEditor component provides a UI for uploading, previewing, and scaling PNG images.
@@ -90,6 +91,33 @@ const ImageEditor = () => {
         link.click();
     };
 
+    /**
+     * Triggers the Web Share API for the current canvas content.
+     */
+    const handleShare = () => {
+        if (!canvasRef.current || typeof navigator === 'undefined' || !navigator.share) return;
+
+        const baseName = fileName.replace(/\.[^/.]+$/, '');
+        const shareFileName = `${baseName}-${displayScale}x.png`;
+
+        canvasRef.current.toBlob(async (blob) => {
+            if (blob) {
+                const file = new File([blob], shareFileName, { type: 'image/png' });
+                try {
+                    await navigator.share({
+                        files: [file],
+                        title: shareFileName
+                    });
+                } catch (error) {
+                    // Ignore errors thrown when the user cancels the share dialog
+                    if (error.name !== 'AbortError') {
+                        console.error('Error sharing:', error);
+                    }
+                }
+            }
+        }, 'image/png');
+    };
+
     return (
         <>
             <button
@@ -162,12 +190,21 @@ const ImageEditor = () => {
                                 />
                             </div>
                             <div style={{ marginTop: '10px' }}>
-                                <button
-                                    className="button"
-                                    onClick={handleDownload}
-                                >
-                                    Save
-                                </button>
+                                {isIOS() && typeof navigator !== 'undefined' && navigator.share ? (
+                                    <button
+                                        className="button"
+                                        onClick={handleShare}
+                                    >
+                                        Share
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="button"
+                                        onClick={handleDownload}
+                                    >
+                                        Save
+                                    </button>
+                                )}
                             </div>
                         </>
                     )}

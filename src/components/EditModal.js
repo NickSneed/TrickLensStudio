@@ -10,6 +10,7 @@ import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 import { useSettings } from '../context/SettingsContext.js';
 import { convertFrameToData } from '../utils/canvasUtils.js';
 import FileLoader from '../components/FileLoader.js';
+import { isIOS } from '../utils/deviceUtils.js';
 
 /**
  * EditModal component allows users to edit, apply effects, and export photos.
@@ -98,17 +99,6 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setLocalFrame(newFrame);
     };
 
-    // Detect iOS devices to conditionally show the Share button
-    const isIOS = useMemo(
-        () =>
-            typeof navigator !== 'undefined' &&
-            (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                (navigator.userAgent.includes('Mac') &&
-                    typeof document !== 'undefined' &&
-                    'ontouchend' in document)),
-        []
-    );
-
     return (
         <div className={styles.editWrapper}>
             <div className={styles.photo}>
@@ -133,7 +123,10 @@ const EditModal = ({ photos, palette, frame, username }) => {
                         saveRef={saveCanvasRef}
                         rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
                     />
-                    {handleShare && isIOS && typeof navigator !== 'undefined' && navigator.share ? (
+                    {handleShare &&
+                    isIOS() &&
+                    typeof navigator !== 'undefined' &&
+                    navigator.share ? (
                         <button
                             className="button"
                             onClick={handleShare}
