@@ -1,9 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import { palettes } from 'tricklens-js';
 import Modal from './Modal.js';
 import FileLoader from './FileLoader.js';
 import PaletteSelector from './PaletteSelector.js';
 import * as styles from './ImageScaler.module.css';
+import {
+    analyzeImageColors,
+    drawScaledImage,
+    calculateBaseDimensions
+} from '../utils/imageProcessingUtils.js';
 
 /**
  * ImageScaler component provides a UI for uploading, previewing, and scaling PNG images.
@@ -28,117 +32,21 @@ const ImageScaler = () => {
             setColorIndexMap(null);
             return;
         }
-
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = baseDimensions.width;
-        tempCanvas.height = baseDimensions.height;
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCtx.imageSmoothingEnabled = false;
-        tempCtx.drawImage(image, 0, 0, baseDimensions.width, baseDimensions.height);
-
-        const imageData = tempCtx.getImageData(0, 0, baseDimensions.width, baseDimensions.height);
-        const data = imageData.data;
-
-        const uniqueColors = new Map();
-        for (let i = 0; i < data.length; i += 4) {
-            if (data[i + 3] === 0) continue; // Skip transparent pixels
-            const r = data[i],
-                g = data[i + 1],
-                b = data[i + 2];
-            const colorStr = `${r},${g},${b}`;
-            if (!uniqueColors.has(colorStr)) {
-                uniqueColors.set(colorStr, { r, g, b });
-            }
-        }
-
-        const colorsWithLuminance = Array.from(uniqueColors.values()).map((color) => ({
-            ...color,
-            luminance: 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b
-        }));
-
-        colorsWithLuminance.sort((a, b) => b.luminance - a.luminance); // Sort lightest to darkest
-
-        const newColorMap = new Map();
-        colorsWithLuminance.forEach((color, index) => {
-            const colorStr = `${color.r},${color.g},${color.b}`;
-            newColorMap.set(colorStr, index);
-        });
-
+        const newColorMap = analyzeImageColors(image, baseDimensions.width, baseDimensions.height);
         setColorIndexMap(newColorMap);
     }, [image, baseDimensions]);
 
     // Resizes the canvas drawing buffer and redraws the image whenever
     // the source image, scale factor, or palette changes.
     useEffect(() => {
-        if (!image || !canvasRef.current || !baseDimensions.width) return;
-
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-
-        // Calculate target internal resolution
-        const targetWidth = baseDimensions.width * displayScale;
-        const targetHeight = baseDimensions.height * displayScale;
-
-        // This changes the actual size of the image data (the drawing buffer)
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-
-        // Resizing a canvas resets the context state, so we must disable smoothing now
-        ctx.imageSmoothingEnabled = false;
-
-        let imageToDraw = image;
-
-        // Only apply palette if one is selected and the color map is ready
-        if (palette && colorIndexMap) {
-            // Create a temporary canvas to handle pixel manipulation at base resolution
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = baseDimensions.width;
-            tempCanvas.height = baseDimensions.height;
-            const tempCtx = tempCanvas.getContext('2d');
-            // Disable smoothing to preserve original pixel colors when downscaling
-            tempCtx.imageSmoothingEnabled = false;
-            tempCtx.drawImage(image, 0, 0, baseDimensions.width, baseDimensions.height);
-
-            // Apply palette coloring
-            const imageData = tempCtx.getImageData(
-                0,
-                0,
-                baseDimensions.width,
-                baseDimensions.height
-            );
-            const data = imageData.data;
-            // Safely get the palette, falling back to the first available one if the selected one is invalid.
-            const paletteObj = palettes[palette] || Object.values(palettes)[0];
-            const currentColors = paletteObj ? paletteObj.colors : null;
-
-            if (currentColors && currentColors.length >= 4) {
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i],
-                        g = data[i + 1],
-                        b = data[i + 2],
-                        a = data[i + 3];
-
-                    // If pixel is transparent, keep it that way
-                    if (a === 0) continue;
-
-                    const colorStr = `${r},${g},${b}`;
-                    const index = colorIndexMap.get(colorStr);
-
-                    if (index !== undefined && index < currentColors.length) {
-                        const color = currentColors[index];
-                        data[i] = color.r;
-                        data[i + 1] = color.g;
-                        data[i + 2] = color.b;
-                        data[i + 3] = 255; // Ensure full alpha
-                    }
-                }
-                tempCtx.putImageData(imageData, 0, 0);
-            }
-            imageToDraw = tempCanvas;
-        }
-
-        // Draw the original or processed image, stretched to the new internal resolution
-        ctx.drawImage(imageToDraw, 0, 0, targetWidth, targetHeight);
+        drawScaledImage(
+            canvasRef.current,
+            image,
+            baseDimensions,
+            displayScale,
+            palette,
+            colorIndexMap
+        );
     }, [image, displayScale, baseDimensions, palette, colorIndexMap]);
 
     /**
@@ -154,23 +62,7 @@ const ImageScaler = () => {
         const img = new Image();
         img.onload = () => {
             // Determine base dimensions based on aspect ratio
-            const aspectRatio = img.width / img.height;
-            const standardFrameAspectRatio = 160 / 144;
-            const noFrameAspectRatio = 128 / 112;
-            const wildFrameAspectRatio = 160 / 244;
-
-            const diffStandard = Math.abs(aspectRatio - standardFrameAspectRatio);
-            const diffNoFrame = Math.abs(aspectRatio - noFrameAspectRatio);
-            const diffWild = Math.abs(aspectRatio - wildFrameAspectRatio);
-
-            let newBaseDimensions;
-            if (diffWild < diffStandard && diffWild < diffNoFrame) {
-                newBaseDimensions = { width: 160, height: 244 };
-            } else if (diffStandard < diffNoFrame) {
-                newBaseDimensions = { width: 160, height: 144 };
-            } else {
-                newBaseDimensions = { width: 128, height: 112 };
-            }
+            const newBaseDimensions = calculateBaseDimensions(img.width, img.height);
 
             // Set the default scale to make the image 1280px wide
             if (newBaseDimensions.width > 0) {
