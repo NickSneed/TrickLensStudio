@@ -16,18 +16,19 @@ const ImageScaler = () => {
     const [displayScale, setDisplayScale] = useState(2);
     const [image, setImage] = useState(null);
     const [fileName, setFileName] = useState('');
+    const [baseDimensions, setBaseDimensions] = useState({ width: 0, height: 0 });
 
     // Resizes the canvas drawing buffer and redraws the image whenever
     // the source image or the scale factor changes.
     useEffect(() => {
-        if (!image || !canvasRef.current) return;
+        if (!image || !canvasRef.current || !baseDimensions.width) return;
 
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
 
         // Calculate target internal resolution
-        const targetWidth = image.width * displayScale;
-        const targetHeight = image.height * displayScale;
+        const targetWidth = baseDimensions.width * displayScale;
+        const targetHeight = baseDimensions.height * displayScale;
 
         // This changes the actual size of the image data (the drawing buffer)
         canvas.width = targetWidth;
@@ -38,7 +39,7 @@ const ImageScaler = () => {
 
         // Draw the image stretched to the new internal resolution
         ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
-    }, [image, displayScale]);
+    }, [image, displayScale, baseDimensions]);
 
     /**
      * Processes the selected file, creates an Image object, and stores it in state.
@@ -51,6 +52,23 @@ const ImageScaler = () => {
         const url = URL.createObjectURL(blob);
         const img = new Image();
         img.onload = () => {
+            // Determine base dimensions based on aspect ratio
+            const aspectRatio = img.width / img.height;
+            const standardFrameAspectRatio = 160 / 144;
+            const noFrameAspectRatio = 128 / 112;
+            const wildFrameAspectRatio = 160 / 244;
+
+            const diffStandard = Math.abs(aspectRatio - standardFrameAspectRatio);
+            const diffNoFrame = Math.abs(aspectRatio - noFrameAspectRatio);
+            const diffWild = Math.abs(aspectRatio - wildFrameAspectRatio);
+
+            if (diffWild < diffStandard && diffWild < diffNoFrame) {
+                setBaseDimensions({ width: 160, height: 244 });
+            } else if (diffStandard < diffNoFrame) {
+                setBaseDimensions({ width: 160, height: 144 });
+            } else {
+                setBaseDimensions({ width: 128, height: 112 });
+            }
             setImage(img);
             URL.revokeObjectURL(url);
         };
@@ -95,6 +113,7 @@ const ImageScaler = () => {
                                 const ctx = canvas.getContext('2d');
                                 setImage(null);
                                 setFileName('');
+                                setBaseDimensions({ width: 0, height: 0 });
                                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                             }
                         }}
@@ -111,12 +130,16 @@ const ImageScaler = () => {
                                     value={displayScale}
                                     onChange={(e) => setDisplayScale(Number(e.target.value))}
                                 >
-                                    {[2, 3, 4, 5, 6, 8, 10, 12, 16].map((s) => (
+                                    {[1, 2, 3, 4, 5, 6, 8, 10, 12, 16].map((s) => (
                                         <option
                                             key={s}
                                             value={s}
                                         >
                                             {s}x
+                                            {baseDimensions.width > 0 &&
+                                                ` (${baseDimensions.width * s}x${
+                                                    baseDimensions.height * s
+                                                })`}
                                         </option>
                                     ))}
                                 </select>
@@ -132,8 +155,7 @@ const ImageScaler = () => {
                                     className="button"
                                     onClick={handleDownload}
                                 >
-                                    Save {image.width * displayScale} x{' '}
-                                    {image.height * displayScale}
+                                    Save
                                 </button>
                             </div>
                         </>

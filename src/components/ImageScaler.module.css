@@ -1,6 +1,7 @@
 .scalerwrapper {
     margin: 0 auto;
     max-width: 500px;
+    width: 100%;
 }
 
 .canvaswrapper {
