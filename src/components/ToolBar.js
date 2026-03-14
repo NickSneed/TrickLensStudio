@@ -5,6 +5,7 @@ import FileLoader from '../components/FileLoader.js';
 import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../utils/canvasUtils.js';
 import { setStoredFrame, removeStoredFrame } from '../utils/storageUtils.js';
+import ImageScaler from './ImageScaler.js';
 import * as styles from './ToolBar.module.css';
 
 /**
@@ -93,11 +94,16 @@ const ToolBar = forwardRef(
                             accept=".png"
                         />
                     </div>
-                    <div className={styles.toolbaritem}>
-                        <PaletteSelector
-                            currentPalette={palette}
-                            onPaletteChange={setPalette}
-                        />
+                    <div className={styles.toolbarHalfGroup}>
+                        <div className={`${styles.toolbaritem} ${styles.toolbaritemhalf}`}>
+                            <PaletteSelector
+                                currentPalette={palette}
+                                onPaletteChange={setPalette}
+                            />
+                        </div>
+                        <div className={`${styles.toolbaritem} ${styles.toolbaritemhalf}`}>
+                            <ImageScaler />
+                        </div>
                     </div>
                     <div className={styles.settingsbutton}>
                         <button

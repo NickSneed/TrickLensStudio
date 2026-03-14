@@ -36,6 +36,17 @@
     margin: 0 0 0.5em;
     width: 100%;
 }
+@media (max-width: 1279px) {
+    .toolbarHalfGroup {
+        display: flex;
+        gap: 8px; /* Adjust spacing between the two items */
+        width: 100%;
+    }
+
+    .toolbaritemhalf {
+        width: 50%;
+    }
+}
 
 .settingsbutton {
     float: right;
@@ -85,12 +96,13 @@
     }
 
     .logo {
-        font-size: 24px;
+        font-size: 1em;
         float: right;
+        line-height: 3.4em;
         margin-right: 1em;
     }
 
     .settingsbutton {
-        margin-top: 0.5em;
+        margin-top: 0.3em;
     }
 }
