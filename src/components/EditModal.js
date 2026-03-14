@@ -6,11 +6,10 @@ import * as styles from './EditModal.module.css';
 import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
 import { useEffectApplier } from '../hooks/useEffectApplier.js';
 import { getAvailableMontageTypes } from '../utils/montageUtils.js';
-import { usePhotoExporter } from '../hooks/usePhotoExporter.js';
 import { useSettings } from '../context/SettingsContext.js';
 import { convertFrameToData } from '../utils/canvasUtils.js';
 import FileLoader from '../components/FileLoader.js';
-import { isIOS } from '../utils/deviceUtils.js';
+import ExportButton from './ExportButton.js';
 
 /**
  * EditModal component allows users to edit, apply effects, and export photos.
@@ -73,15 +72,6 @@ const EditModal = ({ photos, palette, frame, username }) => {
     // Set saveCanvasRef
     const saveCanvasRef = useRef(null);
 
-    // Initialize photo export hook
-    const { handleExport, handleShare } = usePhotoExporter(
-        saveCanvasRef,
-        username,
-        localPalette,
-        settings.exportFormat,
-        settings.exportQuality
-    );
-
     // Generate montage dropdown options based on photo count
     const montageOptions = getAvailableMontageTypes(photos?.length).map((opt) => (
         <option
@@ -123,24 +113,11 @@ const EditModal = ({ photos, palette, frame, username }) => {
                         saveRef={saveCanvasRef}
                         rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
                     />
-                    {handleShare &&
-                    isIOS() &&
-                    typeof navigator !== 'undefined' &&
-                    navigator.share ? (
-                        <button
-                            className="button"
-                            onClick={handleShare}
-                        >
-                            Share
-                        </button>
-                    ) : (
-                        <button
-                            className="button"
-                            onClick={handleExport}
-                        >
-                            Export<span> as {settings.exportFormat.toUpperCase()}</span>
-                        </button>
-                    )}
+                    <ExportButton
+                        saveCanvasRef={saveCanvasRef}
+                        username={username}
+                        paletteId={localPalette}
+                    />
                 </div>
             </div>
             <div className={styles.controls}>

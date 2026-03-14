@@ -17,13 +17,15 @@ const getFormattedUsername = (username) => {
  * @param {string} paletteId - The ID of the palette used.
  * @param {string} format - The image format ('png' or 'jpg').
  * @param {number} quality - The image quality (0 to 1).
+ * @param {string} [fileNameOverride] - Optional filename override (excluding extension).
  */
 export const usePhotoExporter = (
     saveCanvasRef,
     username,
     paletteId,
     format = 'png',
-    quality = 0.9
+    quality = 0.9,
+    fileNameOverride = null
 ) => {
     // Determines the MIME type and file extension based on the selected format
     const getFormatDetails = () => {
@@ -32,6 +34,16 @@ export const usePhotoExporter = (
             mimeType: isJpg ? 'image/jpeg' : 'image/png',
             extension: isJpg ? 'jpg' : 'png'
         };
+    };
+
+    // Helper to get a Blob from either HTMLCanvasElement (toBlob) or OffscreenCanvas (convertToBlob)
+    const getCanvasBlob = async (canvas, mimeType, quality) => {
+        if (canvas.convertToBlob) {
+            return await canvas.convertToBlob({ type: mimeType, quality });
+        } else if (canvas.toBlob) {
+            return new Promise((resolve) => canvas.toBlob(resolve, mimeType, quality));
+        }
+        return null;
     };
 
     // Handles downloading the image to the user's device
@@ -45,19 +57,23 @@ export const usePhotoExporter = (
         const { mimeType, extension } = getFormatDetails();
 
         // Convert the canvas content to a Blob
-        const blob = await canvas.convertToBlob({ type: mimeType, quality });
+        const blob = await getCanvasBlob(canvas, mimeType, quality);
+
+        if (!blob) return;
 
         // Create a temporary link element to trigger the download
         const link = document.createElement('a');
-        link.download = `gbcam${getFormattedUsername(
-            username
-        )}-${paletteId}-${Date.now()}.${extension}`;
+        const filename = fileNameOverride
+            ? `${fileNameOverride}.${extension}`
+            : `gbcam${getFormattedUsername(username)}-${paletteId}-${Date.now()}.${extension}`;
+
+        link.download = filename;
         link.href = URL.createObjectURL(blob);
         link.click();
 
         // Clean up the object URL
         URL.revokeObjectURL(link.href);
-    }, [saveCanvasRef, username, paletteId, format, quality]);
+    }, [saveCanvasRef, username, paletteId, format, quality, fileNameOverride]);
 
     // Handles sharing the image using the Web Share API
     const handleShare = useCallback(async () => {
@@ -70,11 +86,13 @@ export const usePhotoExporter = (
             const { mimeType, extension } = getFormatDetails();
 
             // Convert canvas to Blob
-            const blob = await canvas.convertToBlob({ type: mimeType, quality });
+            const blob = await getCanvasBlob(canvas, mimeType, quality);
 
-            const filename = `gbcam${getFormattedUsername(
-                username
-            )}-${paletteId}-${Date.now()}.${extension}`;
+            if (!blob) return;
+
+            const filename = fileNameOverride
+                ? `${fileNameOverride}.${extension}`
+                : `gbcam${getFormattedUsername(username)}-${paletteId}-${Date.now()}.${extension}`;
 
             // Create a File object from the Blob
             const file = new File([blob], filename, { type: mimeType });
@@ -82,13 +100,16 @@ export const usePhotoExporter = (
             // Check if the browser supports sharing files
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
-                    files: [file]
+                    files: [file],
+                    title: filename
                 });
             }
         } catch (error) {
-            console.error('Error sharing:', error);
+            if (error.name !== 'AbortError') {
+                console.error('Error sharing:', error);
+            }
         }
-    }, [saveCanvasRef, username, paletteId, format, quality]);
+    }, [saveCanvasRef, username, paletteId, format, quality, fileNameOverride]);
 
     return { handleExport, handleShare };
 };

@@ -8,7 +8,7 @@ import {
     drawScaledImage,
     calculateBaseDimensions
 } from '../utils/imageProcessingUtils.js';
-import { isIOS } from '../utils/deviceUtils.js';
+import ExportButton from './ExportButton.js';
 
 /**
  * ImageEditor component provides a UI for uploading, previewing, and scaling PNG images.
@@ -50,6 +50,10 @@ const ImageEditor = () => {
         );
     }, [image, displayScale, baseDimensions, palette, colorIndexMap]);
 
+    // Prepare filename for export (remove original extension, append scale)
+    const baseName = fileName.replace(/\.[^/.]+$/, '');
+    const exportFileName = `${baseName}-${displayScale}x`;
+
     /**
      * Processes the selected file, creates an Image object, and stores it in state.
      *
@@ -76,46 +80,6 @@ const ImageEditor = () => {
             URL.revokeObjectURL(url);
         };
         img.src = url;
-    };
-
-    /**
-     * Triggers a browser download of the current canvas content as a PNG file.
-     */
-    const handleDownload = () => {
-        if (!canvasRef.current) return;
-        const link = document.createElement('a');
-        // Remove the existing extension and append the scale
-        const baseName = fileName.replace(/\.[^/.]+$/, '');
-        link.download = `${baseName}-${displayScale}x.png`;
-        link.href = canvasRef.current.toDataURL('image/png');
-        link.click();
-    };
-
-    /**
-     * Triggers the Web Share API for the current canvas content.
-     */
-    const handleShare = () => {
-        if (!canvasRef.current || typeof navigator === 'undefined' || !navigator.share) return;
-
-        const baseName = fileName.replace(/\.[^/.]+$/, '');
-        const shareFileName = `${baseName}-${displayScale}x.png`;
-
-        canvasRef.current.toBlob(async (blob) => {
-            if (blob) {
-                const file = new File([blob], shareFileName, { type: 'image/png' });
-                try {
-                    await navigator.share({
-                        files: [file],
-                        title: shareFileName
-                    });
-                } catch (error) {
-                    // Ignore errors thrown when the user cancels the share dialog
-                    if (error.name !== 'AbortError') {
-                        console.error('Error sharing:', error);
-                    }
-                }
-            }
-        }, 'image/png');
     };
 
     return (
@@ -190,21 +154,10 @@ const ImageEditor = () => {
                                 />
                             </div>
                             <div style={{ marginTop: '10px' }}>
-                                {isIOS() && typeof navigator !== 'undefined' && navigator.share ? (
-                                    <button
-                                        className="button"
-                                        onClick={handleShare}
-                                    >
-                                        Share
-                                    </button>
-                                ) : (
-                                    <button
-                                        className="button"
-                                        onClick={handleDownload}
-                                    >
-                                        Save
-                                    </button>
-                                )}
+                                <ExportButton
+                                    saveCanvasRef={canvasRef}
+                                    fileNameOverride={exportFileName}
+                                />
                             </div>
                         </>
                     )}
