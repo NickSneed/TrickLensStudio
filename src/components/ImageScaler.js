@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
+import { palettes } from 'tricklens-js';
 import Modal from './Modal.js';
 import FileLoader from './FileLoader.js';
+import PaletteSelector from './PaletteSelector.js';
 import * as styles from './ImageScaler.module.css';
 
 /**
@@ -17,9 +19,56 @@ const ImageScaler = () => {
     const [image, setImage] = useState(null);
     const [fileName, setFileName] = useState('');
     const [baseDimensions, setBaseDimensions] = useState({ width: 0, height: 0 });
+    const [palette, setPalette] = useState(null);
+    const [colorIndexMap, setColorIndexMap] = useState(null);
+
+    // Analyze the image's colors to create a brightness-based mapping.
+    useEffect(() => {
+        if (!image || !baseDimensions.width) {
+            setColorIndexMap(null);
+            return;
+        }
+
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = baseDimensions.width;
+        tempCanvas.height = baseDimensions.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCtx.imageSmoothingEnabled = false;
+        tempCtx.drawImage(image, 0, 0, baseDimensions.width, baseDimensions.height);
+
+        const imageData = tempCtx.getImageData(0, 0, baseDimensions.width, baseDimensions.height);
+        const data = imageData.data;
+
+        const uniqueColors = new Map();
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i + 3] === 0) continue; // Skip transparent pixels
+            const r = data[i],
+                g = data[i + 1],
+                b = data[i + 2];
+            const colorStr = `${r},${g},${b}`;
+            if (!uniqueColors.has(colorStr)) {
+                uniqueColors.set(colorStr, { r, g, b });
+            }
+        }
+
+        const colorsWithLuminance = Array.from(uniqueColors.values()).map((color) => ({
+            ...color,
+            luminance: 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b
+        }));
+
+        colorsWithLuminance.sort((a, b) => b.luminance - a.luminance); // Sort lightest to darkest
+
+        const newColorMap = new Map();
+        colorsWithLuminance.forEach((color, index) => {
+            const colorStr = `${color.r},${color.g},${color.b}`;
+            newColorMap.set(colorStr, index);
+        });
+
+        setColorIndexMap(newColorMap);
+    }, [image, baseDimensions]);
 
     // Resizes the canvas drawing buffer and redraws the image whenever
-    // the source image or the scale factor changes.
+    // the source image, scale factor, or palette changes.
     useEffect(() => {
         if (!image || !canvasRef.current || !baseDimensions.width) return;
 
@@ -37,9 +86,60 @@ const ImageScaler = () => {
         // Resizing a canvas resets the context state, so we must disable smoothing now
         ctx.imageSmoothingEnabled = false;
 
-        // Draw the image stretched to the new internal resolution
-        ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
-    }, [image, displayScale, baseDimensions]);
+        let imageToDraw = image;
+
+        // Only apply palette if one is selected and the color map is ready
+        if (palette && colorIndexMap) {
+            // Create a temporary canvas to handle pixel manipulation at base resolution
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = baseDimensions.width;
+            tempCanvas.height = baseDimensions.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            // Disable smoothing to preserve original pixel colors when downscaling
+            tempCtx.imageSmoothingEnabled = false;
+            tempCtx.drawImage(image, 0, 0, baseDimensions.width, baseDimensions.height);
+
+            // Apply palette coloring
+            const imageData = tempCtx.getImageData(
+                0,
+                0,
+                baseDimensions.width,
+                baseDimensions.height
+            );
+            const data = imageData.data;
+            // Safely get the palette, falling back to the first available one if the selected one is invalid.
+            const paletteObj = palettes[palette] || Object.values(palettes)[0];
+            const currentColors = paletteObj ? paletteObj.colors : null;
+
+            if (currentColors && currentColors.length >= 4) {
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i],
+                        g = data[i + 1],
+                        b = data[i + 2],
+                        a = data[i + 3];
+
+                    // If pixel is transparent, keep it that way
+                    if (a === 0) continue;
+
+                    const colorStr = `${r},${g},${b}`;
+                    const index = colorIndexMap.get(colorStr);
+
+                    if (index !== undefined && index < currentColors.length) {
+                        const color = currentColors[index];
+                        data[i] = color.r;
+                        data[i + 1] = color.g;
+                        data[i + 2] = color.b;
+                        data[i + 3] = 255; // Ensure full alpha
+                    }
+                }
+                tempCtx.putImageData(imageData, 0, 0);
+            }
+            imageToDraw = tempCanvas;
+        }
+
+        // Draw the original or processed image, stretched to the new internal resolution
+        ctx.drawImage(imageToDraw, 0, 0, targetWidth, targetHeight);
+    }, [image, displayScale, baseDimensions, palette, colorIndexMap]);
 
     /**
      * Processes the selected file, creates an Image object, and stores it in state.
@@ -47,6 +147,7 @@ const ImageScaler = () => {
      * @param {Object} fileInfo - Object containing raw file data as an ArrayBuffer and the name.
      */
     const handleFileChange = ({ data, name }) => {
+        setPalette(null);
         setFileName(name);
         const blob = new Blob([data], { type: 'image/png' });
         const url = URL.createObjectURL(blob);
@@ -62,13 +163,22 @@ const ImageScaler = () => {
             const diffNoFrame = Math.abs(aspectRatio - noFrameAspectRatio);
             const diffWild = Math.abs(aspectRatio - wildFrameAspectRatio);
 
+            let newBaseDimensions;
             if (diffWild < diffStandard && diffWild < diffNoFrame) {
-                setBaseDimensions({ width: 160, height: 244 });
+                newBaseDimensions = { width: 160, height: 244 };
             } else if (diffStandard < diffNoFrame) {
-                setBaseDimensions({ width: 160, height: 144 });
+                newBaseDimensions = { width: 160, height: 144 };
             } else {
-                setBaseDimensions({ width: 128, height: 112 });
+                newBaseDimensions = { width: 128, height: 112 };
             }
+
+            // Set the default scale to make the image 1280px wide
+            if (newBaseDimensions.width > 0) {
+                const targetWidth = 1280;
+                setDisplayScale(targetWidth / newBaseDimensions.width);
+            }
+
+            setBaseDimensions(newBaseDimensions);
             setImage(img);
             URL.revokeObjectURL(url);
         };
@@ -94,13 +204,13 @@ const ImageScaler = () => {
                 onClick={() => setIsOpen(!isOpen)}
                 className={`button`}
             >
-                Scaler
+                Img Editor
             </button>
             <Modal
                 type="full"
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
-                title="Image Scaler"
+                title="Image Editor"
             >
                 <div className={styles.scalerwrapper}>
                     <FileLoader
@@ -114,6 +224,9 @@ const ImageScaler = () => {
                                 setImage(null);
                                 setFileName('');
                                 setBaseDimensions({ width: 0, height: 0 });
+                                setColorIndexMap(null);
+                                setPalette(null);
+                                setDisplayScale(2);
                                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                             }
                         }}
@@ -123,6 +236,12 @@ const ImageScaler = () => {
 
                     {image && (
                         <>
+                            <div style={{ marginTop: '10px' }}>
+                                <PaletteSelector
+                                    currentPalette={palette}
+                                    onPaletteChange={setPalette}
+                                />
+                            </div>
                             <label style={{ display: 'block', marginTop: '10px' }}>
                                 Preview Scale:{' '}
                                 <select
