@@ -243,7 +243,7 @@ const ImageScaler = () => {
                                 />
                             </div>
                             <label style={{ display: 'block', marginTop: '10px' }}>
-                                Preview Scale:{' '}
+                                Scale:{' '}
                                 <select
                                     className="select"
                                     value={displayScale}
