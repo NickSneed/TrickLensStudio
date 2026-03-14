@@ -5,7 +5,7 @@ import FileLoader from '../components/FileLoader.js';
 import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../utils/canvasUtils.js';
 import { setStoredFrame, removeStoredFrame } from '../utils/storageUtils.js';
-import ImageScaler from './ImageScaler.js';
+import ImageEditor from './ImageEditor.js';
 import * as styles from './ToolBar.module.css';
 
 /**
@@ -102,7 +102,7 @@ const ToolBar = forwardRef(
                             />
                         </div>
                         <div className={`${styles.toolbaritem} ${styles.toolbaritemhalf}`}>
-                            <ImageScaler />
+                            <ImageEditor />
                         </div>
                     </div>
                     <div className={styles.settingsbutton}>

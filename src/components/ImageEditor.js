@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import Modal from './Modal.js';
 import FileLoader from './FileLoader.js';
 import PaletteSelector from './PaletteSelector.js';
-import * as styles from './ImageScaler.module.css';
+import * as styles from './ImageEditor.module.css';
 import {
     analyzeImageColors,
     drawScaledImage,
@@ -10,13 +10,13 @@ import {
 } from '../utils/imageProcessingUtils.js';
 
 /**
- * ImageScaler component provides a UI for uploading, previewing, and scaling PNG images.
+ * ImageEditor component provides a UI for uploading, previewing, and scaling PNG images.
  * It uses a canvas to perform nearest-neighbor upscaling and allows users to download
  * the resulting high-resolution image.
  *
- * @returns {JSX.Element} The rendered ImageScaler component.
+ * @returns {JSX.Element} The rendered ImageEditor component.
  */
-const ImageScaler = () => {
+const ImageEditor = () => {
     const [isOpen, setIsOpen] = useState(false);
     const canvasRef = useRef(null);
     const [displayScale, setDisplayScale] = useState(2);
@@ -177,4 +177,4 @@ const ImageScaler = () => {
     );
 };
 
-export default ImageScaler;
+export default ImageEditor;
