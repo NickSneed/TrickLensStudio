@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Photo from '../components/Photo.js';
 import PaletteSelector from '../components/PaletteSelector.js';
@@ -10,6 +10,7 @@ import { useSettings } from '../context/SettingsContext.js';
 import { convertFrameToData } from '../utils/canvasUtils.js';
 import FileLoader from '../components/FileLoader.js';
 import ExportButton from './ExportButton.js';
+import EditorLayout from './EditorLayout.js';
 
 /**
  * EditModal component allows users to edit, apply effects, and export photos.
@@ -89,159 +90,165 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setLocalFrame(newFrame);
     };
 
-    return (
-        <div className={styles.editWrapper}>
-            <div className={styles.photo}>
-                <div className={styles.scale}>
-                    <Photo
-                        photo={photoToRender}
-                        photoG={isRgb && photos?.length >= 1 ? photos[1] : undefined}
-                        photoB={isRgb && photos?.length >= 2 ? photos[2] : undefined}
-                        paletteId={localPalette}
-                        frame={localFrame}
-                        scaleFactor={4}
-                        isScale={true}
-                        drawHandlers={drawHandlers}
-                        paletteOrder={paletteOrder}
-                        exportConfig={{
-                            format: settings.exportFormat,
-                            quality: settings.exportQuality,
-                            username
-                        }}
-                        showShareButton={true}
-                        showExportButton={true}
-                        saveRef={saveCanvasRef}
-                        rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
-                    />
-                    <ExportButton
-                        saveCanvasRef={saveCanvasRef}
-                        username={username}
-                        paletteId={localPalette}
-                    />
-                </div>
-            </div>
-            <div className={styles.controls}>
-                <FileLoader
-                    text="Select frame &hellip;"
-                    onChange={loadFrame}
-                    onRemove={() => {
-                        setLocalFrame(null);
-                    }}
-                    showRemove={localFrame ? true : false}
-                    accept=".png"
-                />
-                <PaletteSelector
-                    currentPalette={localPalette}
-                    onPaletteChange={setLocalPalette}
-                />
-                <label>
-                    Palette Order:
-                    <select
-                        className={styles.select}
-                        value={paletteOrder}
-                        onChange={(e) => setPaletteOrder(e.target.value)}
-                    >
-                        <option value="normal">normal</option>
-                        <option value="i">invert</option>
-                        <option value="pa">a</option>
-                        <option value="pb">b</option>
-                        <option value="pc">c</option>
-                        <option value="pd">d</option>
-                    </select>
-                </label>
-                <label>
-                    Trick Lenses:
-                    <select
-                        className={styles.select}
-                        value={effect}
-                        onChange={(e) => setEffect(e.target.value)}
-                    >
-                        <option value="none">none</option>
-                        <option value="mirror-rtl">mirror-rtl</option>
-                        <option value="mirror-ltr">mirror-ltr</option>
-                        <option value="mirror-btt">mirror-btt</option>
-                        <option value="mirror-ttb">mirror-ttb</option>
-                        <option value="zoom">zoom</option>
-                        <option value="zoom-h">zoom-h</option>
-                        <option value="zoom-v">zoom-v</option>
-                        <option value="tile">tile</option>
-                        <option value="flip-h">flip-h</option>
-                        <option value="flip-v">flip-v</option>
-                        <option value="flip-vh">flip-vh</option>
-                    </select>
-                </label>
-                <label>
-                    Brush Color:
-                    <select
-                        className={styles.select}
-                        value={brushColor}
-                        onChange={(e) => setBrushColor(e.target.value)}
-                    >
-                        <option value="0">Lightest</option>
-                        <option value="1">Light</option>
-                        <option value="2">Dark</option>
-                        <option value="3">Darkest</option>
-                    </select>
-                </label>
-                <label>
-                    Brush Size:
-                    <select
-                        className={styles.select}
-                        value={brushSize}
-                        onChange={(e) => setBrushSize(e.target.value)}
-                    >
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                    </select>
-                </label>
-                {photos?.length > 1 ? (
-                    <label>
-                        Montage:
-                        <select
-                            className={styles.select}
-                            value={montageType}
-                            onChange={(e) => setMontageType(e.target.value)}
-                        >
-                            {montageOptions}
-                            {photos.length > 2 ? <option value="rgb">rgb</option> : null}
-                        </select>
-                    </label>
-                ) : null}
-
-                {photos?.length > 2 && isRgb ? (
-                    <>
-                        <label>
-                            Brightness: {Math.round(rgbBrightness * 20)}
-                            <input
-                                className={styles.slider}
-                                type="range"
-                                min="-0.5"
-                                max="0.5"
-                                step="0.05"
-                                value={rgbBrightness}
-                                onChange={(e) => setRgbBrightness(e.target.value)}
-                            />
-                        </label>
-                        <label>
-                            Contrast: {Math.round(rgbContrast * 10)}
-                            <input
-                                className={styles.slider}
-                                type="range"
-                                min="-1"
-                                max="1"
-                                step="0.1"
-                                value={rgbContrast}
-                                onChange={(e) => setRgbContrast(e.target.value)}
-                            />
-                        </label>
-                    </>
-                ) : null}
-            </div>
+    const mainContent = (
+        <div className={styles.scale}>
+            <Photo
+                photo={photoToRender}
+                photoG={isRgb && photos?.length >= 1 ? photos[1] : undefined}
+                photoB={isRgb && photos?.length >= 2 ? photos[2] : undefined}
+                paletteId={localPalette}
+                frame={localFrame}
+                scaleFactor={4}
+                isScale={true}
+                drawHandlers={drawHandlers}
+                paletteOrder={paletteOrder}
+                exportConfig={{
+                    format: settings.exportFormat,
+                    quality: settings.exportQuality,
+                    username
+                }}
+                showShareButton={true}
+                showExportButton={true}
+                saveRef={saveCanvasRef}
+                rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
+            />
+            <ExportButton
+                saveCanvasRef={saveCanvasRef}
+                username={username}
+                paletteId={localPalette}
+            />
         </div>
+    );
+
+    const controlsContent = (
+        <>
+            <FileLoader
+                text="Select frame &hellip;"
+                onChange={loadFrame}
+                onRemove={() => {
+                    setLocalFrame(null);
+                }}
+                showRemove={localFrame ? true : false}
+                accept=".png"
+            />
+            <PaletteSelector
+                currentPalette={localPalette}
+                onPaletteChange={setLocalPalette}
+            />
+            <label>
+                Palette Order:
+                <select
+                    className={styles.select}
+                    value={paletteOrder}
+                    onChange={(e) => setPaletteOrder(e.target.value)}
+                >
+                    <option value="normal">normal</option>
+                    <option value="i">invert</option>
+                    <option value="pa">a</option>
+                    <option value="pb">b</option>
+                    <option value="pc">c</option>
+                    <option value="pd">d</option>
+                </select>
+            </label>
+            <label>
+                Trick Lenses:
+                <select
+                    className={styles.select}
+                    value={effect}
+                    onChange={(e) => setEffect(e.target.value)}
+                >
+                    <option value="none">none</option>
+                    <option value="mirror-rtl">mirror-rtl</option>
+                    <option value="mirror-ltr">mirror-ltr</option>
+                    <option value="mirror-btt">mirror-btt</option>
+                    <option value="mirror-ttb">mirror-ttb</option>
+                    <option value="zoom">zoom</option>
+                    <option value="zoom-h">zoom-h</option>
+                    <option value="zoom-v">zoom-v</option>
+                    <option value="tile">tile</option>
+                    <option value="flip-h">flip-h</option>
+                    <option value="flip-v">flip-v</option>
+                    <option value="flip-vh">flip-vh</option>
+                </select>
+            </label>
+            <label>
+                Brush Color:
+                <select
+                    className={styles.select}
+                    value={brushColor}
+                    onChange={(e) => setBrushColor(e.target.value)}
+                >
+                    <option value="0">Lightest</option>
+                    <option value="1">Light</option>
+                    <option value="2">Dark</option>
+                    <option value="3">Darkest</option>
+                </select>
+            </label>
+            <label>
+                Brush Size:
+                <select
+                    className={styles.select}
+                    value={brushSize}
+                    onChange={(e) => setBrushSize(e.target.value)}
+                >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </label>
+            {photos?.length > 1 ? (
+                <label>
+                    Montage:
+                    <select
+                        className={styles.select}
+                        value={montageType}
+                        onChange={(e) => setMontageType(e.target.value)}
+                    >
+                        {montageOptions}
+                        {photos.length > 2 ? <option value="rgb">rgb</option> : null}
+                    </select>
+                </label>
+            ) : null}
+
+            {photos?.length > 2 && isRgb ? (
+                <>
+                    <label>
+                        Brightness: {Math.round(rgbBrightness * 20)}
+                        <input
+                            className={styles.slider}
+                            type="range"
+                            min="-0.5"
+                            max="0.5"
+                            step="0.05"
+                            value={rgbBrightness}
+                            onChange={(e) => setRgbBrightness(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Contrast: {Math.round(rgbContrast * 10)}
+                        <input
+                            className={styles.slider}
+                            type="range"
+                            min="-1"
+                            max="1"
+                            step="0.1"
+                            value={rgbContrast}
+                            onChange={(e) => setRgbContrast(e.target.value)}
+                        />
+                    </label>
+                </>
+            ) : null}
+        </>
+    );
+
+    return (
+        <EditorLayout
+            mainContent={mainContent}
+            controlsContent={controlsContent}
+        />
     );
 };
 
