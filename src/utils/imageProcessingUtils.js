@@ -55,13 +55,37 @@ export const drawScaledImage = (
     baseDimensions,
     displayScale,
     palette,
-    colorIndexMap
+    colorIndexMap,
+    frame
 ) => {
     if (!canvas || !image || !baseDimensions.width) return;
 
     const ctx = canvas.getContext('2d');
-    const targetWidth = baseDimensions.width * displayScale;
-    const targetHeight = baseDimensions.height * displayScale;
+
+    // Determine target dimensions and offsets based on frame presence and image size
+    let finalWidth = baseDimensions.width;
+    let finalHeight = baseDimensions.height;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (frame && baseDimensions.width === 128 && baseDimensions.height === 112) {
+        const frameAspect = frame.width / frame.height;
+        // Check for Wild frame (160x224) vs Standard (160x144)
+        if (Math.abs(frameAspect - 160 / 224) < 0.1) {
+            finalWidth = 160;
+            finalHeight = 224;
+            offsetX = 16;
+            offsetY = 40;
+        } else {
+            finalWidth = 160;
+            finalHeight = 144;
+            offsetX = 16;
+            offsetY = 16;
+        }
+    }
+
+    const targetWidth = finalWidth * displayScale;
+    const targetHeight = finalHeight * displayScale;
 
     canvas.width = targetWidth;
     canvas.height = targetHeight;
@@ -103,12 +127,23 @@ export const drawScaledImage = (
         }
         imageToDraw = tempCanvas;
     }
-    ctx.drawImage(imageToDraw, 0, 0, targetWidth, targetHeight);
+    ctx.drawImage(
+        imageToDraw,
+        offsetX * displayScale,
+        offsetY * displayScale,
+        baseDimensions.width * displayScale,
+        baseDimensions.height * displayScale
+    );
+
+    // Draw the frame over the image if it exists
+    if (frame) {
+        ctx.drawImage(frame, 0, 0, targetWidth, targetHeight);
+    }
 };
 
 export const calculateBaseDimensions = (width, height) => {
     const aspectRatio = width / height;
-    if (Math.abs(aspectRatio - 160 / 244) < 0.1) return { width: 160, height: 244 };
-    if (Math.abs(aspectRatio - 160 / 144) < 0.1) return { width: 160, height: 144 };
+    if (Math.abs(aspectRatio - 160 / 224) < 0.05) return { width: 160, height: 224 };
+    if (Math.abs(aspectRatio - 160 / 144) < 0.01) return { width: 160, height: 144 };
     return { width: 128, height: 112 };
 };

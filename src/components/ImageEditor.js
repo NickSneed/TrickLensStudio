@@ -23,6 +23,7 @@ const ImageEditor = () => {
     const canvasRef = useRef(null);
     const [displayScale, setDisplayScale] = useState(2);
     const [image, setImage] = useState(null);
+    const [frame, setFrame] = useState(null);
     const [fileName, setFileName] = useState('');
     const [baseDimensions, setBaseDimensions] = useState({ width: 0, height: 0 });
     const [palette, setPalette] = useState(null);
@@ -47,9 +48,10 @@ const ImageEditor = () => {
             baseDimensions,
             displayScale,
             palette,
-            colorIndexMap
+            colorIndexMap,
+            frame
         );
-    }, [image, displayScale, baseDimensions, palette, colorIndexMap]);
+    }, [image, displayScale, baseDimensions, palette, colorIndexMap, frame]);
 
     // Prepare filename for export (remove original extension, append scale)
     const baseName = fileName.replace(/\.[^/.]+$/, '');
@@ -78,6 +80,22 @@ const ImageEditor = () => {
 
             setBaseDimensions(newBaseDimensions);
             setImage(img);
+            URL.revokeObjectURL(url);
+        };
+        img.src = url;
+    };
+
+    /**
+     * Processes the selected frame file, creates an Image object, and stores it in state.
+     *
+     * @param {Object} fileInfo - Object containing raw file data as an ArrayBuffer.
+     */
+    const handleFrameChange = ({ data }) => {
+        const blob = new Blob([data], { type: 'image/png' });
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+            setFrame(img);
             URL.revokeObjectURL(url);
         };
         img.src = url;
@@ -113,6 +131,7 @@ const ImageEditor = () => {
                         setBaseDimensions({ width: 0, height: 0 });
                         setColorIndexMap(null);
                         setPalette(null);
+                        setFrame(null);
                         setDisplayScale(2);
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
                     }
@@ -122,6 +141,15 @@ const ImageEditor = () => {
             />
             {image && (
                 <>
+                    <FileLoader
+                        text="Select frame &hellip;"
+                        onChange={handleFrameChange}
+                        onRemove={() => {
+                            setFrame(null);
+                        }}
+                        showRemove={frame ? true : false}
+                        accept=".png"
+                    />
                     <PaletteSelector
                         currentPalette={palette}
                         onPaletteChange={setPalette}
