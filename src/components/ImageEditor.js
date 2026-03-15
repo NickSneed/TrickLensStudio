@@ -162,6 +162,14 @@ const ImageEditor = () => {
                         currentPalette={palette}
                         onPaletteChange={setPalette}
                     />
+                    {palette && (
+                        <button
+                            onClick={() => setPalette(null)}
+                            className={`button`}
+                        >
+                            Remove Palette
+                        </button>
+                    )}
                     <label>
                         Scale:{' '}
                         <select
