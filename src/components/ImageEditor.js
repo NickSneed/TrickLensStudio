@@ -7,7 +7,8 @@ import {
     analyzeImageColors,
     drawScaledImage,
     calculateBaseDimensions,
-    getFramedLayout
+    getFramedLayout,
+    createImageFromBuffer
 } from '../utils/imageProcessingUtils.js';
 import ExportButton from './ExportButton.js';
 import EditorLayout from './EditorLayout.js';
@@ -76,21 +77,17 @@ const ImageEditor = () => {
      *
      * @param {Object} fileInfo - Object containing raw file data as an ArrayBuffer and the name.
      */
-    const handleFileChange = ({ data, name }) => {
+    const handleFileChange = async ({ data, name }) => {
         setPalette(null);
         setFileName(name);
-        const blob = new Blob([data], { type: 'image/png' });
-        const url = URL.createObjectURL(blob);
-        const img = new Image();
-        img.onload = () => {
-            // Determine base dimensions based on aspect ratio
+        try {
+            const img = await createImageFromBuffer(data);
             const newBaseDimensions = calculateBaseDimensions(img.width, img.height);
-
             setBaseDimensions(newBaseDimensions);
             setImage(img);
-            URL.revokeObjectURL(url);
-        };
-        img.src = url;
+        } catch (error) {
+            console.error('Failed to load image:', error);
+        }
     };
 
     /**
@@ -98,15 +95,13 @@ const ImageEditor = () => {
      *
      * @param {Object} fileInfo - Object containing raw file data as an ArrayBuffer.
      */
-    const handleFrameChange = ({ data }) => {
-        const blob = new Blob([data], { type: 'image/png' });
-        const url = URL.createObjectURL(blob);
-        const img = new Image();
-        img.onload = () => {
+    const handleFrameChange = async ({ data }) => {
+        try {
+            const img = await createImageFromBuffer(data);
             setFrame(img);
-            URL.revokeObjectURL(url);
-        };
-        img.src = url;
+        } catch (error) {
+            console.error('Failed to load frame:', error);
+        }
     };
 
     const mainContent = image ? (

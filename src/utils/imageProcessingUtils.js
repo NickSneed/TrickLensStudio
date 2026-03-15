@@ -223,3 +223,26 @@ export const calculateBaseDimensions = (width, height) => {
     // Default to the standard raw image size (128x112)
     return { width: 128, height: 112 };
 };
+
+/**
+ * Creates an Image object from an ArrayBuffer.
+ *
+ * @param {ArrayBuffer} buffer - The image data.
+ * @returns {Promise<HTMLImageElement>} A promise that resolves with the loaded Image.
+ */
+export const createImageFromBuffer = (buffer) => {
+    return new Promise((resolve, reject) => {
+        const blob = new Blob([buffer], { type: 'image/png' });
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve(img);
+        };
+        img.onerror = (err) => {
+            URL.revokeObjectURL(url);
+            reject(err);
+        };
+        img.src = url;
+    });
+};
