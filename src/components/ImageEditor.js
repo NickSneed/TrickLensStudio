@@ -104,6 +104,21 @@ const ImageEditor = () => {
         }
     };
 
+    /**
+     * Resets the editor state to its initial values.
+     */
+    const resetEditor = () => {
+        setImage(null);
+        setFileName('');
+        setBaseDimensions({ width: 0, height: 0 });
+        setColorIndexMap(null);
+        setPalette(null);
+        setFrame(null);
+        setDisplayScale(2);
+        const ctx = canvasRef.current?.getContext('2d');
+        if (ctx) ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    };
+
     const mainContent = image ? (
         <>
             <canvas
@@ -125,20 +140,7 @@ const ImageEditor = () => {
                 text="Select PNG &hellip;"
                 onChange={handleFileChange}
                 // Reset the component state when the selected file is removed
-                onRemove={() => {
-                    const canvas = canvasRef.current;
-                    if (canvas) {
-                        const ctx = canvas.getContext('2d');
-                        setImage(null);
-                        setFileName('');
-                        setBaseDimensions({ width: 0, height: 0 });
-                        setColorIndexMap(null);
-                        setPalette(null);
-                        setFrame(null);
-                        setDisplayScale(2);
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    }
-                }}
+                onRemove={resetEditor}
                 showRemove={image ? true : false}
                 accept=".png"
             />
