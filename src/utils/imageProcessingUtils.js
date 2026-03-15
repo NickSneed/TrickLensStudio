@@ -46,23 +46,7 @@ export const analyzeImageColors = (image, width, height) => {
     return newColorMap;
 };
 
-/**
- * Draws the scaled and palette-applied image to the canvas.
- */
-export const drawScaledImage = (
-    canvas,
-    image,
-    baseDimensions,
-    displayScale,
-    palette,
-    colorIndexMap,
-    frame
-) => {
-    if (!canvas || !image || !baseDimensions.width) return;
-
-    const ctx = canvas.getContext('2d');
-
-    // Determine target dimensions and offsets based on frame presence and image size
+export const getFramedLayout = (baseDimensions, frame) => {
     let finalWidth = baseDimensions.width;
     let finalHeight = baseDimensions.height;
     let offsetX = 0;
@@ -83,6 +67,27 @@ export const drawScaledImage = (
             offsetY = 16;
         }
     }
+
+    return { finalWidth, finalHeight, offsetX, offsetY };
+};
+
+/**
+ * Draws the scaled and palette-applied image to the canvas.
+ */
+export const drawScaledImage = (
+    canvas,
+    image,
+    baseDimensions,
+    displayScale,
+    palette,
+    colorIndexMap,
+    frame
+) => {
+    if (!canvas || !image || !baseDimensions.width) return;
+
+    const ctx = canvas.getContext('2d');
+
+    const { finalWidth, finalHeight, offsetX, offsetY } = getFramedLayout(baseDimensions, frame);
 
     const targetWidth = finalWidth * displayScale;
     const targetHeight = finalHeight * displayScale;
@@ -137,7 +142,46 @@ export const drawScaledImage = (
 
     // Draw the frame over the image if it exists
     if (frame) {
-        ctx.drawImage(frame, 0, 0, targetWidth, targetHeight);
+        let frameToDraw = frame;
+
+        // If a palette is selected, apply it to the frame as well
+        if (palette) {
+            const frameColorIndexMap = analyzeImageColors(frame, frame.width, frame.height);
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = frame.width;
+            tempCanvas.height = frame.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.imageSmoothingEnabled = false;
+            tempCtx.drawImage(frame, 0, 0, frame.width, frame.height);
+
+            const imageData = tempCtx.getImageData(0, 0, frame.width, frame.height);
+            const data = imageData.data;
+            const paletteObj = palettes[palette] || Object.values(palettes)[0];
+            const currentColors = paletteObj ? paletteObj.colors : null;
+
+            if (currentColors && currentColors.length >= 4) {
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i],
+                        g = data[i + 1],
+                        b = data[i + 2],
+                        a = data[i + 3];
+                    if (a === 0) continue; // Preserve transparency
+                    const colorStr = `${r},${g},${b}`;
+                    const index = frameColorIndexMap.get(colorStr);
+                    if (index !== undefined && index < currentColors.length) {
+                        const color = currentColors[index];
+                        data[i] = color.r;
+                        data[i + 1] = color.g;
+                        data[i + 2] = color.b;
+                        data[i + 3] = 255; // Make opaque where color is applied
+                    }
+                }
+                tempCtx.putImageData(imageData, 0, 0);
+            }
+            frameToDraw = tempCanvas;
+        }
+
+        ctx.drawImage(frameToDraw, 0, 0, targetWidth, targetHeight);
     }
 };
 

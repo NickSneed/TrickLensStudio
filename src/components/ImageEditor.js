@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Modal from './Modal.js';
 import FileLoader from './FileLoader.js';
 import PaletteSelector from './PaletteSelector.js';
@@ -6,7 +6,8 @@ import * as styles from './ImageEditor.module.css';
 import {
     analyzeImageColors,
     drawScaledImage,
-    calculateBaseDimensions
+    calculateBaseDimensions,
+    getFramedLayout
 } from '../utils/imageProcessingUtils.js';
 import ExportButton from './ExportButton.js';
 import EditorLayout from './EditorLayout.js';
@@ -28,6 +29,19 @@ const ImageEditor = () => {
     const [baseDimensions, setBaseDimensions] = useState({ width: 0, height: 0 });
     const [palette, setPalette] = useState(null);
     const [colorIndexMap, setColorIndexMap] = useState(null);
+
+    const displayedDimensions = useMemo(() => {
+        const { finalWidth, finalHeight } = getFramedLayout(baseDimensions, frame);
+        return { width: finalWidth, height: finalHeight };
+    }, [baseDimensions, frame]);
+
+    // Auto-scale to 1280px width when dimensions change (image load or frame switch)
+    useEffect(() => {
+        if (displayedDimensions.width > 0) {
+            const targetWidth = 1280;
+            setDisplayScale(targetWidth / displayedDimensions.width);
+        }
+    }, [displayedDimensions.width, image, frame]);
 
     // Analyze the image's colors to create a brightness-based mapping.
     useEffect(() => {
@@ -71,12 +85,6 @@ const ImageEditor = () => {
         img.onload = () => {
             // Determine base dimensions based on aspect ratio
             const newBaseDimensions = calculateBaseDimensions(img.width, img.height);
-
-            // Set the default scale to make the image 1280px wide
-            if (newBaseDimensions.width > 0) {
-                const targetWidth = 1280;
-                setDisplayScale(targetWidth / newBaseDimensions.width);
-            }
 
             setBaseDimensions(newBaseDimensions);
             setImage(img);
@@ -167,9 +175,9 @@ const ImageEditor = () => {
                                     value={s}
                                 >
                                     {s}x
-                                    {baseDimensions.width > 0 &&
-                                        ` (${baseDimensions.width * s}x${
-                                            baseDimensions.height * s
+                                    {displayedDimensions.width > 0 &&
+                                        ` (${displayedDimensions.width * s}x${
+                                            displayedDimensions.height * s
                                         })`}
                                 </option>
                             ))}
