@@ -100,8 +100,7 @@ export const usePhotoExporter = (
             // Check if the browser supports sharing files
             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                 await navigator.share({
-                    files: [file],
-                    title: filename
+                    files: [file]
                 });
             }
         } catch (error) {
