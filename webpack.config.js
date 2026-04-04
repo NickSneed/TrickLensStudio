@@ -102,6 +102,8 @@ export default {
     },
     devServer: {
         port: 3000,
+        host: '0.0.0.0',
+        allowedHosts: 'all',
         open: false,
         compress: true,
         static: {
