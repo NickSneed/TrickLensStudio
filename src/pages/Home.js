@@ -173,7 +173,6 @@ const Home = () => {
                 isOpen={editPhotos.length > 0}
                 setIsOpen={setEditPhotos}
                 title="Magic"
-                type="full"
             >
                 <EditModal
                     photos={editPhotos}

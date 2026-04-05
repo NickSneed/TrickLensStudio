@@ -202,7 +202,6 @@ const ImageEditor = () => {
                 Img Editor
             </button>
             <Modal
-                type="full"
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 title="Image Editor"

@@ -59,15 +59,8 @@
 }
 
 @media (min-width: 1280px) {
-    .modal {
-        height: auto;
-    }
-
-    .modalwrapper.full .modal {
-        height: 100%;
-    }
-
     .small .modal {
+        height: auto;
         max-width: 500px;
     }
 }

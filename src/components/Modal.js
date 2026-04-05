@@ -46,8 +46,7 @@ const Modal = ({ isOpen, setIsOpen, title, children, type, zindex = 3 }) => {
         <div
             className={`
                 ${styles.modalwrapper} 
-                ${type === 'small' ? styles.small : ''} 
-                ${type === 'full' ? styles.full : ''} 
+                ${type === 'small' ? styles.small : ''}
                 ${isOpen ? styles.open : ''}
             `}
             onClick={(e) => {
