@@ -16,7 +16,15 @@ let openModalCount = 0;
  * @param {string} [props.type] - Optional type to adjust modal size ('small', 'full').
  * @param {number} [props.zindex] - Optional z-index for the modal wrapper.
  */
-const Modal = ({ isOpen, setIsOpen, title, children, type, zindex = 3 }) => {
+const Modal = ({
+    isOpen,
+    setIsOpen,
+    title,
+    children,
+    type,
+    zindex = 3,
+    saveScrollPosition = false
+}) => {
     const scrollRef = useRef(null);
 
     // Adds class to body to prevent scrolling and scrolls modal to top on open
@@ -27,7 +35,7 @@ const Modal = ({ isOpen, setIsOpen, title, children, type, zindex = 3 }) => {
                 document.body.classList.add('modal-open');
             }
 
-            if (scrollRef.current) {
+            if (scrollRef.current && !saveScrollPosition) {
                 scrollRef.current.scrollTop = 0;
             }
         }

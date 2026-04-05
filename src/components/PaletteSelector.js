@@ -58,15 +58,8 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     title="Palettes"
                     allowScroll={true}
                     zindex={8}
+                    saveScrollPosition={true}
                 >
-                    <div className={styles.randombutton}>
-                        <button
-                            onClick={handleRandom}
-                            className="button"
-                        >
-                            Random
-                        </button>
-                    </div>
                     <div className={styles.dropdownContainer}>
                         {Object.keys(palettes).map((paletteId) => {
                             const palette = palettes[paletteId].colors;
@@ -102,6 +95,14 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 </label>
                             );
                         })}
+                    </div>
+                    <div className={styles.randombutton}>
+                        <button
+                            onClick={handleRandom}
+                            className="button"
+                        >
+                            Random
+                        </button>
                     </div>
                 </Modal>
             </div>
