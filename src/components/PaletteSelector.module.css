@@ -58,7 +58,7 @@
 }
 
 .randombutton {
-    margin: 2em auto 1em;
+    margin: 0 auto 2em;
 }
 
 @media (min-width: 700px) {
