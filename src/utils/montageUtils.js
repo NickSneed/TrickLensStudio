@@ -3,7 +3,15 @@ export const getAvailableMontageTypes = (numPhotos) => {
         return [];
     }
 
-    const options = ['none', 'vertical', 'horizontal', 'quadrant', 'horizontal-2/3', 'border'];
+    const options = [
+        'none',
+        'vertical',
+        'horizontal',
+        'quadrant',
+        'horizontal-2/3',
+        'border',
+        'fusion'
+    ];
 
     if (numPhotos > 2) {
         options.push('horizontal-bars');
