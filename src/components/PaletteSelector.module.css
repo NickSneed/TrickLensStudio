@@ -91,6 +91,29 @@
     flex: 1;
 }
 
+.activeRow {
+    outline: 2px solid var(--c-white);
+    outline-offset: 4px;
+}
+
+.quickPicker {
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 1.5em;
+}
+
+.quickSwatch {
+    aspect-ratio: 1;
+    border: 2px solid var(--c-modalcopy);
+    cursor: pointer;
+    width: 100%;
+}
+
+.quickSwatch:hover {
+    border-color: var(--c-white);
+}
+
 @media (min-width: 700px) {
     .presetContainer {
         display: grid;
@@ -116,5 +139,9 @@
         align-items: center;
         gap: 1em;
         margin-bottom: 0.5em;
+    }
+
+    .quickPicker {
+        grid-template-columns: repeat(20, 1fr);
     }
 }

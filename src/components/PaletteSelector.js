@@ -4,6 +4,7 @@ import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
 import Modal from './Modal.js';
 import { useSettings } from '../context/SettingsContext.js';
+import QUICK_COLORS from '../utils/quickColors.js';
 
 /**
  * PaletteSelector component allows users to choose a color palette from a list.
@@ -15,6 +16,7 @@ import { useSettings } from '../context/SettingsContext.js';
  */
 const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedColorIndex, setSelectedColorIndex] = useState(0);
 
     // Use the global settings context
     const { settings } = useSettings();
@@ -38,6 +40,16 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
             }
             return color;
         });
+
+        onPaletteChange({
+            ...currentPalette,
+            id: 'custom',
+            colors: newColors
+        });
+    };
+
+    const handleQuickColorSelect = (color) => {
+        const newColors = currentColors.map((c, i) => (i === selectedColorIndex ? color : c));
 
         onPaletteChange({
             ...currentPalette,
@@ -128,7 +140,10 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 {currentColors.map((color, colorIdx) => (
                                     <div
                                         key={colorIdx}
-                                        className={styles.colorRow}
+                                        className={`${styles.colorRow} ${
+                                            selectedColorIndex === colorIdx ? styles.activeRow : ''
+                                        }`}
+                                        onClick={() => setSelectedColorIndex(colorIdx)}
                                     >
                                         <div
                                             className={styles.swatchColorBlock}
@@ -154,6 +169,21 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                         ))}
                                     </div>
                                 ))}
+                                <div className={styles.quickPicker}>
+                                    {QUICK_COLORS.map((color, index) => (
+                                        <div
+                                            key={index}
+                                            className={styles.quickSwatch}
+                                            style={{
+                                                backgroundColor: `rgb(${color.r},${color.g},${color.b})`
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleQuickColorSelect(color);
+                                            }}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>
