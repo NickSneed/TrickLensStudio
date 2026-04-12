@@ -7,6 +7,31 @@ import { useSettings } from '../context/SettingsContext.js';
 import QUICK_COLORS from '../utils/quickColors.js';
 
 /**
+ * Adjusts the brightness of an RGB color using specific shade levels.
+ * @param {number} r, g, b - The base color values (0-255)
+ * @param {number} level - The shade level (-3 to 3)
+ * @returns {Array} - The new [r, g, b] values
+ */
+const getSGBShade = (r, g, b, level) => {
+    const darkMultipliers = [1.0, 0.686, 0.439, 0.247]; // Neutral, -1, -2, -3
+    const lightSteps = [0, 0.314, 0.533, 0.753]; // Neutral, +1, +2, +3
+
+    if (level === 0) return [r, g, b];
+
+    if (level < 0) {
+        const mult = darkMultipliers[Math.abs(level)];
+        return [Math.round(r * mult), Math.round(g * mult), Math.round(b * mult)];
+    } else {
+        const step = lightSteps[level];
+        return [
+            Math.round(r + (255 - r) * step),
+            Math.round(g + (255 - g) * step),
+            Math.round(b + (255 - b) * step)
+        ];
+    }
+};
+
+/**
  * PaletteSelector component allows users to choose a color palette from a list.
  * It displays the current palette and opens a modal with available options.
  *
@@ -17,6 +42,8 @@ import QUICK_COLORS from '../utils/quickColors.js';
 const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+    const [shadeLevels, setShadeLevels] = useState([0, 0, 0, 0]);
+    const [baseColors, setBaseColors] = useState([null, null, null, null]);
 
     // Use the global settings context
     const { settings } = useSettings();
@@ -34,6 +61,14 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     };
 
     const handleColorChange = (colorIndex, channel, value) => {
+        const updatedColor = { ...currentColors[colorIndex], [channel]: parseInt(value, 10) };
+
+        // Reset tracking because user manually tweaked the color
+        const newLevels = [...shadeLevels];
+        newLevels[colorIndex] = 0;
+        setShadeLevels(newLevels);
+        updateBaseColor(colorIndex, updatedColor);
+
         const newColors = currentColors.map((color, i) => {
             if (i === colorIndex) {
                 return { ...color, [channel]: parseInt(value, 10) };
@@ -48,7 +83,42 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         });
     };
 
+    const handleShadeChange = (colorIndex, delta) => {
+        const currentLevel = shadeLevels[colorIndex];
+        const newLevel = Math.max(-3, Math.min(3, currentLevel + delta));
+
+        if (newLevel === currentLevel) return;
+
+        const base = baseColors[colorIndex] || currentColors[colorIndex];
+        const [r, g, b] = getSGBShade(base.r, base.g, base.b, newLevel);
+
+        const newLevels = [...shadeLevels];
+        newLevels[colorIndex] = newLevel;
+        setShadeLevels(newLevels);
+        updateBaseColor(colorIndex, base);
+
+        const newColors = currentColors.map((c, i) => {
+            if (i === colorIndex) return { r, g, b };
+            return c;
+        });
+
+        onPaletteChange({
+            ...currentPalette,
+            id: 'custom',
+            colors: newColors
+        });
+    };
+
     const handleQuickColorSelect = (color) => {
+        // Reset level to 0 and set new base when picking from the grid
+        const newLevels = [...shadeLevels];
+        newLevels[selectedColorIndex] = 0;
+        setShadeLevels(newLevels);
+
+        const newBases = [...baseColors];
+        newBases[selectedColorIndex] = color;
+        setBaseColors(newBases);
+
         const newColors = currentColors.map((c, i) => (i === selectedColorIndex ? color : c));
 
         onPaletteChange({
@@ -56,6 +126,12 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
             id: 'custom',
             colors: newColors
         });
+    };
+
+    const updateBaseColor = (index, color) => {
+        const newBases = [...baseColors];
+        newBases[index] = color;
+        setBaseColors(newBases);
     };
 
     const currentColors = currentPalette?.colors || [];
@@ -167,6 +243,26 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                                 }
                                             />
                                         ))}
+                                        <div className={styles.stepper}>
+                                            <button
+                                                className="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleShadeChange(colorIdx, -1);
+                                                }}
+                                            >
+                                                -
+                                            </button>
+                                            <button
+                                                className="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleShadeChange(colorIdx, 1);
+                                                }}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                                 <div className={styles.quickPicker}>

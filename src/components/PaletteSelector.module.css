@@ -78,6 +78,8 @@
     flex-direction: column;
     gap: 0.5em;
     margin-bottom: 1.5em;
+    padding: 0 1em;
+    cursor: pointer;
 }
 
 .colorRow .swatchColorBlock {
@@ -89,6 +91,16 @@
 .colorRow input[type='range'] {
     cursor: pointer;
     flex: 1;
+}
+
+.stepper {
+    display: flex;
+    gap: 4px;
+}
+
+.stepper button {
+    padding: 2px 0;
+    width: 2em;
 }
 
 .activeRow {
