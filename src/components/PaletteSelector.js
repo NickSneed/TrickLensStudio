@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
@@ -44,6 +44,14 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
     const [shadeLevels, setShadeLevels] = useState([0, 0, 0, 0]);
     const [baseColors, setBaseColors] = useState([null, null, null, null]);
+
+    // Synchronize local shade tracking when a preset palette is selected
+    useEffect(() => {
+        if (currentPalette && currentPalette.id !== 'custom') {
+            setShadeLevels([0, 0, 0, 0]);
+            setBaseColors(currentPalette.colors);
+        }
+    }, [currentPalette?.id]);
 
     // Use the global settings context
     const { settings } = useSettings();
