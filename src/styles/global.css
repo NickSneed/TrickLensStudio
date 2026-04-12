@@ -107,7 +107,9 @@ div {
 h1,
 h2,
 h3 {
+    font-size: 16px;
     font-family: var(--f-bold);
+    font-weight: 400;
 }
 
 select {

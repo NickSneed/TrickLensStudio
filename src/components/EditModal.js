@@ -96,7 +96,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
                 photo={photoToRender}
                 photoG={isRgb && photos?.length >= 1 ? photos[1] : undefined}
                 photoB={isRgb && photos?.length >= 2 ? photos[2] : undefined}
-                paletteId={localPalette}
+                palette={localPalette}
                 frame={localFrame}
                 scaleFactor={4}
                 isScale={true}
@@ -115,7 +115,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
             <ExportButton
                 saveCanvasRef={saveCanvasRef}
                 username={username}
-                paletteId={localPalette}
+                paletteId={localPalette?.id}
             />
         </div>
     );
@@ -256,7 +256,7 @@ export default EditModal;
 
 EditModal.propTypes = {
     photos: PropTypes.array,
-    palette: PropTypes.string,
+    palette: PropTypes.object,
     frame: PropTypes.object,
     username: PropTypes.string
 };

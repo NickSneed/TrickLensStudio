@@ -11,6 +11,17 @@ import * as styles from './SettingsMenu.module.css';
 const SettingsMenu = () => {
     const { settings, handleSettingChange } = useSettings();
 
+    const handleClearStorage = () => {
+        if (
+            window.confirm(
+                'Are you sure you want to clear all data? This will reset all settings and remove loaded save data.'
+            )
+        ) {
+            localStorage.clear();
+            window.location.reload();
+        }
+    };
+
     return (
         <div className={styles.settings}>
             <label>
@@ -114,6 +125,12 @@ const SettingsMenu = () => {
                 <span></span>
                 Enable Animations
             </label>
+            <button
+                onClick={handleClearStorage}
+                className="button"
+            >
+                Clear All Data
+            </button>
         </div>
     );
 };

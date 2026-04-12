@@ -29,7 +29,6 @@
 .modal h2 {
     background: var(--c-modal);
     display: inline-block;
-    font-size: 16px;
     left: 1em;
     padding: 0 0.5em;
     position: absolute;

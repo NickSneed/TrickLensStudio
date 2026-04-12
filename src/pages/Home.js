@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { palettes } from 'tricklens-js';
 import PhotoTile from '../components/PhotoTile.js';
 import ToolBar from '../components/ToolBar.js';
 import Modal from '../components/Modal.js';
@@ -11,7 +12,9 @@ import { useSettings } from '../context/SettingsContext.js';
 const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());
     const [frame, setFrame] = useState(() => getStoredFrame());
-    const [palette, setPalette] = useState(getItem('palette') || 'sgb2h');
+    const [palette, setPalette] = useState(() => {
+        return getItem('palette') || { id: 'sgb2h', ...palettes['sgb2h'] };
+    });
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [editPhotos, setEditPhotos] = useState([]);
@@ -145,7 +148,7 @@ const Home = () => {
                             <PhotoTile
                                 key={photo.index}
                                 photo={photo}
-                                paletteId={palette}
+                                palette={palette}
                                 frame={frame}
                                 isFramePadding={true}
                                 scaleFactor={settings.scaleFactor}

@@ -19,7 +19,7 @@ const CANVAS_PADDING_PX = 16;
  * @param {Object} props.photo - The primary photo data object (Red channel or grayscale).
  * @param {Object} [props.photoG] - The Green channel photo data object (for RGB mode).
  * @param {Object} [props.photoB] - The Blue channel photo data object (for RGB mode).
- * @param {string} [props.paletteId] - The ID of the color palette to apply.
+ * @param {Object} [props.palette] - The color palette object to apply.
  * @param {Object} [props.frame] - The frame object to overlay on the photo.
  * @param {boolean} [props.isFramePadding=false] - Whether to add padding when no frame is present.
  * @param {string} [props.paletteOrder] - The order of colors in the palette (e.g., for inversion).
@@ -34,7 +34,7 @@ const Photo = ({
     photo,
     photoG,
     photoB,
-    paletteId,
+    palette,
     frame,
     isFramePadding = false,
     paletteOrder,
@@ -51,7 +51,7 @@ const Photo = ({
         photo,
         photoG,
         photoB,
-        paletteId,
+        palette,
         frame,
         scaleFactor,
         paletteOrder,
@@ -114,7 +114,7 @@ Photo.propTypes = {
     photo: PropTypes.object.isRequired,
     photoG: PropTypes.object,
     photoB: PropTypes.object,
-    paletteId: PropTypes.string,
+    palette: PropTypes.object,
     frame: PropTypes.shape({
         name: PropTypes.string
     }),

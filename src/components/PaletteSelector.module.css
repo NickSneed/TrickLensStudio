@@ -1,4 +1,28 @@
-.dropdownContainer {
+.paletteicon {
+    border: 2px solid var(--c-black);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 1.9em;
+    margin-top: 2px;
+    position: absolute;
+    right: 0.5em;
+    top: 0.1em;
+    width: 1.9em;
+}
+
+.paletteselector {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    padding-right: 3.5em;
+}
+
+.section {
+    background: color-mix(in srgb, var(--c-modalcopy) 5%, transparent);
+    padding: 1em;
+}
+
+.presetContainer {
     display: grid;
     gap: 0.4em;
     grid-template-columns: auto auto;
@@ -38,46 +62,59 @@
     text-align: center;
 }
 
-.paletteicon {
-    border: 2px solid var(--c-black);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    height: 1.9em;
-    margin-top: 2px;
-    position: absolute;
-    right: 0.5em;
-    top: 0.1em;
-    width: 1.9em;
-}
-
-.paletteselector {
-    align-items: center;
-    display: flex;
-    gap: 8px;
-    padding-right: 3.5em;
-}
-
 .randombutton {
     margin: 1em auto 0;
 }
 
+.custom {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    padding: 0.5em;
+}
+
+.colorRow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    margin-bottom: 1.5em;
+}
+
+.colorRow .swatchColorBlock {
+    border: 1px solid var(--c-modalcopy);
+    height: 1.5em;
+    width: 1.5em;
+}
+
+.colorRow input[type='range'] {
+    cursor: pointer;
+    flex: 1;
+}
+
 @media (min-width: 700px) {
-    .dropdownContainer {
+    .presetContainer {
         display: grid;
         grid-template-columns: auto auto auto auto;
     }
 }
 
 @media (min-width: 900px) {
-    .dropdownContainer {
+    .presetContainer {
         display: grid;
         grid-template-columns: auto auto auto auto auto;
     }
 }
 
 @media (min-width: 1280px) {
-    .dropdownContainer {
+    .presetContainer {
         display: grid;
         grid-template-columns: auto auto auto auto auto auto auto auto;
+    }
+
+    .colorRow {
+        flex-direction: row;
+        align-items: center;
+        gap: 1em;
+        margin-bottom: 0.5em;
     }
 }

@@ -20,19 +20,33 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const { settings } = useSettings();
 
     const handleSelect = (paletteId) => {
-        onPaletteChange(paletteId);
+        onPaletteChange({ id: paletteId, ...palettes[paletteId] });
         setIsOpen(false); // Close the selector after choosing a palette
     };
 
     const handleRandom = () => {
         const paletteKeys = Object.keys(palettes);
-        const randomIndex = Math.floor(Math.random() * paletteKeys.length);
-        const randomPalette = paletteKeys[randomIndex];
-        onPaletteChange(randomPalette);
+        const randomId = paletteKeys[Math.floor(Math.random() * paletteKeys.length)];
+        onPaletteChange({ id: randomId, ...palettes[randomId] });
         setIsOpen(false);
     };
 
-    const currentColors = palettes[currentPalette]?.colors || [];
+    const handleColorChange = (colorIndex, channel, value) => {
+        const newColors = currentColors.map((color, i) => {
+            if (i === colorIndex) {
+                return { ...color, [channel]: parseInt(value, 10) };
+            }
+            return color;
+        });
+
+        onPaletteChange({
+            ...currentPalette,
+            id: 'custom',
+            colors: newColors
+        });
+    };
+
+    const currentColors = currentPalette?.colors || [];
 
     return (
         <>
@@ -60,49 +74,88 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     zindex={8}
                     saveScrollPosition={true}
                 >
-                    <div className={styles.dropdownContainer}>
-                        {Object.keys(palettes).map((paletteId) => {
-                            const palette = palettes[paletteId].colors;
-                            const isSelected = currentPalette === paletteId;
+                    <h3>Presets</h3>
+                    <div className={styles.section}>
+                        <div className={styles.presetContainer}>
+                            {Object.keys(palettes).map((paletteId) => {
+                                const palette = palettes[paletteId].colors;
+                                const isSelected = currentPalette?.id === paletteId;
 
-                            return (
-                                <label
-                                    className={styles.label}
-                                    key={paletteId}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="palette"
-                                        value={paletteId}
-                                        checked={isSelected}
-                                        onChange={(e) => handleSelect(e.target.value)}
-                                        className={styles.radioInput}
-                                    />
-                                    <span
-                                        className={`${styles.swatchContainer} ${isSelected ? styles.selected : ''} ${settings.isAnimate ? 'shake' : ''}`}
+                                return (
+                                    <label
+                                        className={styles.label}
+                                        key={paletteId}
                                     >
-                                        {palette.map((c, index) => (
-                                            <span
-                                                key={index}
-                                                className={styles.swatchColorBlock}
-                                                style={{
-                                                    backgroundColor: `rgb(${c.r},${c.g},${c.b})`
-                                                }}
-                                            ></span>
-                                        ))}
-                                    </span>
-                                    {paletteId}
-                                </label>
-                            );
-                        })}
+                                        <input
+                                            type="radio"
+                                            name="palette"
+                                            value={paletteId}
+                                            checked={isSelected}
+                                            onChange={(e) => handleSelect(e.target.value)}
+                                            className={styles.radioInput}
+                                        />
+                                        <span
+                                            className={`${styles.swatchContainer} ${isSelected ? styles.selected : ''} ${settings.isAnimate ? 'shake' : ''}`}
+                                        >
+                                            {palette.map((c, index) => (
+                                                <span
+                                                    key={index}
+                                                    className={styles.swatchColorBlock}
+                                                    style={{
+                                                        backgroundColor: `rgb(${c.r},${c.g},${c.b})`
+                                                    }}
+                                                ></span>
+                                            ))}
+                                        </span>
+                                        {paletteId}
+                                    </label>
+                                );
+                            })}
+                        </div>
+                        <div className={styles.randombutton}>
+                            <button
+                                onClick={handleRandom}
+                                className="button"
+                            >
+                                Random
+                            </button>
+                        </div>
                     </div>
-                    <div className={styles.randombutton}>
-                        <button
-                            onClick={handleRandom}
-                            className="button"
-                        >
-                            Random
-                        </button>
+                    <h3>Custom</h3>
+                    <div className={styles.section}>
+                        {currentColors.length > 0 && (
+                            <div className={styles.custom}>
+                                {currentColors.map((color, colorIdx) => (
+                                    <div
+                                        key={colorIdx}
+                                        className={styles.colorRow}
+                                    >
+                                        <div
+                                            className={styles.swatchColorBlock}
+                                            style={{
+                                                backgroundColor: `rgb(${color.r},${color.g},${color.b})`
+                                            }}
+                                        />
+                                        {['r', 'g', 'b'].map((channel) => (
+                                            <input
+                                                key={channel}
+                                                type="range"
+                                                min="0"
+                                                max="255"
+                                                value={color[channel]}
+                                                onChange={(e) =>
+                                                    handleColorChange(
+                                                        colorIdx,
+                                                        channel,
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </Modal>
             </div>
@@ -111,7 +164,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
 };
 
 PaletteSelector.propTypes = {
-    currentPalette: PropTypes.string.isRequired,
+    currentPalette: PropTypes.object,
     onPaletteChange: PropTypes.func.isRequired
 };
 

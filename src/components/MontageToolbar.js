@@ -26,7 +26,7 @@ const MontageToolbar = ({ photos, palette, onClick, onClose }) => {
                 {photos.map((photo, index) => (
                     <Photo
                         key={index}
-                        paletteId={palette}
+                        palette={palette}
                         photo={photo}
                         frame={null}
                         scaleFactor={0.4}
@@ -46,7 +46,7 @@ const MontageToolbar = ({ photos, palette, onClick, onClose }) => {
 
 MontageToolbar.propTypes = {
     photos: PropTypes.array.isRequired,
-    palette: PropTypes.string,
+    palette: PropTypes.object,
     onClick: PropTypes.func,
     onClose: PropTypes.func
 };

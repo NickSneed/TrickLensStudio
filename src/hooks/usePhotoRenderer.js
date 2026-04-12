@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { palettes, applyPalette, applyRGB } from 'tricklens-js';
+import { applyPalette, applyRGB } from 'tricklens-js';
 import { composeImage } from '../utils/canvasUtils.js';
 import { getFrameOffsets } from '../utils/frameUtils.js';
 
@@ -10,7 +10,7 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
  * @param {Object} photo - The primary photo data (Red channel or grayscale).
  * @param {Object} photoG - The Green channel photo data (optional, for RGB mode).
  * @param {Object} photoB - The Blue channel photo data (optional, for RGB mode).
- * @param {string} paletteId - The ID of the color palette to apply.
+ * @param {Object} palette - The color palette object to apply.
  * @param {Object} frame - The frame data to overlay.
  * @param {number} displayScale - The scale factor for the display canvas.
  * @param {Array} paletteOrder - The order of colors in the palette.
@@ -23,7 +23,7 @@ export const usePhotoRenderer = (
     photo,
     photoG,
     photoB,
-    paletteId,
+    palette,
     frame,
     displayScale,
     paletteOrder,
@@ -36,7 +36,6 @@ export const usePhotoRenderer = (
     const internalSaveRef = useRef(null);
     const saveCanvasRef = externalSaveRef || internalSaveRef;
     const saveScale = 10; // Scale factor for the high-resolution export
-    const palette = palettes[paletteId];
 
     useEffect(() => {
         if (!photo) return;

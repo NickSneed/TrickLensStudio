@@ -125,7 +125,7 @@ export default ToolBar;
 ToolBar.displayName = 'ToolBar';
 
 ToolBar.propTypes = {
-    palette: PropTypes.string.isRequired,
+    palette: PropTypes.object.isRequired,
     setPalette: PropTypes.func.isRequired,
     setSaveData: PropTypes.func.isRequired,
     setFrame: PropTypes.func.isRequired,

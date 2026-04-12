@@ -9,7 +9,7 @@ import { useSettings } from '../context/SettingsContext.js';
  *
  * @param {Object} props - The component props.
  * @param {Object} props.photo - The photo data object.
- * @param {string} props.paletteId - The ID of the palette to apply.
+ * @param {Object} props.palette - The palette object to apply.
  * @param {Object} props.frame - The frame object to apply.
  * @param {boolean} props.isFramePadding - Whether to apply padding for the frame.
  * @param {number} props.scaleFactor - The scaling factor for the photo.
@@ -22,7 +22,7 @@ import { useSettings } from '../context/SettingsContext.js';
  */
 function PhotoTile({
     photo,
-    paletteId,
+    palette,
     frame,
     isFramePadding,
     scaleFactor,
@@ -46,7 +46,7 @@ function PhotoTile({
             {photo.isDeleted && showDeletedFlag ? <div className={styles.deleted}>d</div> : null}
             <Photo
                 photo={photo}
-                paletteId={paletteId}
+                palette={palette}
                 scaleFactor={scaleFactor}
                 frame={frame}
                 isFramePadding={isFramePadding}
@@ -86,7 +86,7 @@ function PhotoTile({
 
 PhotoTile.propTypes = {
     photo: PropTypes.object,
-    paletteId: PropTypes.string,
+    palette: PropTypes.object,
     frame: PropTypes.object,
     isFramePadding: PropTypes.bool,
     scaleFactor: PropTypes.number,
