@@ -5,7 +5,6 @@ import * as styles from './PaletteSelector.module.css';
 import Modal from './Modal.js';
 import { useSettings } from '../context/SettingsContext.js';
 import FileLoader from './FileLoader.js';
-import QUICK_COLORS from '../utils/quickColors.js';
 
 /**
  * Adjusts the brightness of an RGB color using specific shade levels.
@@ -46,6 +45,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [shadeLevels, setShadeLevels] = useState([0, 0, 0, 0]);
     const [baseColors, setBaseColors] = useState([null, null, null, null]);
     const [userPalettes, setUserPalettes] = useState({});
+    const [quickColors, setQuickColors] = useState([]);
 
     // Synchronize local shade tracking when a preset palette is selected
     useEffect(() => {
@@ -58,9 +58,11 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     // Load user palettes from local storage on component mount
     useEffect(() => {
         try {
-            const storedUserPalettes = localStorage.getItem('tricklens-saved-palettes');
-            if (storedUserPalettes) {
-                setUserPalettes(JSON.parse(storedUserPalettes));
+            const storedData = localStorage.getItem('tricklens-saved-palettes');
+            if (storedData) {
+                const parsed = JSON.parse(storedData);
+                setUserPalettes(parsed.palettes || {});
+                setQuickColors(parsed.quickColors || []);
             }
         } catch (e) {
             console.error('Failed to load user palettes from localStorage', e);
@@ -84,11 +86,15 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         try {
             const decoder = new TextDecoder('utf-8');
             const jsonString = decoder.decode(data);
-            const loadedPalettes = JSON.parse(jsonString);
+            const loadedData = JSON.parse(jsonString);
+
+            const loadedPalettes = loadedData.palettes || {};
+            const loadedQuickColors = loadedData.quickColors || [];
 
             // Basic validation for the loaded structure
             const isValid = Object.values(loadedPalettes).every(
                 (p) =>
+                    p &&
                     p.name &&
                     Array.isArray(p.colors) &&
                     p.colors.every(
@@ -107,8 +113,15 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
             }
 
             setUserPalettes(loadedPalettes);
-            localStorage.setItem('tricklens-saved-palettes', JSON.stringify(loadedPalettes));
-            alert('Palettes loaded successfully!');
+            setQuickColors(loadedQuickColors);
+            localStorage.setItem(
+                'tricklens-saved-palettes',
+                JSON.stringify({
+                    palettes: loadedPalettes,
+                    quickColors: loadedQuickColors
+                })
+            );
+            window.scrollTo(0, 0);
         } catch (error) {
             console.error('Error loading palette file:', error);
             alert('Failed to load palette file. Please ensure it is a valid JSON file.');
@@ -117,6 +130,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
 
     const handleClearUserPalettes = () => {
         setUserPalettes({});
+        setQuickColors([]);
         localStorage.removeItem('tricklens-saved-palettes');
     };
 
@@ -339,27 +353,29 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                         </div>
                                     </div>
                                 ))}
-                                <div className={styles.quickPicker}>
-                                    {QUICK_COLORS.map((color, index) => (
-                                        <div
-                                            key={index}
-                                            className={styles.quickSwatch}
-                                            style={{
-                                                backgroundColor: `rgb(${color.r},${color.g},${color.b})`
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleQuickColorSelect(color);
-                                            }}
-                                        />
-                                    ))}
-                                </div>
+                                {quickColors.length > 0 && (
+                                    <div className={styles.quickPicker}>
+                                        {quickColors.map((color, index) => (
+                                            <div
+                                                key={index}
+                                                className={styles.quickSwatch}
+                                                style={{
+                                                    backgroundColor: `rgb(${color.r},${color.g},${color.b})`
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleQuickColorSelect(color);
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
                     <h3>Load/Manage</h3>
                     <FileLoader
-                        text="Load Palettes ..."
+                        text="Load config ..."
                         onChange={handleLoadUserPalettesFile}
                         onRemove={handleClearUserPalettes}
                         accept=".json"
