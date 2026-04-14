@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
@@ -70,8 +70,11 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     // Use the global settings context
     const { settings } = useSettings();
 
+    // Combine built-in and user palettes for easier access throughout the component
+    const allPalettes = useMemo(() => ({ ...palettes, ...userPalettes }), [userPalettes]);
+
     const handleSelect = (paletteId) => {
-        const selectedPaletteData = userPalettes[paletteId] || palettes[paletteId];
+        const selectedPaletteData = allPalettes[paletteId];
         if (!selectedPaletteData) return;
         onPaletteChange({ id: paletteId, ...selectedPaletteData });
         setIsOpen(false); // Close the selector after choosing a palette
@@ -118,22 +121,15 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     };
 
     const handleRandom = () => {
-        // Combine built-in and user palettes for random selection
-        const allPaletteIds = [...Object.keys(palettes), ...Object.keys(userPalettes)];
+        const allPaletteIds = Object.keys(allPalettes);
         if (allPaletteIds.length === 0) {
             alert('No palettes available for random selection.');
             return;
         }
+
         const randomId = allPaletteIds[Math.floor(Math.random() * allPaletteIds.length)];
 
-        let selectedPaletteData;
-        if (palettes[randomId]) {
-            selectedPaletteData = palettes[randomId];
-        } else if (userPalettes[randomId]) {
-            selectedPaletteData = userPalettes[randomId];
-        }
-
-        onPaletteChange({ id: randomId, ...selectedPaletteData });
+        onPaletteChange({ id: randomId, ...allPalettes[randomId] });
         setIsOpen(false);
     };
 
@@ -242,14 +238,9 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     <h3>Presets</h3>
                     <div className={styles.section}>
                         <div className={styles.presetContainer}>
-                            {Array.from(
-                                new Set([...Object.keys(palettes), ...Object.keys(userPalettes)])
-                            ).map((paletteId) => {
-                                const isUser = !!userPalettes[paletteId];
-                                const paletteData = isUser
-                                    ? userPalettes[paletteId]
-                                    : palettes[paletteId];
-                                const palette = paletteData.colors;
+                            {Object.keys(allPalettes).map((paletteId) => {
+                                const paletteData = allPalettes[paletteId];
+                                const colors = paletteData.colors;
                                 const isSelected = currentPalette?.id === paletteId;
 
                                 return (
@@ -268,7 +259,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                         <span
                                             className={`${styles.swatchContainer} ${isSelected ? styles.selected : ''} ${settings.isAnimate ? 'shake' : ''}`}
                                         >
-                                            {palette.map((c, index) => (
+                                            {colors.map((c, index) => (
                                                 <span
                                                     key={index}
                                                     className={styles.swatchColorBlock}
