@@ -358,15 +358,13 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                         )}
                     </div>
                     <h3>Load/Manage Palettes</h3>
-                    <div className={styles.section}>
-                        <FileLoader
-                            text="Load Palettes File (.json)"
-                            onChange={handleLoadUserPalettesFile}
-                            onRemove={handleClearUserPalettes}
-                            accept=".json"
-                            showRemove={Object.keys(userPalettes).length > 0}
-                        />
-                    </div>
+                    <FileLoader
+                        text="Load Palettes ..."
+                        onChange={handleLoadUserPalettesFile}
+                        onRemove={handleClearUserPalettes}
+                        accept=".json"
+                        showRemove={Object.keys(userPalettes).length > 0}
+                    />
                 </Modal>
             </div>
         </>
