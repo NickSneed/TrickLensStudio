@@ -357,7 +357,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                             </div>
                         )}
                     </div>
-                    <h3>Load/Manage Palettes</h3>
+                    <h3>Load/Manage</h3>
                     <FileLoader
                         text="Load Palettes ..."
                         onChange={handleLoadUserPalettesFile}
