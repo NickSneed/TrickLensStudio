@@ -74,6 +74,25 @@
     padding: 0.5em;
 }
 
+.mobileSwatchBar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5em;
+    justify-content: center;
+}
+
+.mobileSwatchBar .swatchColorBlock {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border: 1px solid #444;
+    box-sizing: border-box;
+}
+
+.activeSwatch {
+    border: 2px solid var(--c-white) !important;
+}
+
 .colorRow {
     display: flex;
     flex-direction: column;
@@ -153,6 +172,12 @@
     .presetContainer {
         display: grid;
         grid-template-columns: auto auto auto auto auto;
+    }
+}
+
+@media (max-width: 1279px) {
+    .colorRow {
+        margin-bottom: 0.5em;
     }
 }
 

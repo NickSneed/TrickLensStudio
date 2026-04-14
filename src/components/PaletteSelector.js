@@ -47,6 +47,16 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [userPalettes, setUserPalettes] = useState({});
     const [quickColors, setQuickColors] = useState([]);
 
+    const [isDesktop, setIsDesktop] = useState(
+        typeof window !== 'undefined' ? window.innerWidth >= 1280 : true
+    );
+
+    useEffect(() => {
+        const handleResize = () => setIsDesktop(window.innerWidth >= 1280);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     // Synchronize local shade tracking when a preset palette is selected
     useEffect(() => {
         if (currentPalette && currentPalette.id !== 'custom') {
@@ -301,58 +311,94 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     <div className={styles.section}>
                         {currentColors.length > 0 && (
                             <div className={styles.custom}>
-                                {currentColors.map((color, colorIdx) => (
+                                {!isDesktop && (
                                     <div
-                                        key={colorIdx}
-                                        className={`${styles.colorRow} ${
-                                            selectedColorIndex === colorIdx ? styles.activeRow : ''
-                                        }`}
-                                        onClick={() => setSelectedColorIndex(colorIdx)}
+                                        style={{
+                                            display: 'flex',
+                                            gap: '10px',
+                                            marginBottom: '15px',
+                                            justifyContent: 'center'
+                                        }}
                                     >
-                                        <div
-                                            className={styles.swatchColorBlock}
-                                            style={{
-                                                backgroundColor: `rgb(${color.r},${color.g},${color.b})`
-                                            }}
-                                        />
-                                        {['r', 'g', 'b'].map((channel) => (
-                                            <input
-                                                key={channel}
-                                                type="range"
-                                                min="0"
-                                                max="255"
-                                                value={color[channel]}
-                                                onChange={(e) =>
-                                                    handleColorChange(
-                                                        colorIdx,
-                                                        channel,
-                                                        e.target.value
-                                                    )
-                                                }
+                                        {currentColors.map((color, idx) => (
+                                            <div
+                                                key={idx}
+                                                className={`${styles.swatchColorBlock} ${selectedColorIndex === idx ? styles.activeSwatch : ''}`}
+                                                style={{
+                                                    backgroundColor: `rgb(${color.r},${color.g},${color.b})`,
+                                                    width: '50px',
+                                                    height: '50px',
+                                                    cursor: 'pointer',
+                                                    border:
+                                                        selectedColorIndex === idx
+                                                            ? '2px solid white'
+                                                            : '1px solid #444',
+                                                    boxSizing: 'border-box'
+                                                }}
+                                                onClick={() => setSelectedColorIndex(idx)}
                                             />
                                         ))}
-                                        <div className={styles.stepper}>
-                                            <button
-                                                className="button"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleShadeChange(colorIdx, -1);
-                                                }}
-                                            >
-                                                -
-                                            </button>
-                                            <button
-                                                className="button"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleShadeChange(colorIdx, 1);
-                                                }}
-                                            >
-                                                +
-                                            </button>
-                                        </div>
                                     </div>
-                                ))}
+                                )}
+                                {currentColors.map((color, colorIdx) => {
+                                    if (!isDesktop && selectedColorIndex !== colorIdx) return null;
+                                    return (
+                                        <div
+                                            key={colorIdx}
+                                            className={`${styles.colorRow} ${
+                                                selectedColorIndex === colorIdx
+                                                    ? styles.activeRow
+                                                    : ''
+                                            }`}
+                                            onClick={() => setSelectedColorIndex(colorIdx)}
+                                        >
+                                            {isDesktop && (
+                                                <div
+                                                    className={styles.swatchColorBlock}
+                                                    style={{
+                                                        backgroundColor: `rgb(${color.r},${color.g},${color.b})`
+                                                    }}
+                                                />
+                                            )}
+                                            {['r', 'g', 'b'].map((channel) => (
+                                                <input
+                                                    key={channel}
+                                                    type="range"
+                                                    min="0"
+                                                    max="255"
+                                                    value={color[channel]}
+                                                    onChange={(e) =>
+                                                        handleColorChange(
+                                                            colorIdx,
+                                                            channel,
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            ))}
+                                            <div className={styles.stepper}>
+                                                <button
+                                                    className="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleShadeChange(colorIdx, -1);
+                                                    }}
+                                                >
+                                                    -
+                                                </button>
+                                                <button
+                                                    className="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleShadeChange(colorIdx, 1);
+                                                    }}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                                 {quickColors.length > 0 && (
                                     <div className={styles.quickPicker}>
                                         {quickColors.map((color, index) => (
