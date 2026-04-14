@@ -4,6 +4,7 @@ import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
 import Modal from './Modal.js';
 import { useSettings } from '../context/SettingsContext.js';
+import FileLoader from './FileLoader.js';
 import QUICK_COLORS from '../utils/quickColors.js';
 
 /**
@@ -44,6 +45,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
     const [shadeLevels, setShadeLevels] = useState([0, 0, 0, 0]);
     const [baseColors, setBaseColors] = useState([null, null, null, null]);
+    const [userPalettes, setUserPalettes] = useState({});
 
     // Synchronize local shade tracking when a preset palette is selected
     useEffect(() => {
@@ -53,18 +55,85 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         }
     }, [currentPalette?.id]);
 
+    // Load user palettes from local storage on component mount
+    useEffect(() => {
+        try {
+            const storedUserPalettes = localStorage.getItem('tricklens-saved-palettes');
+            if (storedUserPalettes) {
+                setUserPalettes(JSON.parse(storedUserPalettes));
+            }
+        } catch (e) {
+            console.error('Failed to load user palettes from localStorage', e);
+        }
+    }, []);
+
     // Use the global settings context
     const { settings } = useSettings();
 
     const handleSelect = (paletteId) => {
-        onPaletteChange({ id: paletteId, ...palettes[paletteId] });
+        const selectedPaletteData = userPalettes[paletteId] || palettes[paletteId];
+        if (!selectedPaletteData) return;
+        onPaletteChange({ id: paletteId, ...selectedPaletteData });
         setIsOpen(false); // Close the selector after choosing a palette
     };
 
+    const handleLoadUserPalettesFile = ({ data }) => {
+        try {
+            const decoder = new TextDecoder('utf-8');
+            const jsonString = decoder.decode(data);
+            const loadedPalettes = JSON.parse(jsonString);
+
+            // Basic validation for the loaded structure
+            const isValid = Object.values(loadedPalettes).every(
+                (p) =>
+                    p.name &&
+                    Array.isArray(p.colors) &&
+                    p.colors.every(
+                        (c) =>
+                            typeof c.r === 'number' &&
+                            typeof c.g === 'number' &&
+                            typeof c.b === 'number'
+                    )
+            );
+
+            if (!isValid) {
+                alert(
+                    'Invalid palette file format. Please ensure it matches the expected structure.'
+                );
+                return;
+            }
+
+            setUserPalettes(loadedPalettes);
+            localStorage.setItem('tricklens-saved-palettes', JSON.stringify(loadedPalettes));
+            alert('Palettes loaded successfully!');
+        } catch (error) {
+            console.error('Error loading palette file:', error);
+            alert('Failed to load palette file. Please ensure it is a valid JSON file.');
+        }
+    };
+
+    const handleClearUserPalettes = () => {
+        setUserPalettes({});
+        localStorage.removeItem('tricklens-saved-palettes');
+    };
+
     const handleRandom = () => {
-        const paletteKeys = Object.keys(palettes);
-        const randomId = paletteKeys[Math.floor(Math.random() * paletteKeys.length)];
-        onPaletteChange({ id: randomId, ...palettes[randomId] });
+        // Combine built-in and user palettes for random selection
+        const allPaletteIds = [...Object.keys(palettes), ...Object.keys(userPalettes)];
+        if (allPaletteIds.length === 0) {
+            alert('No palettes available for random selection.');
+            return;
+        }
+        const randomId = allPaletteIds[Math.floor(Math.random() * allPaletteIds.length)];
+
+        let selectedPaletteData;
+        if (palettes[randomId]) {
+            selectedPaletteData = palettes[randomId];
+        } else if (userPalettes[randomId]) {
+            selectedPaletteData = userPalettes[randomId];
+        }
+
+        onPaletteChange({ id: randomId, ...selectedPaletteData });
         setIsOpen(false);
     };
 
@@ -173,8 +242,14 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     <h3>Presets</h3>
                     <div className={styles.section}>
                         <div className={styles.presetContainer}>
-                            {Object.keys(palettes).map((paletteId) => {
-                                const palette = palettes[paletteId].colors;
+                            {Array.from(
+                                new Set([...Object.keys(palettes), ...Object.keys(userPalettes)])
+                            ).map((paletteId) => {
+                                const isUser = !!userPalettes[paletteId];
+                                const paletteData = isUser
+                                    ? userPalettes[paletteId]
+                                    : palettes[paletteId];
+                                const palette = paletteData.colors;
                                 const isSelected = currentPalette?.id === paletteId;
 
                                 return (
@@ -187,7 +262,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                             name="palette"
                                             value={paletteId}
                                             checked={isSelected}
-                                            onChange={(e) => handleSelect(e.target.value)}
+                                            onChange={() => handleSelect(paletteId)}
                                             className={styles.radioInput}
                                         />
                                         <span
@@ -290,6 +365,16 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 </div>
                             </div>
                         )}
+                    </div>
+                    <h3>Load/Manage Palettes</h3>
+                    <div className={styles.section}>
+                        <FileLoader
+                            text="Load Palettes File (.json)"
+                            onChange={handleLoadUserPalettesFile}
+                            onRemove={handleClearUserPalettes}
+                            accept=".json"
+                            showRemove={Object.keys(userPalettes).length > 0}
+                        />
                     </div>
                 </Modal>
             </div>

@@ -13,7 +13,7 @@ const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());
     const [frame, setFrame] = useState(() => getStoredFrame());
     const [palette, setPalette] = useState(() => {
-        return getItem('palette') || { id: 'sgb2h', ...palettes['sgb2h'] };
+        return getItem('palette') || { id: 'bw', ...palettes['bw'] };
     });
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
