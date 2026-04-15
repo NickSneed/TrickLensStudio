@@ -1,3 +1,4 @@
+/* palette toolbar button */
 .paletteicon {
     border: 2px solid var(--c-black);
     display: grid;
@@ -17,18 +18,32 @@
     padding-right: 3.5em;
 }
 
+/* section divider */
 .section {
     background: color-mix(in srgb, var(--c-modalcopy) 5%, transparent);
     padding: 1em;
 }
 
+/* preset section */
 .presetContainer {
     display: grid;
     gap: 0.4em;
     grid-template-columns: auto auto;
+    @media (min-width: 700px) {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+    }
+    @media (min-width: 900px) {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto;
+    }
+    @media (min-width: 1280px) {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto auto auto;
+    }
 }
 
-.swatchContainer {
+.presetSwatches {
     border: 2px solid var(--c-black);
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
     display: flex;
@@ -38,16 +53,16 @@
     width: 5em;
 }
 
-.swatchContainer.selected {
+.presetSwatches.selected {
     border-color: color-mix(in srgb, var(--c-modalcopy) 10%, #fff);
 }
 
-.swatchContainer:hover,
-.swatchContainer:active {
+.presetSwatches:hover,
+.presetSwatches:active {
     border-color: color-mix(in srgb, var(--c-modalcopy) 40%, var(--c-white));
 }
 
-.swatchColorBlock {
+.presetSwatches .swatchColorBlock {
     height: 100%;
     width: 25%;
 }
@@ -67,6 +82,7 @@
     margin: 1em auto 0;
 }
 
+/* custom section */
 .custom {
     display: flex;
     flex-direction: column;
@@ -74,41 +90,48 @@
     padding: 0.5em;
 }
 
-.mobileSwatchBar {
+.activeRow {
+    outline: 2px solid var(--c-white);
+    outline-offset: 4px;
+}
+
+.mobileColorSwatches {
     display: flex;
     gap: 10px;
-    margin-bottom: 1.5em;
+    margin-bottom: 15px;
     justify-content: center;
 }
 
-.mobileSwatchBar .swatchColorBlock {
-    width: 50px;
-    height: 50px;
+.custom .swatchColorBlock {
+    border: 2px solid var(--c-modalcopy);
     cursor: pointer;
-    border: 1px solid #444;
-    box-sizing: border-box;
+    height: 3em;
+    width: 3em;
+    @media (min-width: 1280px) {
+        height: 2em;
+        width: 2em;
+    }
 }
 
-.activeSwatch {
-    border: 2px solid var(--c-white) !important;
+.custom .swatchColorBlock.activeSwatch {
+    border: 2px solid var(--c-white);
 }
 
-.colorRow {
+.customColorRow {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
     padding: 1em;
-    cursor: pointer;
+    @media (min-width: 1280px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 1em;
+    }
 }
 
-.colorRow .swatchColorBlock {
-    border: 1px solid var(--c-modalcopy);
-    height: 1.5em;
-    width: 1.5em;
-}
-
-.colorRow input[type='range'] {
+.customColorRow input[type='range'] {
     cursor: pointer;
     flex: 1;
 }
@@ -124,15 +147,11 @@
     width: 2em;
 }
 
-.activeRow {
-    outline: 2px solid var(--c-white);
-    outline-offset: 4px;
-}
-
 .quickPicker {
-    display: grid;
-    gap: 4px;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5em;
     margin-top: 1.5em;
 }
 
@@ -140,9 +159,10 @@
     aspect-ratio: 1;
     border: 2px solid var(--c-black);
     cursor: pointer;
+    height: 2.4em;
     box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
     position: relative;
-    width: 100%;
+    width: 2.4em;
 }
 
 .quickSwatch:after {
@@ -161,39 +181,7 @@
     border-color: var(--c-white);
 }
 
-@media (min-width: 700px) {
-    .presetContainer {
-        display: grid;
-        grid-template-columns: auto auto auto auto;
-    }
-}
-
-@media (min-width: 900px) {
-    .presetContainer {
-        display: grid;
-        grid-template-columns: auto auto auto auto auto;
-    }
-}
-
-@media (max-width: 1279px) {
-    .colorRow {
-        margin-bottom: 0.5em;
-    }
-}
-
 @media (min-width: 1280px) {
-    .presetContainer {
-        display: grid;
-        grid-template-columns: auto auto auto auto auto auto auto auto;
-    }
-
-    .colorRow {
-        flex-direction: row;
-        align-items: center;
-        gap: 1em;
-        margin-bottom: 0.5em;
-    }
-
     .quickPicker {
         grid-template-columns: repeat(20, 1fr);
     }

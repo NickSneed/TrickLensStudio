@@ -281,7 +281,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                             className={styles.radioInput}
                                         />
                                         <span
-                                            className={`${styles.swatchContainer} ${isSelected ? styles.selected : ''} ${settings.isAnimate ? 'shake' : ''}`}
+                                            className={`${styles.presetSwatches} ${isSelected ? styles.selected : ''} ${settings.isAnimate ? 'shake' : ''}`}
                                         >
                                             {colors.map((c, index) => (
                                                 <span
@@ -312,28 +312,13 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                         {currentColors.length > 0 && (
                             <div className={styles.custom}>
                                 {!isDesktop && (
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            gap: '10px',
-                                            marginBottom: '15px',
-                                            justifyContent: 'center'
-                                        }}
-                                    >
+                                    <div className={styles.mobileColorSwatches}>
                                         {currentColors.map((color, idx) => (
                                             <div
                                                 key={idx}
                                                 className={`${styles.swatchColorBlock} ${selectedColorIndex === idx ? styles.activeSwatch : ''}`}
                                                 style={{
-                                                    backgroundColor: `rgb(${color.r},${color.g},${color.b})`,
-                                                    width: '50px',
-                                                    height: '50px',
-                                                    cursor: 'pointer',
-                                                    border:
-                                                        selectedColorIndex === idx
-                                                            ? '2px solid white'
-                                                            : '1px solid #444',
-                                                    boxSizing: 'border-box'
+                                                    backgroundColor: `rgb(${color.r},${color.g},${color.b})`
                                                 }}
                                                 onClick={() => setSelectedColorIndex(idx)}
                                             />
@@ -345,7 +330,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                     return (
                                         <div
                                             key={colorIdx}
-                                            className={`${styles.colorRow} ${
+                                            className={`${styles.customColorRow} ${
                                                 selectedColorIndex === colorIdx
                                                     ? styles.activeRow
                                                     : ''
