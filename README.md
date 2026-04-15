@@ -32,6 +32,7 @@ When editing a photo, you can select additional photos to create a montage.
 ### Custom palettes and quick colors
 
 - Custom palettes and quick colors can be loaded via an external JSON
+- Open the palette menu and click Load config to load a config file
 
 JSON format:
 
