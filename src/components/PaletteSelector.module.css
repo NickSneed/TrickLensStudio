@@ -94,7 +94,6 @@
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
-    justify-content: center;
 }
 
 .custom .swatchColorBlock {
@@ -113,7 +112,7 @@
 }
 
 .customColorRow {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.05);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -132,9 +131,21 @@
     flex: 1;
 }
 
+.rgbStepperContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.rgbValues {
+    display: flex;
+    gap: 0.5em;
+    min-width: 200px;
+    line-height: 2.5em;
+}
+
 .activeRow {
     @media (min-width: 1280px) {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.08);
     }
 }
 
@@ -152,7 +163,6 @@
 .quickPicker {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 0.5em;
     margin-top: 1.5em;
     @media (min-width: 1280px) {

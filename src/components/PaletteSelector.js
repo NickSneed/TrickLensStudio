@@ -361,6 +361,11 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                                     }
                                                 />
                                             ))}
+                                            <div className={styles.rgbValues}>
+                                                <span>{color.r}</span>
+                                                <span>{color.g}</span>
+                                                <span>{color.b}</span>
+                                            </div>
                                             <div className={styles.stepper}>
                                                 <button
                                                     className="button"

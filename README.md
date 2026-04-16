@@ -69,12 +69,11 @@ JSON format:
 
 ## To do
 
+- Add more help docs
 - Add bulk export
 - Fix effects and drawing when applying rgb
 - Add hold shift while drawing
 - Add color picker for palettes
 - Add undo to the pixel editor
 - Add stamps
-- Add help docs
-- Show rgb values for custom palettes
 - Add option to save custom palettes
