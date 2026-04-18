@@ -261,7 +261,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 const paletteData = allPalettes[paletteId];
                                 return (
                                     <label
-                                        className={styles.label}
+                                        className={styles.presetLabel}
                                         key={paletteId}
                                     >
                                         <input
@@ -270,7 +270,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                             value={paletteId}
                                             checked={currentPalette?.id === paletteId}
                                             onChange={() => handleSelect(paletteId)}
-                                            className={styles.radioInput}
+                                            className={styles.presetRadioInput}
                                         />
                                         <SwatchSet
                                             colors={paletteData.colors}
@@ -282,7 +282,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 );
                             })}
                         </div>
-                        <div className={styles.randombutton}>
+                        <div className={styles.presetRandomButton}>
                             <MainButton onClick={handleRandom}>Random</MainButton>
                         </div>
                     </div>

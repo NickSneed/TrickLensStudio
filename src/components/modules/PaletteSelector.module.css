@@ -1,10 +1,8 @@
-/* section divider */
 .section {
     background: color-mix(in srgb, var(--c-modalcopy) 5%, transparent);
     padding: 1em;
 }
 
-/* preset section */
 .presetContainer {
     display: grid;
     gap: 0.4em;
@@ -27,22 +25,21 @@
     margin: 0 auto 0.5em;
 }
 
-.randombutton {
-    margin: 1em auto 0;
-}
-
-.label {
+.presetLabel {
     display: block;
     margin: 4px;
     cursor: pointer;
     text-align: center;
 }
 
-.radioInput {
+.presetRadioInput {
     display: none;
 }
 
-/* custom section */
+.presetRandomButton {
+    margin: 1em auto 0;
+}
+
 .custom {
     display: flex;
     flex-direction: column;
@@ -58,6 +55,8 @@
 
 .customColorRow {
     background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--c-gray);
+    box-shadow: var(--shadow);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -91,6 +90,7 @@
 .activeRow {
     @media (min-width: 1280px) {
         background: rgba(255, 255, 255, 0.1);
+        border: 2px solid var(--c-white);
     }
 }
 
@@ -109,7 +109,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
-    margin-top: 1.5em;
+    margin-top: 0.5em;
     @media (min-width: 1280px) {
         grid-template-columns: repeat(20, 1fr);
     }

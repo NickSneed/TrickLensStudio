@@ -40,6 +40,8 @@
     /* shake hover */
     --shake-strength: 0.5px;
     --shake-rotate: 0.5deg;
+
+    --shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
 }
 
 body[data-theme='dark'] {
