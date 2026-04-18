@@ -94,7 +94,7 @@ const Home = () => {
     const activePhotos = allPhotos.filter((photo) => !photo.isDeleted);
     const deletedPhotos = allPhotos.filter((photo) => photo.isDeleted);
 
-    if (settings.isReversed) {
+    if (!settings.isReversed) {
         activePhotos.reverse();
         deletedPhotos.reverse();
     }
