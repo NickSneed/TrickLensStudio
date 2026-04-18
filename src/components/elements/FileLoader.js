@@ -65,6 +65,7 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
                 onClick={handleRemove}
                 isHide={!showRemove}
                 className={styles.remove}
+                isDark={true}
             />
         </div>
     );

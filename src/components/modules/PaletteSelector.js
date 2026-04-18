@@ -4,7 +4,7 @@ import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
 import Modal from '../elements/Modal.js';
 import FileLoader from '../elements/FileLoader.js';
-import SwatchBar from '../elements/SwatchBar.js';
+import SwatchSet from '../elements/SwatchSet.js';
 import MainButton from '../elements/MainButton.js';
 import Swatch from '../elements/Swatch.js';
 
@@ -240,14 +240,10 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     rightPadding={true}
                 >
                     Palette
-                    <div className={styles.paletteicon}>
-                        {currentColors.map((c, index) => (
-                            <div
-                                key={index}
-                                style={{ backgroundColor: `rgb(${c.r},${c.g},${c.b})` }}
-                            />
-                        ))}
-                    </div>
+                    <SwatchSet
+                        colors={currentColors}
+                        layout="2x2"
+                    />
                 </MainButton>
 
                 <Modal
@@ -264,13 +260,25 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                             {Object.keys(allPalettes).map((paletteId) => {
                                 const paletteData = allPalettes[paletteId];
                                 return (
-                                    <SwatchBar
+                                    <label
+                                        className={styles.label}
                                         key={paletteId}
-                                        paletteId={paletteId}
-                                        colors={paletteData.colors}
-                                        isSelected={currentPalette?.id === paletteId}
-                                        handleSelect={handleSelect}
-                                    />
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="palette"
+                                            value={paletteId}
+                                            checked={currentPalette?.id === paletteId}
+                                            onChange={() => handleSelect(paletteId)}
+                                            className={styles.radioInput}
+                                        />
+                                        <SwatchSet
+                                            colors={paletteData.colors}
+                                            isSelected={currentPalette?.id === paletteId}
+                                            className={styles.presetSwatch}
+                                        />
+                                        {paletteId}
+                                    </label>
                                 );
                             })}
                         </div>
@@ -285,12 +293,10 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 {!isDesktop && (
                                     <div className={styles.mobileColorSwatches}>
                                         {currentColors.map((color, idx) => (
-                                            <div
+                                            <Swatch
                                                 key={idx}
-                                                className={`${styles.swatchColorBlock} ${selectedColorIndex === idx ? styles.activeSwatch : ''}`}
-                                                style={{
-                                                    backgroundColor: `rgb(${color.r},${color.g},${color.b})`
-                                                }}
+                                                color={color}
+                                                isSelected={selectedColorIndex === idx}
                                                 onClick={() => setSelectedColorIndex(idx)}
                                             />
                                         ))}
@@ -308,7 +314,12 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                             }`}
                                             onClick={() => setSelectedColorIndex(colorIdx)}
                                         >
-                                            {isDesktop && <Swatch color={color} />}
+                                            {isDesktop && (
+                                                <Swatch
+                                                    color={color}
+                                                    isSelected={selectedColorIndex === colorIdx}
+                                                />
+                                            )}
                                             {['r', 'g', 'b'].map((channel) => (
                                                 <input
                                                     key={channel}

@@ -6,15 +6,15 @@ import * as styles from './Swatch.module.css';
  *
  * @param {Object} props - The component props.
  * @param {Function} [props.onClick] - The function to call when the button is clicked.
- * @param {boolean} [props.isHide=false] - If true, the component will not be rendered.
+ * @param {boolean} [props.isSelected=false] - If true, the swatch will have a selected style applied.
  * @param {Object} props.color - The RGB color object {r, g, b} to display.
- * @returns {JSX.Element|null} The rendered button or null if hidden.
+ * @returns {JSX.Element|null} The rendered color swatch or null if no color is provided.
  */
-const Swatch = ({ onClick, isHide, color }) => {
+const Swatch = ({ onClick, color, isSelected }) => {
     if (!color) return null;
     return (
         <div
-            className={styles.quickSwatch}
+            className={`${styles.quickSwatch} ${isSelected ? styles.selected : ''}`}
             style={{
                 backgroundColor: `rgb(${color.r},${color.g},${color.b})`
             }}
@@ -25,7 +25,12 @@ const Swatch = ({ onClick, isHide, color }) => {
 
 Swatch.propTypes = {
     onClick: PropTypes.func,
-    isHide: PropTypes.bool
+    isSelected: PropTypes.bool,
+    color: PropTypes.shape({
+        r: PropTypes.number,
+        g: PropTypes.number,
+        b: PropTypes.number
+    })
 };
 
 export default Swatch;

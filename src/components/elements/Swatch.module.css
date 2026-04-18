@@ -23,3 +23,7 @@
 .quickSwatch:hover {
     border-color: var(--c-white);
 }
+
+.selected {
+    border: 2px solid var(--c-white);
+}

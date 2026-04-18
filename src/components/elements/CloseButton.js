@@ -8,13 +8,14 @@ import * as styles from './CloseButton.module.css';
  * @param {Function} [props.onClick] - The function to call when the button is clicked.
  * @param {boolean} [props.isHide=false] - If true, the component will not be rendered.
  * @param {string} [props.className] - Additional CSS class names to apply to the button.
+ * @param {boolean} [props.isDark] - If true, dark styling will be applied.
  * @returns {JSX.Element|null} The rendered button or null if hidden.
  */
-const CloseButton = ({ onClick, isHide, className }) => {
+const CloseButton = ({ onClick, isHide, className, isDark }) => {
     if (isHide) return null;
     return (
         <button
-            className={`${styles.closeButton} ${className}`}
+            className={`${styles.closeButton} ${isDark ? styles.dark : ''} ${className}`}
             onClick={onClick}
         >
             x
@@ -25,7 +26,8 @@ const CloseButton = ({ onClick, isHide, className }) => {
 CloseButton.propTypes = {
     onClick: PropTypes.func,
     isHide: PropTypes.bool,
-    className: PropTypes.string
+    className: PropTypes.string,
+    isDark: PropTypes.bool
 };
 
 export default CloseButton;

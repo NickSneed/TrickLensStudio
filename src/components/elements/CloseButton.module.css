@@ -5,6 +5,7 @@
     border: none;
     color: var(--c-modal);
     font-family: var(--f-regular);
+    font-weight: 400;
     font-size: 16px;
     height: 30px;
     line-height: 1;
@@ -12,13 +13,8 @@
     width: 30px;
 }
 
-/*
-button + .closeButton,
-button + .closeButton:hover {
-    background: var(--c-buttonoutline);
+.dark,
+.dark:hover {
+    background: var(--c-black);
     color: var(--c-white);
-    position: absolute;
-    right: 0.8em;
-    top: 0.5em;
 }
-    */

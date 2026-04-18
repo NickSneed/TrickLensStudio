@@ -53,3 +53,9 @@
     padding-right: 3.5em;
     text-align: left;
 }
+
+.mainButton :global(.swatchSet) {
+    position: absolute;
+    right: 0.5em;
+    top: 0.1em;
+}

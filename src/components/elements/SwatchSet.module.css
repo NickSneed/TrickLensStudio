@@ -1,0 +1,32 @@
+.swatchSet {
+    border: 2px solid var(--c-black);
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    display: grid;
+    vertical-align: middle;
+}
+
+.swatchSet.selected {
+    border-color: color-mix(in srgb, var(--c-modalcopy) 10%, #fff);
+}
+
+.swatchSet:hover,
+.swatchSet:active {
+    border-color: color-mix(in srgb, var(--c-modalcopy) 40%, var(--c-white));
+}
+
+.swatchSet .swatchColorBlock {
+    height: 100%;
+    width: 100%;
+}
+
+.layout1x4 {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    height: 1.4em;
+    width: 5em;
+}
+
+.layout2x2 {
+    grid-template-columns: 1fr 1fr;
+    height: 2em;
+    width: 2em;
+}

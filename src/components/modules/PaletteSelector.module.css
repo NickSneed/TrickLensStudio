@@ -1,16 +1,3 @@
-/* palette toolbar button */
-.paletteicon {
-    border: 2px solid var(--c-black);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    height: 1.9em;
-    margin-top: 2px;
-    position: absolute;
-    right: 0.5em;
-    top: 0.1em;
-    width: 1.9em;
-}
-
 /* section divider */
 .section {
     background: color-mix(in srgb, var(--c-modalcopy) 5%, transparent);
@@ -36,8 +23,23 @@
     }
 }
 
+.presetSwatch {
+    margin: 0 auto 0.5em;
+}
+
 .randombutton {
     margin: 1em auto 0;
+}
+
+.label {
+    display: block;
+    margin: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.radioInput {
+    display: none;
 }
 
 /* custom section */
@@ -52,21 +54,6 @@
     display: flex;
     gap: 10px;
     margin-bottom: 15px;
-}
-
-.custom .swatchColorBlock {
-    border: 2px solid var(--c-modalcopy);
-    cursor: pointer;
-    height: 3em;
-    width: 3em;
-    @media (min-width: 1280px) {
-        height: 2em;
-        width: 2em;
-    }
-}
-
-.custom .swatchColorBlock.activeSwatch {
-    border: 2px solid var(--c-white);
 }
 
 .customColorRow {
