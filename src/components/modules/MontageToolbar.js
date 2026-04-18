@@ -38,6 +38,7 @@ const MontageToolbar = ({ photos, palette, onClick, onClose }) => {
             <CloseButton
                 onClick={onClose}
                 className={styles.close}
+                isDark={true}
             />
         </div>
     );
