@@ -9,6 +9,12 @@ import { getItem, setItem, getStoredSave, getStoredFrame } from '../../utils/sto
 import MontageToolbar from '../organisms/MontageToolbar.js';
 import { useSettings } from '../../context/SettingsContext.js';
 
+/**
+ * Home page component that manages the primary photo grid, save data loading,
+ * and coordination between the toolbar and modals.
+ *
+ * @returns {JSX.Element} The rendered Home page.
+ */
 const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());
     const [frame, setFrame] = useState(() => getStoredFrame());

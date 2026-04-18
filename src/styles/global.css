@@ -132,20 +132,6 @@ button {
     padding: 0;
 }
 
-.closeButton,
-.closeButton:hover {
-    background: var(--c-modalcopy);
-    display: block;
-    border: none;
-    color: var(--c-modal);
-    font-family: var(--f-regular);
-    font-size: 16px;
-    height: 30px;
-    line-height: 1;
-    padding: 0;
-    width: 30px;
-}
-
 .colorgreen {
     background-color: var(--c-green);
 }

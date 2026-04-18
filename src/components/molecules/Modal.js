@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import * as styles from './Modal.module.css';
+import CloseButton from '../atoms/CloseButton.js';
 
 let openModalCount = 0;
 
@@ -70,15 +71,13 @@ const Modal = ({
                 onClick={(e) => e.stopPropagation()}
                 style={{ display: 'flex', flexDirection: 'column' }}
             >
-                <button
-                    className={`closeButton ${styles.close}`}
+                <CloseButton
+                    className={styles.close}
                     onClick={(e) => {
                         e.stopPropagation();
                         setIsOpen(!isOpen);
                     }}
-                >
-                    x
-                </button>
+                />
                 <h2>{title}</h2>
                 <div
                     ref={scrollRef}
