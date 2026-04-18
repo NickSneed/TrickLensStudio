@@ -63,7 +63,7 @@ const ImageEditor = () => {
             image,
             baseDimensions,
             displayScale,
-            palette?.id,
+            palette,
             colorIndexMap,
             frame
         );

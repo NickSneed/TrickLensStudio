@@ -3,7 +3,7 @@
     flex-direction: column;
     height: 100%;
     margin: 0 auto;
-    max-width: 56em;
+    max-width: 60em;
     width: 100%;
 }
 
@@ -37,7 +37,7 @@
     }
 
     .controls {
-        flex-basis: 260px;
+        flex-basis: 18em;
         flex-shrink: 0;
         margin-left: 2em;
         padding-top: 0;

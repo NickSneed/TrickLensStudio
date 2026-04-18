@@ -1,5 +1,3 @@
-import { palettes } from 'tricklens-js';
-
 /**
  * Analyzes the image to find unique colors and sorts them by luminance.
  * @param {HTMLImageElement} image - The source image.
@@ -93,7 +91,7 @@ export const getFramedLayout = (baseDimensions, frame) => {
  * @param {number} width - The width of the image.
  * @param {number} height - The height of the image.
  * @param {Map<string, number>} colorIndexMap - The map of original colors to palette indices.
- * @param {string} palette - The palette ID to apply.
+ * @param {Object} palette - The palette object containing a colors array to apply.
  * @returns {HTMLCanvasElement} A new canvas with the palette applied.
  */
 const applyPalette = (source, width, height, colorIndexMap, palette) => {
@@ -106,8 +104,9 @@ const applyPalette = (source, width, height, colorIndexMap, palette) => {
 
     const imageData = tempCtx.getImageData(0, 0, width, height);
     const data = imageData.data;
-    const paletteObj = palettes[palette] || Object.values(palettes)[0];
-    const currentColors = paletteObj ? paletteObj.colors : null;
+
+    // Use the palette object directly
+    const currentColors = palette ? palette.colors : null;
 
     if (currentColors && currentColors.length >= 4) {
         for (let i = 0; i < data.length; i += 4) {
@@ -139,7 +138,7 @@ const applyPalette = (source, width, height, colorIndexMap, palette) => {
  * @param {HTMLImageElement} image - The source image.
  * @param {{width: number, height: number}} baseDimensions - The base dimensions of the image.
  * @param {number} displayScale - The scale factor for drawing.
- * @param {string} palette - The palette ID to apply.
+ * @param {Object} palette - The palette object to apply.
  * @param {Map<string, number>} colorIndexMap - The map of original colors to palette indices.
  * @param {HTMLImageElement} [frame] - The optional frame image.
  */
