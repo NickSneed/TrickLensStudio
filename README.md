@@ -79,7 +79,6 @@ JSON format:
 - Add bulk export
 - Fix effects and drawing when applying rgb
 - Add hold shift while drawing
-- Add color picker for palettes
 - Add undo to the pixel editor
 - Add stamps
 - Add option to save custom palettes
