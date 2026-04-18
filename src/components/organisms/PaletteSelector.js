@@ -5,6 +5,8 @@ import * as styles from './PaletteSelector.module.css';
 import Modal from '../molecules/Modal.js';
 import { useSettings } from '../../context/SettingsContext.js';
 import FileLoader from '../molecules/FileLoader.js';
+import SwatchBar from '../molecules/SwatchBar.js';
+import MainButton from '../atoms/MainButton.js';
 
 /**
  * Adjusts the brightness of an RGB color using specific shade levels.
@@ -236,9 +238,9 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     return (
         <>
             <div>
-                <button
+                <MainButton
                     onClick={() => setIsOpen(!isOpen)}
-                    className={`${styles.paletteselector} button`}
+                    rightPadding={true}
                 >
                     Palette
                     <div className={styles.paletteicon}>
@@ -249,7 +251,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                             />
                         ))}
                     </div>
-                </button>
+                </MainButton>
 
                 <Modal
                     isOpen={isOpen}
@@ -264,47 +266,19 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                         <div className={styles.presetContainer}>
                             {Object.keys(allPalettes).map((paletteId) => {
                                 const paletteData = allPalettes[paletteId];
-                                const colors = paletteData.colors;
-                                const isSelected = currentPalette?.id === paletteId;
-
                                 return (
-                                    <label
-                                        className={styles.label}
+                                    <SwatchBar
                                         key={paletteId}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="palette"
-                                            value={paletteId}
-                                            checked={isSelected}
-                                            onChange={() => handleSelect(paletteId)}
-                                            className={styles.radioInput}
-                                        />
-                                        <span
-                                            className={`${styles.presetSwatches} ${isSelected ? styles.selected : ''} ${settings.isAnimate ? 'shake' : ''}`}
-                                        >
-                                            {colors.map((c, index) => (
-                                                <span
-                                                    key={index}
-                                                    className={styles.swatchColorBlock}
-                                                    style={{
-                                                        backgroundColor: `rgb(${c.r},${c.g},${c.b})`
-                                                    }}
-                                                ></span>
-                                            ))}
-                                        </span>
-                                        {paletteId}
-                                    </label>
+                                        paletteId={paletteId}
+                                        colors={paletteData.colors}
+                                        isSelected={currentPalette?.id === paletteId}
+                                        handleSelect={handleSelect}
+                                    />
                                 );
                             })}
                         </div>
                         <div className={styles.randombutton}>
-                            <button
-                                onClick={handleRandom}
-                                className="button"
-                            >
-                                Random
-                            </button>
+                            <MainButton onClick={handleRandom}>Random</MainButton>
                         </div>
                     </div>
                     <h3>Custom</h3>
@@ -367,24 +341,22 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                                 <span>{color.b}</span>
                                             </div>
                                             <div className={styles.stepper}>
-                                                <button
-                                                    className="button"
+                                                <MainButton
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleShadeChange(colorIdx, -1);
                                                     }}
                                                 >
                                                     -
-                                                </button>
-                                                <button
-                                                    className="button"
+                                                </MainButton>
+                                                <MainButton
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleShadeChange(colorIdx, 1);
                                                     }}
                                                 >
                                                     +
-                                                </button>
+                                                </MainButton>
                                             </div>
                                         </div>
                                     );

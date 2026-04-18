@@ -1,5 +1,6 @@
 import { useSettings } from '../../context/SettingsContext.js';
 import * as styles from './SettingsMenu.module.css';
+import MainButton from '../atoms/MainButton.js';
 
 /**
  * SettingsMenu component displays a list of configurable application settings.
@@ -125,12 +126,7 @@ const SettingsMenu = () => {
                 <span></span>
                 Enable Animations
             </label>
-            <button
-                onClick={handleClearStorage}
-                className="button"
-            >
-                Clear All Data
-            </button>
+            <MainButton onClick={handleClearStorage}>Clear All Data</MainButton>
         </div>
     );
 };

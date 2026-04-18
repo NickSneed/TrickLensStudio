@@ -1,6 +1,7 @@
 import { useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './FileLoader.module.css';
+import MainButton from '../atoms/MainButton.js';
 
 /**
  * FileLoader component handles file input operations.
@@ -53,12 +54,12 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
                 multiple
                 onChange={handleFileChange}
             />
-            <button
-                className="button"
+            <MainButton
                 onClick={handleButtonClick}
+                rightPadding={true}
             >
                 {text}
-            </button>
+            </MainButton>
             <button
                 className={`closeButton ${styles.remove}`}
                 onClick={handleRemove}

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { isIOS } from '../../utils/deviceUtils.js';
 import { usePhotoExporter } from '../../hooks/usePhotoExporter.js';
 import { useSettings } from '../../context/SettingsContext.js';
+import MainButton from '../atoms/MainButton.js';
 
 /**
  * A button that shows "Share" on iOS/supporting platforms and a fallback "Save" or "Export" button otherwise.
@@ -26,23 +27,13 @@ const ExportButton = ({ saveCanvasRef, username, paletteId, fileNameOverride }) 
     const canShare = isIOS() && typeof navigator !== 'undefined' && navigator.share;
 
     if (canShare && handleShare) {
-        return (
-            <button
-                className="button"
-                onClick={handleShare}
-            >
-                Share
-            </button>
-        );
+        return <MainButton onClick={handleShare}>Share</MainButton>;
     }
 
     return (
-        <button
-            className="button"
-            onClick={handleExport}
-        >
+        <MainButton onClick={handleExport}>
             Export<span> as {settings.exportFormat.toUpperCase()}</span>
-        </button>
+        </MainButton>
     );
 };
 

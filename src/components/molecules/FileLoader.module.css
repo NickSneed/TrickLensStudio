@@ -6,11 +6,6 @@
     display: none;
 }
 
-.fileLoader button:not(.remove) {
-    padding-right: 50px !important;
-    text-align: left;
-}
-
 .fileLoader .remove {
     background: var(--c-buttonoutline);
     color: var(--c-white);

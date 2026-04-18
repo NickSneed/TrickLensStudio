@@ -12,6 +12,7 @@ import {
 } from '../../utils/imageProcessingUtils.js';
 import ExportButton from '../molecules/ExportButton.js';
 import EditorLayout from './EditorLayout.js';
+import MainButton from '../atoms/MainButton.js';
 
 /**
  * ImageEditor component provides a UI for uploading, previewing, and scaling PNG images.
@@ -160,12 +161,7 @@ const ImageEditor = () => {
                         onPaletteChange={setPalette}
                     />
                     {palette && (
-                        <button
-                            onClick={() => setPalette(null)}
-                            className={`button`}
-                        >
-                            Remove Palette
-                        </button>
+                        <MainButton onClick={() => setPalette(null)}>Remove Palette</MainButton>
                     )}
                     <label>
                         Scale:{' '}
@@ -195,12 +191,7 @@ const ImageEditor = () => {
 
     return (
         <>
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className={`button`}
-            >
-                Img Editor
-            </button>
+            <MainButton onClick={() => setIsOpen(!isOpen)}>Img Editor</MainButton>
             <Modal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
