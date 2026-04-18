@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
 import Modal from '../molecules/Modal.js';
-import { useSettings } from '../../context/SettingsContext.js';
 import FileLoader from '../molecules/FileLoader.js';
 import SwatchBar from '../molecules/SwatchBar.js';
 import MainButton from '../atoms/MainButton.js';
@@ -80,9 +79,6 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
             console.error('Failed to load user palettes from localStorage', e);
         }
     }, []);
-
-    // Use the global settings context
-    const { settings } = useSettings();
 
     // Combine built-in and user palettes for easier access throughout the component
     const allPalettes = useMemo(() => ({ ...palettes, ...userPalettes }), [userPalettes]);
