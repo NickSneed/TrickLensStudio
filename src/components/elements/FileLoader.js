@@ -1,8 +1,8 @@
 import { useRef, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './FileLoader.module.css';
-import MainButton from '../atoms/MainButton.js';
-import CloseButton from '../atoms/CloseButton.js';
+import MainButton from './MainButton.js';
+import CloseButton from './CloseButton.js';
 
 /**
  * FileLoader component handles file input operations.
@@ -64,6 +64,7 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
             <CloseButton
                 onClick={handleRemove}
                 isHide={!showRemove}
+                className={styles.remove}
             />
         </div>
     );

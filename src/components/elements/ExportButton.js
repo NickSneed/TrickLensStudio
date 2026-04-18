@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { isIOS } from '../../utils/deviceUtils.js';
 import { usePhotoExporter } from '../../hooks/usePhotoExporter.js';
 import { useSettings } from '../../context/SettingsContext.js';
-import MainButton from '../atoms/MainButton.js';
+import MainButton from './MainButton.js';
 
 /**
  * A button that shows "Share" on iOS/supporting platforms and a fallback "Save" or "Export" button otherwise.

@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { palettes } from 'tricklens-js';
-import PhotoTile from '../organisms/PhotoTile.js';
-import ToolBar from '../organisms/ToolBar.js';
-import Modal from '../molecules/Modal.js';
-import SettingsMenu from '../organisms/SettingsMenu.js';
-import EditModal from '../organisms/EditModal.js';
+import PhotoTile from '../modules/PhotoTile.js';
+import ToolBar from '../modules/ToolBar.js';
+import Modal from '../elements/Modal.js';
+import SettingsMenu from '../modules/SettingsMenu.js';
+import EditModal from '../modules/EditModal.js';
 import { getItem, setItem, getStoredSave, getStoredFrame } from '../../utils/storageUtils.js';
-import MontageToolbar from '../organisms/MontageToolbar.js';
+import MontageToolbar from '../modules/MontageToolbar.js';
 import { useSettings } from '../../context/SettingsContext.js';
 
 /**

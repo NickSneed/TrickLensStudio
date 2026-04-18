@@ -1,0 +1,25 @@
+.quickSwatch {
+    aspect-ratio: 1;
+    border: 2px solid var(--c-black);
+    cursor: pointer;
+    height: 2.4em;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    position: relative;
+    width: 2.4em;
+}
+
+.quickSwatch:after {
+    background: var(--c-white);
+    content: '';
+    display: block;
+    height: 90%;
+    left: 5%;
+    top: 5%;
+    opacity: 0.6;
+    position: absolute;
+    width: 8%;
+}
+
+.quickSwatch:hover {
+    border-color: var(--c-white);
+}

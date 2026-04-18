@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import * as styles from './MontageToolbar.module.css';
-import Photo from '../molecules/Photo.js';
+import Photo from '../elements/Photo.js';
+import CloseButton from '../elements/CloseButton.js';
 
 /**
  * MontageToolbar component displays a floating toolbar with selected photos for creating a montage.
@@ -8,7 +9,7 @@ import Photo from '../molecules/Photo.js';
  *
  * @param {Object} props - The component props.
  * @param {Array} props.photos - Array of selected photo objects to be included in the montage.
- * @param {string} props.palette - The ID of the palette to apply to the thumbnail previews.
+ * @param {Object} props.palette - The palette object to apply to the thumbnail previews.
  * @param {Function} props.onClick - Handler for clicking the main toolbar area (e.g., to open edit modal).
  * @param {Function} props.onClose - Handler for clicking the close button (e.g., to clear selection).
  */
@@ -34,12 +35,10 @@ const MontageToolbar = ({ photos, palette, onClick, onClose }) => {
                     />
                 ))}
             </button>
-            <button
-                className={`closeButton ${styles.close}`}
+            <CloseButton
                 onClick={onClose}
-            >
-                x
-            </button>
+                className={styles.close}
+            />
         </div>
     );
 };

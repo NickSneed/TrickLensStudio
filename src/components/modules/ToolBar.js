@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import PaletteSelector from './PaletteSelector.js';
-import FileLoader from '../molecules/FileLoader.js';
+import FileLoader from '../elements/FileLoader.js';
 import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../../utils/canvasUtils.js';
 import { setStoredFrame, removeStoredFrame } from '../../utils/storageUtils.js';
@@ -12,7 +12,7 @@ import * as styles from './ToolBar.module.css';
  * ToolBar component containing controls for file loading, palette selection, and settings.
  *
  * @param {Object} props - The component props.
- * @param {string} props.palette - The ID of the currently selected palette.
+ * @param {Object} props.palette - The currently selected palette object.
  * @param {Function} props.setPalette - Function to update the selected palette.
  * @param {Function} props.setSaveData - Function to update the loaded save data.
  * @param {Function} props.setFrame - Function to update the selected frame.

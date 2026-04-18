@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import Photo from '../molecules/Photo.js';
+import Photo from '../elements/Photo.js';
 import PaletteSelector from './PaletteSelector.js';
 import * as styles from './EditModal.module.css';
 import { useCanvasDrawer } from '../../hooks/useCanvasDrawer.js';
@@ -8,8 +8,8 @@ import { useEffectApplier } from '../../hooks/useEffectApplier.js';
 import { getAvailableMontageTypes } from '../../utils/montageUtils.js';
 import { useSettings } from '../../context/SettingsContext.js';
 import { convertFrameToData } from '../../utils/canvasUtils.js';
-import FileLoader from '../molecules/FileLoader.js';
-import ExportButton from '../molecules/ExportButton.js';
+import FileLoader from '../elements/FileLoader.js';
+import ExportButton from '../elements/ExportButton.js';
 import EditorLayout from './EditorLayout.js';
 
 /**
@@ -18,7 +18,7 @@ import EditorLayout from './EditorLayout.js';
  *
  * @param {Object} props - The component props.
  * @param {Array} props.photos - Array of photo objects to be edited.
- * @param {string} props.palette - The ID of the currently selected palette.
+ * @param {Object} props.palette - The currently selected palette object.
  * @param {Function} props.setPalette - Function to update the selected palette.
  * @param {Object} props.frame - The frame object to apply to the photo.
  * @param {string} props.username - The username associated with the photos (used for export filename).

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as styles from './PhotoTile.module.css';
-import Photo from '../molecules/Photo.js';
+import Photo from '../elements/Photo.js';
 import { useSettings } from '../../context/SettingsContext.js';
 
 /**

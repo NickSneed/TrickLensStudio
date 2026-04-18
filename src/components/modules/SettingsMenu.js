@@ -1,6 +1,6 @@
 import { useSettings } from '../../context/SettingsContext.js';
 import * as styles from './SettingsMenu.module.css';
-import MainButton from '../atoms/MainButton.js';
+import MainButton from '../elements/MainButton.js';
 
 /**
  * SettingsMenu component displays a list of configurable application settings.

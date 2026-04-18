@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import * as styles from './Modal.module.css';
-import CloseButton from '../atoms/CloseButton.js';
+import CloseButton from './CloseButton.js';
 
 let openModalCount = 0;
 
@@ -16,6 +16,7 @@ let openModalCount = 0;
  * @param {React.ReactNode} props.children - The content to display inside the modal.
  * @param {string} [props.type] - Optional type to adjust modal size ('small', 'full').
  * @param {number} [props.zindex] - Optional z-index for the modal wrapper.
+ * @param {boolean} [props.saveScrollPosition=false] - If true, the scroll position will not be reset to top when the modal opens.
  */
 const Modal = ({
     isOpen,
@@ -72,14 +73,13 @@ const Modal = ({
                 style={{ display: 'flex', flexDirection: 'column' }}
             >
                 {' '}
-                <div className={styles.close}>
-                    <CloseButton
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setIsOpen(!isOpen);
-                        }}
-                    />
-                </div>
+                <CloseButton
+                    className={styles.close}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(!isOpen);
+                    }}
+                />
                 <h2>{title}</h2>
                 <div
                     ref={scrollRef}

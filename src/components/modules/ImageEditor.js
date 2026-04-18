@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import Modal from '../molecules/Modal.js';
-import FileLoader from '../molecules/FileLoader.js';
+import Modal from '../elements/Modal.js';
+import FileLoader from '../elements/FileLoader.js';
 import PaletteSelector from './PaletteSelector.js';
 import * as styles from './ImageEditor.module.css';
 import {
@@ -10,9 +10,9 @@ import {
     getFramedLayout,
     createImageFromBuffer
 } from '../../utils/imageProcessingUtils.js';
-import ExportButton from '../molecules/ExportButton.js';
+import ExportButton from '../elements/ExportButton.js';
 import EditorLayout from './EditorLayout.js';
-import MainButton from '../atoms/MainButton.js';
+import MainButton from '../elements/MainButton.js';
 
 /**
  * ImageEditor component provides a UI for uploading, previewing, and scaling PNG images.

@@ -2,10 +2,11 @@ import { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
-import Modal from '../molecules/Modal.js';
-import FileLoader from '../molecules/FileLoader.js';
-import SwatchBar from '../molecules/SwatchBar.js';
-import MainButton from '../atoms/MainButton.js';
+import Modal from '../elements/Modal.js';
+import FileLoader from '../elements/FileLoader.js';
+import SwatchBar from '../elements/SwatchBar.js';
+import MainButton from '../elements/MainButton.js';
+import Swatch from '../elements/Swatch.js';
 
 /**
  * Adjusts the brightness of an RGB color using specific shade levels.
@@ -37,7 +38,7 @@ const getSGBShade = (r, g, b, level) => {
  * It displays the current palette and opens a modal with available options.
  *
  * @param {Object} props - The component props.
- * @param {string} props.currentPalette - The ID of the currently selected palette.
+ * @param {Object} props.currentPalette - The currently selected palette object.
  * @param {Function} props.onPaletteChange - Handler called when a new palette is selected.
  */
 const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
@@ -307,14 +308,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                             }`}
                                             onClick={() => setSelectedColorIndex(colorIdx)}
                                         >
-                                            {isDesktop && (
-                                                <div
-                                                    className={styles.swatchColorBlock}
-                                                    style={{
-                                                        backgroundColor: `rgb(${color.r},${color.g},${color.b})`
-                                                    }}
-                                                />
-                                            )}
+                                            {isDesktop && <Swatch color={color} />}
                                             {['r', 'g', 'b'].map((channel) => (
                                                 <input
                                                     key={channel}
@@ -360,12 +354,9 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                                 {quickColors.length > 0 && (
                                     <div className={styles.quickPicker}>
                                         {quickColors.map((color, index) => (
-                                            <div
+                                            <Swatch
                                                 key={index}
-                                                className={styles.quickSwatch}
-                                                style={{
-                                                    backgroundColor: `rgb(${color.r},${color.g},${color.b})`
-                                                }}
+                                                color={color}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleQuickColorSelect(color);

@@ -15,10 +15,7 @@ import { useSettings } from '../../context/SettingsContext.js';
 const SwatchBar = ({ paletteId, isSelected, handleSelect, colors }) => {
     const { settings } = useSettings();
     return (
-        <label
-            className={styles.label}
-            key={paletteId}
-        >
+        <label className={styles.label}>
             <input
                 type="radio"
                 name="palette"

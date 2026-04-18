@@ -11,18 +11,9 @@
 }
 
 .close {
-    background: var(--c-black);
-    border: 2px solid var(--c-white);
-    color: var(--c-white);
     position: absolute;
     right: 0;
     top: 0;
-}
-
-.close:hover {
-    background: var(--c-black);
-    border: 2px solid var(--c-white);
-    color: var(--c-white);
 }
 
 @media (min-width: 1280px) {
