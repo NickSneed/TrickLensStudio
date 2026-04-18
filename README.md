@@ -29,6 +29,12 @@ When editing a photo, you can select additional photos to create a montage.
 - **Standard Montages:** Combine photos using layouts like horizontal strips, vertical strips, or quadrants.
 - **RGB Composition:** Select the **rgb** option to combine three photos into a single color photo. This uses the first montage photo as the Red channel, the second as the Green channel, and the current photo as the Blue channel.
 
+### Palettes
+
+The follow palette options are included:
+
+![Description of image](https://github.com/NickSneed/TrickLensJS/blob/main/src/assets/palettes.png)
+
 ### Custom palettes and quick colors
 
 - Custom palettes and quick colors can be loaded via an external JSON
