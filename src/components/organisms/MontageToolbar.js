@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as styles from './MontageToolbar.module.css';
-import Photo from './Photo.js';
+import Photo from '../molecules/Photo.js';
 
 /**
  * MontageToolbar component displays a floating toolbar with selected photos for creating a montage.

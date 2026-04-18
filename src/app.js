@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import './styles/global.css';
-import Layout from './pages/Layout.js';
-import Home from './pages/Home.js';
+import Layout from './components/pages/Layout.js';
+import Home from './components//pages/Home.js';
 import { SettingsProvider } from './context/SettingsContext.js';
 
 export default function App() {

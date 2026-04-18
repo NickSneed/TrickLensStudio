@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './Photo.module.css';
-import { usePhotoRenderer } from '../hooks/usePhotoRenderer.js';
+import { usePhotoRenderer } from '../../hooks/usePhotoRenderer.js';
 
 // Constants for photo dimensions based on Game Boy Camera specs
 const PHOTO_WIDTH_NO_FRAME = 128;

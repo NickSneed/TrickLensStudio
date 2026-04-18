@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { palettes } from 'tricklens-js';
 import * as styles from './PaletteSelector.module.css';
-import Modal from './Modal.js';
-import { useSettings } from '../context/SettingsContext.js';
-import FileLoader from './FileLoader.js';
+import Modal from '../molecules/Modal.js';
+import { useSettings } from '../../context/SettingsContext.js';
+import FileLoader from '../molecules/FileLoader.js';
 
 /**
  * Adjusts the brightness of an RGB color using specific shade levels.

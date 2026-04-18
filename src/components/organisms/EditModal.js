@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import Photo from '../components/Photo.js';
-import PaletteSelector from '../components/PaletteSelector.js';
+import Photo from '../molecules/Photo.js';
+import PaletteSelector from './PaletteSelector.js';
 import * as styles from './EditModal.module.css';
-import { useCanvasDrawer } from '../hooks/useCanvasDrawer.js';
-import { useEffectApplier } from '../hooks/useEffectApplier.js';
-import { getAvailableMontageTypes } from '../utils/montageUtils.js';
-import { useSettings } from '../context/SettingsContext.js';
-import { convertFrameToData } from '../utils/canvasUtils.js';
-import FileLoader from '../components/FileLoader.js';
-import ExportButton from './ExportButton.js';
+import { useCanvasDrawer } from '../../hooks/useCanvasDrawer.js';
+import { useEffectApplier } from '../../hooks/useEffectApplier.js';
+import { getAvailableMontageTypes } from '../../utils/montageUtils.js';
+import { useSettings } from '../../context/SettingsContext.js';
+import { convertFrameToData } from '../../utils/canvasUtils.js';
+import FileLoader from '../molecules/FileLoader.js';
+import ExportButton from '../molecules/ExportButton.js';
 import EditorLayout from './EditorLayout.js';
 
 /**

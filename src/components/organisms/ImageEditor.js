@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import Modal from './Modal.js';
-import FileLoader from './FileLoader.js';
+import Modal from '../molecules/Modal.js';
+import FileLoader from '../molecules/FileLoader.js';
 import PaletteSelector from './PaletteSelector.js';
 import * as styles from './ImageEditor.module.css';
 import {
@@ -9,8 +9,8 @@ import {
     calculateBaseDimensions,
     getFramedLayout,
     createImageFromBuffer
-} from '../utils/imageProcessingUtils.js';
-import ExportButton from './ExportButton.js';
+} from '../../utils/imageProcessingUtils.js';
+import ExportButton from '../molecules/ExportButton.js';
 import EditorLayout from './EditorLayout.js';
 
 /**

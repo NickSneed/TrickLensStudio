@@ -1,10 +1,10 @@
 import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import PaletteSelector from '../components/PaletteSelector.js';
-import FileLoader from '../components/FileLoader.js';
+import PaletteSelector from './PaletteSelector.js';
+import FileLoader from '../molecules/FileLoader.js';
 import { parseSave } from 'tricklens-js';
-import { convertFrameToData } from '../utils/canvasUtils.js';
-import { setStoredFrame, removeStoredFrame } from '../utils/storageUtils.js';
+import { convertFrameToData } from '../../utils/canvasUtils.js';
+import { setStoredFrame, removeStoredFrame } from '../../utils/storageUtils.js';
 import ImageEditor from './ImageEditor.js';
 import * as styles from './ToolBar.module.css';
 

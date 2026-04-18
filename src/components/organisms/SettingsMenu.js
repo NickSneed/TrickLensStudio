@@ -1,4 +1,4 @@
-import { useSettings } from '../context/SettingsContext.js';
+import { useSettings } from '../../context/SettingsContext.js';
 import * as styles from './SettingsMenu.module.css';
 
 /**

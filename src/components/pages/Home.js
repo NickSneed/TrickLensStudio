@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { palettes } from 'tricklens-js';
-import PhotoTile from '../components/PhotoTile.js';
-import ToolBar from '../components/ToolBar.js';
-import Modal from '../components/Modal.js';
-import SettingsMenu from '../components/SettingsMenu.js';
-import EditModal from '../components/EditModal.js';
-import { getItem, setItem, getStoredSave, getStoredFrame } from '../utils/storageUtils.js';
-import MontageToolbar from '../components/MontageToolbar.js';
-import { useSettings } from '../context/SettingsContext.js';
+import PhotoTile from '../organisms/PhotoTile.js';
+import ToolBar from '../organisms/ToolBar.js';
+import Modal from '../molecules/Modal.js';
+import SettingsMenu from '../organisms/SettingsMenu.js';
+import EditModal from '../organisms/EditModal.js';
+import { getItem, setItem, getStoredSave, getStoredFrame } from '../../utils/storageUtils.js';
+import MontageToolbar from '../organisms/MontageToolbar.js';
+import { useSettings } from '../../context/SettingsContext.js';
 
 const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());

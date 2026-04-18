@@ -73,6 +73,13 @@ JSON format:
 }
 ```
 
+### Component directory structure
+
+- Atoms: Basic building blocks (Buttons, Inputs, Labels).
+- Molecules: Groups of atoms functioning together (a Search Bar with a label and button).
+- Organisms: Complex sections composed of molecules (a Header or a Sidebar).
+- Pages: Page-level layouts
+
 ## To do
 
 - Add more help docs

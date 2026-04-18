@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as styles from './PhotoTile.module.css';
-import Photo from './Photo.js';
-import { useSettings } from '../context/SettingsContext.js';
+import Photo from '../molecules/Photo.js';
+import { useSettings } from '../../context/SettingsContext.js';
 
 /**
  * PhotoTile component renders a single photo within a tile layout.
