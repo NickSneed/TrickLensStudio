@@ -62,7 +62,6 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
                 {text}
             </MainButton>
             <CloseButton
-                className={styles.remove}
                 onClick={handleRemove}
                 isHide={!showRemove}
             />

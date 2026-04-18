@@ -71,13 +71,15 @@ const Modal = ({
                 onClick={(e) => e.stopPropagation()}
                 style={{ display: 'flex', flexDirection: 'column' }}
             >
-                <CloseButton
-                    className={styles.close}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setIsOpen(!isOpen);
-                    }}
-                />
+                {' '}
+                <div className={styles.close}>
+                    <CloseButton
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsOpen(!isOpen);
+                        }}
+                    />
+                </div>
                 <h2>{title}</h2>
                 <div
                     ref={scrollRef}
