@@ -83,6 +83,8 @@ body {
 
 body {
     background-color: var(--c-background);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Crect width='1' height='1' fill='black' fill-opacity='0.1'/%3E%3Crect width='1' height='1' x='2' y='1' fill='black' fill-opacity='0.05'/%3E%3Crect width='1' height='1' x='1' y='2' fill='white' fill-opacity='0.03'/%3E%3Crect width='1' height='1' x='3' y='3' fill='black' fill-opacity='0.15'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
     color: var(--c-copy);
     font-family: sans-serif;
     font-size: 16px;
