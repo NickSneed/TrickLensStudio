@@ -27,6 +27,6 @@
 
 .layout2x2 {
     grid-template-columns: 1fr 1fr;
-    height: 2em;
-    width: 2em;
+    height: 1.8em;
+    width: 1.8em;
 }

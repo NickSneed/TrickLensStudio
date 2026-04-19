@@ -21,7 +21,7 @@
     --f-regular: 'DogicaPixel', sans-serif;
     --f-bold: 'DogicaPixelBold', sans-serif;
 
-    /* Other */
+    /* other */
     --c-white: #fff;
     --c-black: #000;
     --c-gray: #333;
@@ -41,6 +41,7 @@
     --shake-strength: 0.5px;
     --shake-rotate: 0.5deg;
 
+    /* shadow */
     --shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
 }
 
