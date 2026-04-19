@@ -45,7 +45,7 @@ const Photo = ({
     imageSmoothing = false
 }) => {
     const { brightness: rgbBrightness = 0, contrast: rgbContrast = 0 } = rgbConfig;
-    const { onDrawStart, onDrawMove, onDrawEnd } = drawHandlers;
+    const { onDrawStart, onDrawMove, onDrawEnd, onMouseLeave } = drawHandlers;
 
     const { displayCanvasRef } = usePhotoRenderer(
         photo,
@@ -102,7 +102,7 @@ const Photo = ({
             onMouseDown={onDrawStart}
             onMouseMove={onDrawMove}
             onMouseUp={onDrawEnd}
-            onMouseLeave={onDrawEnd}
+            onMouseLeave={onMouseLeave}
             onTouchStart={onDrawStart}
             onTouchMove={onDrawMove}
             onTouchEnd={onDrawEnd}
@@ -129,7 +129,8 @@ Photo.propTypes = {
     drawHandlers: PropTypes.shape({
         onDrawStart: PropTypes.func,
         onDrawMove: PropTypes.func,
-        onDrawEnd: PropTypes.func
+        onDrawEnd: PropTypes.func,
+        onMouseLeave: PropTypes.func
     }),
     imageSmoothing: PropTypes.bool
 };

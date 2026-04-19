@@ -15,6 +15,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     const [previewPhoto, setPreviewPhoto] = useState(initialPhoto); // The photo state for rendering, including hover previews
     const [isDrawing, setIsDrawing] = useState(false);
     const requestRef = useRef(null);
+    const isHoveringRef = useRef(false);
 
     useEffect(() => {
         return () => {
@@ -121,8 +122,15 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
             const coords = getCanvasRelativeCoords(e);
             if (!coords || !drawPhoto) return;
 
+            isHoveringRef.current = true;
+
             requestRef.current = requestAnimationFrame(() => {
                 requestRef.current = null;
+
+                // Guard: If the mouse has already left, don't update the preview.
+                // This prevents the "last pixel" ghosting.
+                if (!isHoveringRef.current && !isDrawing) return;
+
                 const { unscaledX, unscaledY } = coords;
                 const newPixels = applyBrush(drawPhoto.pixels, unscaledX, unscaledY);
                 if (isDrawing) {
@@ -143,6 +151,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     }, []);
 
     const handleMouseLeave = useCallback(() => {
+        isHoveringRef.current = false;
         if (requestRef.current) {
             cancelAnimationFrame(requestRef.current);
             requestRef.current = null;
