@@ -57,18 +57,16 @@ function PhotoTile({
     return (
         <>
             <div className={styles.phototile}>
-                <div className={settings.isAnimate ? 'shake' : ''}>
-                    {onClick ? (
-                        <button
-                            className={styles.canvasContainer}
-                            onClick={onClick}
-                        >
-                            {canvasMarkup}
-                        </button>
-                    ) : (
-                        <div className={styles.canvasContainer}>{canvasMarkup}</div>
-                    )}
-                </div>
+                {onClick ? (
+                    <button
+                        className={`${styles.canvasContainer} ${settings.isAnimate ? 'shake' : ''}`}
+                        onClick={onClick}
+                    >
+                        {canvasMarkup}
+                    </button>
+                ) : (
+                    <div className={styles.canvasContainer}>{canvasMarkup}</div>
+                )}
 
                 <label className="pixel-checkbox">
                     <input
