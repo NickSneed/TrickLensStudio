@@ -18,6 +18,10 @@
 }
 
 .photoDetails {
-    padding: 0.5em 0 1.5em;
+    padding: 0.5em 0;
     text-align: center;
+}
+
+.photoDetail {
+    padding: 0 0 1em;
 }

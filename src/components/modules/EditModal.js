@@ -112,16 +112,14 @@ const EditModal = ({ photos, palette, frame, username }) => {
                 saveRef={saveCanvasRef}
                 rgbConfig={{ brightness: rgbBrightness, contrast: rgbContrast }}
             />
-            <div className={styles.photoDetails}>
-                Artist: {username}
-                {photos?.length && photos[0].comment ? (
-                    <>
-                        <br />
-                        <br />
-                        Comment: {photos[0].comment}
-                    </>
-                ) : null}
-            </div>
+            {username || (photos?.length && photos[0].comment) ? (
+                <div className={styles.photoDetails}>
+                    {username ? <div className={styles.photoDetail}>Artist: {username}</div> : null}
+                    {photos?.length && photos[0].comment ? (
+                        <div className={styles.photoDetail}>Comment: {photos[0].comment}</div>
+                    ) : null}
+                </div>
+            ) : null}
             <ExportButton
                 saveCanvasRef={saveCanvasRef}
                 username={username}

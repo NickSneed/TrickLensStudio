@@ -89,4 +89,3 @@ JSON format:
 - Add undo to the pixel editor
 - Add stamps
 - Add option to save custom palettes
-- using arrows to switch between photos
