@@ -119,7 +119,9 @@ const EditModal = ({ photos, palette, frame, username }) => {
             />
             {username || (photos?.length && photos[0].comment) ? (
                 <div className={styles.photoDetails}>
-                    {username ? <div className={styles.photoDetail}>Artist: {username}</div> : null}
+                    {username ? (
+                        <div className={styles.photoDetail}>User Name: {username}</div>
+                    ) : null}
                     {photos?.length && photos[0].comment ? (
                         <div className={styles.photoDetail}>Comment: {photos[0].comment}</div>
                     ) : null}
