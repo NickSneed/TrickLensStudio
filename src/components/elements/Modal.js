@@ -34,7 +34,7 @@ const Modal = ({
         if (isOpen) {
             openModalCount++;
             if (openModalCount === 1) {
-                document.body.classList.add('modal-open');
+                document.body.classList.add('modalOpen');
             }
 
             if (scrollRef.current && !saveScrollPosition) {
@@ -46,7 +46,7 @@ const Modal = ({
             if (isOpen) {
                 openModalCount--;
                 if (openModalCount === 0) {
-                    document.body.classList.remove('modal-open');
+                    document.body.classList.remove('modalOpen');
                 }
             }
         };

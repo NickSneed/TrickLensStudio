@@ -196,12 +196,12 @@ label {
     }
 }
 
-.pixel-checkbox {
+.pixelCheckbox {
     display: block;
     cursor: pointer;
 }
 
-.pixel-checkbox input {
+.pixelCheckbox input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
@@ -209,7 +209,7 @@ label {
     width: 0;
 }
 
-.pixel-checkbox span {
+.pixelCheckbox span {
     background-color: var(--c-inputback);
     border: 2px solid var(--c-inputoutline);
     display: inline-block;
@@ -220,7 +220,7 @@ label {
     width: 18px;
 }
 
-.pixel-checkbox input:checked ~ span:after {
+.pixelCheckbox input:checked ~ span:after {
     content: '';
     position: absolute;
     left: 5px;
@@ -232,13 +232,13 @@ label {
     transform: rotate(45deg);
 }
 
-.pixel-checkbox input:disabled ~ span {
+.pixelCheckbox input:disabled ~ span {
     cursor: not-allowed;
     background-color: color-mix(in srgb, var(--c-inputback) 50%, #000);
     border-color: color-mix(in srgb, var(--c-inputoutline) 50%, #000);
 }
 
-.modal-open {
+.modalOpen {
     overflow: hidden;
 }
 

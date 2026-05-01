@@ -96,7 +96,7 @@ const SettingsMenu = () => {
                     />
                 </label>
             ) : null}
-            <label className="pixel-checkbox">
+            <label className="pixelCheckbox">
                 <input
                     type="checkbox"
                     name="isReversed"
@@ -106,7 +106,7 @@ const SettingsMenu = () => {
                 <span></span>
                 Reverse order
             </label>
-            <label className="pixel-checkbox">
+            <label className="pixelCheckbox">
                 <input
                     type="checkbox"
                     name="isShowDeleted"
@@ -116,7 +116,7 @@ const SettingsMenu = () => {
                 <span></span>
                 Show deleted
             </label>
-            <label className="pixel-checkbox">
+            <label className="pixelCheckbox">
                 <input
                     type="checkbox"
                     name="isAnimate"

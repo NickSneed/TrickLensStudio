@@ -68,7 +68,7 @@ function PhotoTile({
                     <div className={styles.canvasContainer}>{canvasMarkup}</div>
                 )}
 
-                <label className="pixel-checkbox">
+                <label className="pixelCheckbox">
                     <input
                         type="checkbox"
                         checked={isSelected}
