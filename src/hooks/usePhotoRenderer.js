@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { applyPalette, applyRGB } from 'tricklens-js';
 import { composeImage } from '../utils/canvasUtils.js';
 import { getFrameOffsets } from '../utils/frameUtils.js';
+import { useSettings } from '../context/SettingsContext.js';
 
 /**
  * Hook to render the photo with applied effects, palettes, and frames.
@@ -32,10 +33,11 @@ export const usePhotoRenderer = (
     externalSaveRef,
     imageSmoothing = false
 ) => {
+    const { settings } = useSettings();
     const displayCanvasRef = useRef(null);
     const internalSaveRef = useRef(null);
     const saveCanvasRef = externalSaveRef || internalSaveRef;
-    const saveScale = 10; // Scale factor for the high-resolution export
+    const { saveScale } = settings; // Scale factor for the high-resolution export
 
     useEffect(() => {
         if (!photo) return;

@@ -17,7 +17,8 @@ export const SettingsProvider = ({ children }) => {
             exportFormat: getItem('exportFormat') || 'png',
             exportQuality: Number(getItem('exportQuality')) || 0.9,
             theme: getItem('theme') || 'system',
-            isAnimate: getItem('isAnimate') || false
+            isAnimate: getItem('isAnimate') || false,
+            saveScale: Number(getItem('saveScale')) || 10
         };
     });
 
@@ -72,7 +73,7 @@ export const SettingsProvider = ({ children }) => {
         const newValue =
             type === 'checkbox'
                 ? checked
-                : name === 'scaleFactor' || name === 'exportQuality'
+                : name === 'scaleFactor' || name === 'exportQuality' || name === 'saveScale'
                   ? Number(value)
                   : value;
 

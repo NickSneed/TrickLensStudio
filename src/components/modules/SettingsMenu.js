@@ -34,7 +34,7 @@ const SettingsMenu = () => {
                     onChange={handleSettingChange}
                 >
                     <option value={1}>1</option>
-                    <option value={2}>2</option>
+                    <option value={2}>2 (default)</option>
                     <option value={3}>3</option>
                     <option value={4}>4</option>
                 </select>
@@ -48,7 +48,7 @@ const SettingsMenu = () => {
                     onChange={handleSettingChange}
                 >
                     <option>red</option>
-                    <option>green</option>
+                    <option>green (default)</option>
                     <option>yellow</option>
                     <option>blue</option>
                 </select>
@@ -61,9 +61,25 @@ const SettingsMenu = () => {
                     value={settings.theme}
                     onChange={handleSettingChange}
                 >
-                    <option value="system">System</option>
+                    <option value="system">System (default)</option>
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
+                </select>
+            </label>
+            <label>
+                Export scale:{' '}
+                <select
+                    className="select"
+                    name="saveScale"
+                    value={settings.saveScale}
+                    onChange={handleSettingChange}
+                >
+                    <option value={1}>1x</option>
+                    <option value={2}>2x</option>
+                    <option value={4}>4x</option>
+                    <option value={8}>8x</option>
+                    <option value={10}>10x (default)</option>
+                    <option value={16}>16x</option>
                 </select>
             </label>
             <label>
@@ -74,7 +90,7 @@ const SettingsMenu = () => {
                     value={settings.exportFormat}
                     onChange={handleSettingChange}
                 >
-                    <option value="png">PNG</option>
+                    <option value="png">PNG (default)</option>
                     <option value="jpg">JPG</option>
                 </select>
             </label>
