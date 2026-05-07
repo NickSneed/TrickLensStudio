@@ -1,10 +1,23 @@
 /**
  * Constants for localStorage keys used by the application.
  */
-const KEYS = {
+export const KEYS = {
     SAVE_DATA: 'tricklens-save-data',
     FRAME_DATA: 'tricklens-frame-data',
-    PALETTES: 'tricklens-saved-palettes'
+    // User-saved palettes
+    PALETTES: 'tricklens-saved-palettes',
+    // Currently selected palette
+    ACTIVE_PALETTE: 'tricklens-active-palette',
+    // Settings keys
+    SETTING_SCALE_FACTOR: 'tricklens-setting-scale-factor',
+    SETTING_IS_SHOW_DELETED: 'tricklens-setting-is-show-deleted',
+    SETTING_COLOR: 'tricklens-setting-color',
+    SETTING_IS_REVERSED: 'tricklens-setting-is-reversed',
+    SETTING_EXPORT_FORMAT: 'tricklens-setting-export-format',
+    SETTING_EXPORT_QUALITY: 'tricklens-setting-export-quality',
+    SETTING_THEME: 'tricklens-setting-theme',
+    SETTING_IS_ANIMATE: 'tricklens-setting-is-animate',
+    SETTING_SAVE_SCALE: 'tricklens-setting-save-scale'
 };
 
 /**
@@ -36,129 +49,129 @@ const fromBase64 = (str) => {
     return bytes;
 };
 
+// Custom replacer for JSON.stringify to handle Uint8Array
+const uint8ArrayReplacer = (key, value) => {
+    if (value instanceof Uint8Array) {
+        return { __type: 'Uint8Array', data: toBase64(value) };
+    }
+    return value;
+};
+
+// Custom reviver for JSON.parse to handle Uint8Array
+const uint8ArrayReviver = (key, value) => {
+    if (
+        value &&
+        typeof value === 'object' &&
+        value.__type === 'Uint8Array' &&
+        typeof value.data === 'string'
+    ) {
+        return fromBase64(value.data);
+    }
+    return value;
+};
+
+// Generic localStorage operations with optional custom replacer/reviver
+const storage = {
+    getItem: (key, reviver = null) => {
+        try {
+            const item = window.localStorage.getItem(key);
+            return item ? JSON.parse(item, reviver) : null;
+        } catch (error) {
+            console.error(`Error getting item "${key}" from localStorage:`, error);
+            return null;
+        }
+    },
+    setItem: (key, value, replacer = null) => {
+        try {
+            const stringifiedValue = JSON.stringify(value, replacer);
+            window.localStorage.setItem(key, stringifiedValue);
+        } catch (error) {
+            console.error(`Error setting item "${key}" in localStorage:`, error);
+        }
+    },
+    removeItem: (key) => {
+        try {
+            window.localStorage.removeItem(key);
+        } catch (error) {
+            console.error(`Error removing item "${key}" from localStorage:`, error);
+        }
+    },
+    clear: () => {
+        try {
+            window.localStorage.clear();
+        } catch (error) {
+            console.error('Error clearing localStorage:', error);
+        }
+    }
+};
+
 /**
- * Gets an item from localStorage.
+ * Gets a generic item from localStorage.
  * @param {string} key - The key of the item to retrieve.
+ * @param {Function} [reviver] - Optional JSON reviver function.
  * @returns {any | null} The retrieved item, parsed from JSON, or null if not found.
  */
-export function getItem(key) {
-    try {
-        const item = window.localStorage.getItem(key);
-        return item ? JSON.parse(item) : null;
-    } catch (error) {
-        console.error(`Error getting item ${key} from localStorage`, error);
-        return null;
-    }
+export function getItem(key, reviver = null) {
+    return storage.getItem(key, reviver);
 }
 
 /**
- * Sets an item in localStorage.
+ * Sets a generic item in localStorage.
  * @param {string} key - The key of the item to set.
  * @param {any} value - The value to store. It will be stringified.
+ * @param {Function} [replacer] - Optional JSON replacer function.
  */
-export function setItem(key, value) {
-    try {
-        window.localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-        console.error(`Error setting item ${key} in localStorage`, error);
-    }
+export function setItem(key, value, replacer = null) {
+    storage.setItem(key, value, replacer);
 }
 
 export function getStoredSave() {
-    try {
-        const saved = window.localStorage.getItem(KEYS.SAVE_DATA);
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            if (parsed.photos) {
-                parsed.photos.forEach((photo) => {
-                    if (typeof photo?.pixels === 'string') {
-                        photo.pixels = fromBase64(photo.pixels);
-                    }
-                });
-            }
-            return parsed;
-        }
-        return null;
-    } catch (e) {
-        console.warn('Failed to load save data from localStorage', e);
-        return null;
-    }
+    return storage.getItem(KEYS.SAVE_DATA, uint8ArrayReviver);
 }
 
 export function setStoredSave(saveData) {
-    try {
-        window.localStorage.setItem(
-            KEYS.SAVE_DATA,
-            JSON.stringify(saveData, (k, v) => (v instanceof Uint8Array ? toBase64(v) : v))
-        );
-    } catch (e) {
-        console.warn('Failed to save to localStorage', e);
-    }
+    storage.setItem(KEYS.SAVE_DATA, saveData, uint8ArrayReplacer);
 }
 
 export function removeStoredSave() {
-    window.localStorage.removeItem(KEYS.SAVE_DATA);
+    storage.removeItem(KEYS.SAVE_DATA);
 }
 
 export function getStoredFrame() {
-    try {
-        const saved = window.localStorage.getItem(KEYS.FRAME_DATA);
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            if (typeof parsed.data === 'string') {
-                parsed.data = fromBase64(parsed.data);
-            }
-            return parsed;
-        }
-        return null;
-    } catch (e) {
-        console.warn('Failed to load frame data from localStorage', e);
-        return null;
-    }
+    return storage.getItem(KEYS.FRAME_DATA, uint8ArrayReviver);
 }
 
 export function setStoredFrame(frameData) {
-    try {
-        window.localStorage.setItem(
-            KEYS.FRAME_DATA,
-            JSON.stringify(frameData, (k, v) => (v instanceof Uint8Array ? toBase64(v) : v))
-        );
-    } catch (e) {
-        console.warn('Failed to save frame to localStorage', e);
-    }
+    storage.setItem(KEYS.FRAME_DATA, frameData, uint8ArrayReplacer);
 }
 
 export function removeStoredFrame() {
-    window.localStorage.removeItem(KEYS.FRAME_DATA);
+    storage.removeItem(KEYS.FRAME_DATA);
+}
+
+export function getStoredActivePalette() {
+    return storage.getItem(KEYS.ACTIVE_PALETTE);
+}
+
+export function setStoredActivePalette(palette) {
+    storage.setItem(KEYS.ACTIVE_PALETTE, palette);
 }
 
 export function getStoredPalettes() {
-    try {
-        const saved = window.localStorage.getItem(KEYS.PALETTES);
-        return saved ? JSON.parse(saved) : null;
-    } catch (e) {
-        console.error('Failed to load user palettes from localStorage', e);
-        return null;
-    }
+    return storage.getItem(KEYS.PALETTES);
 }
 
 export function setStoredPalettes(palettesData) {
-    try {
-        window.localStorage.setItem(KEYS.PALETTES, JSON.stringify(palettesData));
-    } catch (e) {
-        console.error('Failed to save user palettes to localStorage', e);
-    }
+    storage.setItem(KEYS.PALETTES, palettesData);
 }
 
 export function removeStoredPalettes() {
-    window.localStorage.removeItem(KEYS.PALETTES);
+    storage.removeItem(KEYS.PALETTES);
 }
 
 /**
- * Clears only the app-specific data from localStorage.
+ * Clears all data from localStorage for this origin.
  */
 export function clearAppStorage() {
-    Object.values(KEYS).forEach((key) => {
-        window.localStorage.removeItem(key);
-    });
+    storage.clear();
 }

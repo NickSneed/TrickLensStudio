@@ -1,6 +1,7 @@
 import { useSettings } from '../../context/SettingsContext.js';
 import * as styles from './SettingsMenu.module.css';
 import MainButton from '../elements/MainButton.js';
+import { clearAppStorage } from '../../utils/storageUtils.js';
 
 /**
  * SettingsMenu component displays a list of configurable application settings.
@@ -18,7 +19,7 @@ const SettingsMenu = () => {
                 'Are you sure you want to clear all data? This will reset all settings and remove loaded save data.'
             )
         ) {
-            localStorage.clear();
+            clearAppStorage();
             window.location.reload();
         }
     };

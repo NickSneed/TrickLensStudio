@@ -5,7 +5,12 @@ import ToolBar from '../modules/ToolBar.js';
 import Modal from '../elements/Modal.js';
 import SettingsMenu from '../modules/SettingsMenu.js';
 import EditModal from '../modules/EditModal.js';
-import { getItem, setItem, getStoredSave, getStoredFrame } from '../../utils/storageUtils.js';
+import {
+    getStoredSave,
+    getStoredFrame,
+    getStoredActivePalette,
+    setStoredActivePalette
+} from '../../utils/storageUtils.js';
 import MontageToolbar from '../modules/MontageToolbar.js';
 import { useSettings } from '../../context/SettingsContext.js';
 
@@ -19,7 +24,7 @@ const Home = () => {
     const [saveData, setSaveData] = useState(() => getStoredSave());
     const [frame, setFrame] = useState(() => getStoredFrame());
     const [palette, setPalette] = useState(() => {
-        return getItem('palette') || { id: 'bw', ...palettes['bw'] };
+        return getStoredActivePalette() || { id: 'bw', ...palettes['bw'] };
     });
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -40,7 +45,7 @@ const Home = () => {
     }, [saveData]);
 
     useEffect(() => {
-        setItem('palette', palette);
+        setStoredActivePalette(palette);
     }, [palette]);
 
     useEffect(() => {

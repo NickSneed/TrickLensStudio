@@ -1,31 +1,45 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { getItem, setItem } from '../utils/storageUtils.js';
+import { getItem, setItem, KEYS } from '../utils/storageUtils.js';
 
 const SettingsContext = createContext();
 
 export const useSettings = () => useContext(SettingsContext);
 
+// Map internal setting keys to their centralized storage keys
+const SETTINGS_STORAGE_MAP = {
+    scaleFactor: KEYS.SETTING_SCALE_FACTOR,
+    isShowDeleted: KEYS.SETTING_IS_SHOW_DELETED,
+    color: KEYS.SETTING_COLOR,
+    isReversed: KEYS.SETTING_IS_REVERSED,
+    exportFormat: KEYS.SETTING_EXPORT_FORMAT,
+    exportQuality: KEYS.SETTING_EXPORT_QUALITY,
+    theme: KEYS.SETTING_THEME,
+    isAnimate: KEYS.SETTING_IS_ANIMATE,
+    saveScale: KEYS.SETTING_SAVE_SCALE
+};
+
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState(() => {
-        const initialIsReversed = getItem('isReversed');
+        // Retrieve settings from localStorage using centralized KEYS
+        const initialIsReversed = getItem(KEYS.SETTING_IS_REVERSED);
         return {
-            scaleFactor: getItem('scaleFactor') || 2,
-            isShowDeleted: getItem('isShowDeleted') || false,
-            color: getItem('color') || 'green',
+            scaleFactor: getItem(KEYS.SETTING_SCALE_FACTOR) || 2,
+            isShowDeleted: getItem(KEYS.SETTING_IS_SHOW_DELETED) || false,
+            color: getItem(KEYS.SETTING_COLOR) || 'green',
             isReversed: initialIsReversed === null ? false : initialIsReversed,
-            exportFormat: getItem('exportFormat') || 'png',
-            exportQuality: Number(getItem('exportQuality')) || 0.9,
-            theme: getItem('theme') || 'system',
-            isAnimate: getItem('isAnimate') || false,
-            saveScale: Number(getItem('saveScale')) || 10
+            exportFormat: getItem(KEYS.SETTING_EXPORT_FORMAT) || 'png',
+            exportQuality: Number(getItem(KEYS.SETTING_EXPORT_QUALITY)) || 0.9,
+            theme: getItem(KEYS.SETTING_THEME) || 'system',
+            isAnimate: getItem(KEYS.SETTING_IS_ANIMATE) || false,
+            saveScale: Number(getItem(KEYS.SETTING_SAVE_SCALE)) || 10
         };
     });
 
     // Persist settings to storage
     useEffect(() => {
         Object.keys(settings).forEach((key) => {
-            setItem(key, settings[key]);
+            setItem(SETTINGS_STORAGE_MAP[key], settings[key]);
         });
     }, [settings]);
 
