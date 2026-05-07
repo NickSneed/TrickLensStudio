@@ -59,11 +59,14 @@ const uint8ArrayReplacer = (key, value) => {
 
 // Custom reviver for JSON.parse to handle Uint8Array
 const uint8ArrayReviver = (key, value) => {
+    // Strictly validate the object shape to prevent processing tampered JSON
     if (
         value &&
         typeof value === 'object' &&
+        !Array.isArray(value) &&
         value.__type === 'Uint8Array' &&
-        typeof value.data === 'string'
+        typeof value.data === 'string' &&
+        Object.keys(value).length === 2
     ) {
         return fromBase64(value.data);
     }
