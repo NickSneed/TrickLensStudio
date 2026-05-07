@@ -7,11 +7,7 @@ import FileLoader from '../elements/FileLoader.js';
 import SwatchSet from '../elements/SwatchSet.js';
 import MainButton from '../elements/MainButton.js';
 import Swatch from '../elements/Swatch.js';
-import {
-    getStoredPalettes,
-    setStoredPalettes,
-    removeStoredPalettes
-} from '../../utils/storageUtils.js';
+import { getItem, setItem, removeItem, KEYS } from '../../utils/storageUtils.js';
 
 /**
  * Adjusts the brightness of an RGB color using specific shade levels.
@@ -74,7 +70,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
 
     // Load user palettes from local storage on component mount
     useEffect(() => {
-        const stored = getStoredPalettes();
+        const stored = getItem(KEYS.PALETTES);
         if (stored) {
             setUserPalettes(stored.palettes || {});
             setQuickColors(stored.quickColors || []);
@@ -123,7 +119,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
 
             setUserPalettes(loadedPalettes);
             setQuickColors(loadedQuickColors);
-            setStoredPalettes({
+            setItem(KEYS.PALETTES, {
                 palettes: loadedPalettes,
                 quickColors: loadedQuickColors
             });
@@ -137,7 +133,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const handleClearUserPalettes = () => {
         setUserPalettes({});
         setQuickColors([]);
-        removeStoredPalettes();
+        removeItem(KEYS.PALETTES);
     };
 
     const handleRandom = () => {

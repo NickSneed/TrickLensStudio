@@ -5,12 +5,7 @@ import ToolBar from '../modules/ToolBar.js';
 import Modal from '../elements/Modal.js';
 import SettingsMenu from '../modules/SettingsMenu.js';
 import EditModal from '../modules/EditModal.js';
-import {
-    getStoredSave,
-    getStoredFrame,
-    getStoredActivePalette,
-    setStoredActivePalette
-} from '../../utils/storageUtils.js';
+import { getItem, setItem, KEYS } from '../../utils/storageUtils.js';
 import MontageToolbar from '../modules/MontageToolbar.js';
 import { useSettings } from '../../context/SettingsContext.js';
 
@@ -21,10 +16,10 @@ import { useSettings } from '../../context/SettingsContext.js';
  * @returns {JSX.Element} The rendered Home page.
  */
 const Home = () => {
-    const [saveData, setSaveData] = useState(() => getStoredSave());
-    const [frame, setFrame] = useState(() => getStoredFrame());
+    const [saveData, setSaveData] = useState(() => getItem(KEYS.SAVE_DATA));
+    const [frame, setFrame] = useState(() => getItem(KEYS.FRAME_DATA));
     const [palette, setPalette] = useState(() => {
-        return getStoredActivePalette() || { id: 'bw', ...palettes['bw'] };
+        return getItem(KEYS.ACTIVE_PALETTE) || { id: 'bw', ...palettes['bw'] };
     });
     const [mainMessage, setMainMessage] = useState('Select a .sav file');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -45,7 +40,7 @@ const Home = () => {
     }, [saveData]);
 
     useEffect(() => {
-        setStoredActivePalette(palette);
+        setItem(KEYS.ACTIVE_PALETTE, palette);
     }, [palette]);
 
     useEffect(() => {

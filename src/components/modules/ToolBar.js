@@ -4,12 +4,7 @@ import PaletteSelector from './PaletteSelector.js';
 import FileLoader from '../elements/FileLoader.js';
 import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../../utils/canvasUtils.js';
-import {
-    setStoredFrame,
-    removeStoredFrame,
-    setStoredSave,
-    removeStoredSave
-} from '../../utils/storageUtils.js';
+import { setItem, removeItem, KEYS } from '../../utils/storageUtils.js';
 import ImageEditor from './ImageEditor.js';
 import * as styles from './ToolBar.module.css';
 
@@ -49,7 +44,7 @@ const ToolBar = forwardRef(
         const loadSave = ({ data }) => {
             const saveData = parseSave(data);
             setSaveData(saveData);
-            setStoredSave(saveData);
+            setItem(KEYS.SAVE_DATA, saveData);
             window.scrollTo(0, 0);
         };
 
@@ -58,7 +53,7 @@ const ToolBar = forwardRef(
             const frameData = await convertFrameToData(data);
             const newFrame = { ...frameData, name };
             setFrame(newFrame);
-            setStoredFrame(newFrame);
+            setItem(KEYS.FRAME_DATA, newFrame);
         };
 
         return (
@@ -71,7 +66,7 @@ const ToolBar = forwardRef(
                             onChange={loadSave}
                             onRemove={() => {
                                 setSaveData(null);
-                                removeStoredSave();
+                                removeItem(KEYS.SAVE_DATA);
                             }}
                             showRemove={saveData ? true : false}
                             accept=".sav"
@@ -84,7 +79,7 @@ const ToolBar = forwardRef(
                             onChange={loadFrame}
                             onRemove={() => {
                                 setFrame(null);
-                                removeStoredFrame();
+                                removeItem(KEYS.FRAME_DATA);
                             }}
                             showRemove={frame ? true : false}
                             accept=".png"

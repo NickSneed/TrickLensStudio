@@ -72,7 +72,7 @@ const uint8ArrayReviver = (key, value) => {
 
 // Generic localStorage operations with optional custom replacer/reviver
 const storage = {
-    getItem: (key, reviver = null) => {
+    getItem: (key, reviver = uint8ArrayReviver) => {
         try {
             const item = window.localStorage.getItem(key);
             return item ? JSON.parse(item, reviver) : null;
@@ -81,7 +81,7 @@ const storage = {
             return null;
         }
     },
-    setItem: (key, value, replacer = null) => {
+    setItem: (key, value, replacer = uint8ArrayReplacer) => {
         try {
             const stringifiedValue = JSON.stringify(value, replacer);
             window.localStorage.setItem(key, stringifiedValue);
@@ -111,7 +111,7 @@ const storage = {
  * @param {Function} [reviver] - Optional JSON reviver function.
  * @returns {any | null} The retrieved item, parsed from JSON, or null if not found.
  */
-export function getItem(key, reviver = null) {
+export function getItem(key, reviver = uint8ArrayReviver) {
     return storage.getItem(key, reviver);
 }
 
@@ -121,52 +121,16 @@ export function getItem(key, reviver = null) {
  * @param {any} value - The value to store. It will be stringified.
  * @param {Function} [replacer] - Optional JSON replacer function.
  */
-export function setItem(key, value, replacer = null) {
+export function setItem(key, value, replacer = uint8ArrayReplacer) {
     storage.setItem(key, value, replacer);
 }
 
-export function getStoredSave() {
-    return storage.getItem(KEYS.SAVE_DATA, uint8ArrayReviver);
-}
-
-export function setStoredSave(saveData) {
-    storage.setItem(KEYS.SAVE_DATA, saveData, uint8ArrayReplacer);
-}
-
-export function removeStoredSave() {
-    storage.removeItem(KEYS.SAVE_DATA);
-}
-
-export function getStoredFrame() {
-    return storage.getItem(KEYS.FRAME_DATA, uint8ArrayReviver);
-}
-
-export function setStoredFrame(frameData) {
-    storage.setItem(KEYS.FRAME_DATA, frameData, uint8ArrayReplacer);
-}
-
-export function removeStoredFrame() {
-    storage.removeItem(KEYS.FRAME_DATA);
-}
-
-export function getStoredActivePalette() {
-    return storage.getItem(KEYS.ACTIVE_PALETTE);
-}
-
-export function setStoredActivePalette(palette) {
-    storage.setItem(KEYS.ACTIVE_PALETTE, palette);
-}
-
-export function getStoredPalettes() {
-    return storage.getItem(KEYS.PALETTES);
-}
-
-export function setStoredPalettes(palettesData) {
-    storage.setItem(KEYS.PALETTES, palettesData);
-}
-
-export function removeStoredPalettes() {
-    storage.removeItem(KEYS.PALETTES);
+/**
+ * Removes an item from localStorage.
+ * @param {string} key - The key of the item to remove.
+ */
+export function removeItem(key) {
+    storage.removeItem(key);
 }
 
 /**
