@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>TrickLens Studio</title>
+    <title><%= htmlWebpackPlugin.options.isProduction ? '' : "Test " %>TrickLens Studio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="description" content="A basic React setup using NPM and Webpack.">
+    <meta name="description" content="A studio for lo-fi photography.">
     <meta name="keywords" content="React">
-    <meta name="author" content="Author">
+    <meta name="author" content="BobRumbly">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'<%= htmlWebpackPlugin.options.isProduction ? '' : " 'unsafe-eval'" %>; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self';">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/pwa-icon.png">
     <link rel="icon" href="/favicon.ico">

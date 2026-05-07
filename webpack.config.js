@@ -7,8 +7,13 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// eslint-disable-next-line no-undef
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default {
+    mode: isProduction ? 'production' : 'development',
     entry: './src/app.js',
+    devtool: isProduction ? 'source-map' : 'eval-source-map',
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
@@ -37,20 +42,13 @@ export default {
             {
                 test: /\.css$/,
                 exclude: /\.module\.css$/, // Exclude CSS Modules
-                use: [
-                    process.env.NODE_ENV === 'production'
-                        ? MiniCssExtractPlugin.loader
-                        : 'style-loader',
-                    'css-loader'
-                ]
+                use: [isProduction ? MiniCssExtractPlugin.loader : 'style-loader', 'css-loader']
             },
             // Rule for CSS Modules
             {
                 test: /\.module\.css$/, // Target files ending with .module.css
                 use: [
-                    process.env.NODE_ENV === 'production'
-                        ? MiniCssExtractPlugin.loader
-                        : 'style-loader',
+                    isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
                     {
                         loader: 'css-loader',
                         options: {
@@ -82,7 +80,8 @@ export default {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.html'
+            template: './src/index.html',
+            isProduction
         }),
         new MiniCssExtractPlugin({
             filename: '[name].css'

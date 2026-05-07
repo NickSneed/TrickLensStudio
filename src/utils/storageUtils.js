@@ -84,7 +84,7 @@ const validatePaletteData = (data) => {
     const loadedPalettes = data.palettes || {};
 
     // Strict validation for the palettes object
-    return Object.entries(loadedPalettes).every(([id, p]) => {
+    return Object.values(loadedPalettes).every((p) => {
         const hasValidStructure =
             p &&
             typeof p.name === 'string' &&
