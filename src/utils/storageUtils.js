@@ -8,6 +8,35 @@ const KEYS = {
 };
 
 /**
+ * Converts a Uint8Array to a Base64 string safely.
+ * @param {Uint8Array} arr
+ * @returns {string}
+ */
+const toBase64 = (arr) => {
+    let binary = '';
+    const len = arr.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(arr[i]);
+    }
+    return btoa(binary);
+};
+
+/**
+ * Converts a Base64 string back to a Uint8Array.
+ * @param {string} str
+ * @returns {Uint8Array}
+ */
+const fromBase64 = (str) => {
+    const binaryString = atob(str);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+};
+
+/**
  * Gets an item from localStorage.
  * @param {string} key - The key of the item to retrieve.
  * @returns {any | null} The retrieved item, parsed from JSON, or null if not found.
@@ -42,12 +71,8 @@ export function getStoredSave() {
             const parsed = JSON.parse(saved);
             if (parsed.photos) {
                 parsed.photos.forEach((photo) => {
-                    if (photo && photo.pixels) {
-                        // Convert Array (or legacy Object) back to Uint8Array
-                        const data = Array.isArray(photo.pixels)
-                            ? photo.pixels
-                            : Object.values(photo.pixels);
-                        photo.pixels = new Uint8Array(data);
+                    if (typeof photo?.pixels === 'string') {
+                        photo.pixels = fromBase64(photo.pixels);
                     }
                 });
             }
@@ -64,7 +89,7 @@ export function setStoredSave(saveData) {
     try {
         window.localStorage.setItem(
             KEYS.SAVE_DATA,
-            JSON.stringify(saveData, (k, v) => (v instanceof Uint8Array ? Array.from(v) : v))
+            JSON.stringify(saveData, (k, v) => (v instanceof Uint8Array ? toBase64(v) : v))
         );
     } catch (e) {
         console.warn('Failed to save to localStorage', e);
@@ -80,9 +105,8 @@ export function getStoredFrame() {
         const saved = window.localStorage.getItem(KEYS.FRAME_DATA);
         if (saved) {
             const parsed = JSON.parse(saved);
-            if (parsed.data) {
-                const data = Array.isArray(parsed.data) ? parsed.data : Object.values(parsed.data);
-                parsed.data = new Uint8Array(data);
+            if (typeof parsed.data === 'string') {
+                parsed.data = fromBase64(parsed.data);
             }
             return parsed;
         }
@@ -97,7 +121,7 @@ export function setStoredFrame(frameData) {
     try {
         window.localStorage.setItem(
             KEYS.FRAME_DATA,
-            JSON.stringify(frameData, (k, v) => (v instanceof Uint8Array ? Array.from(v) : v))
+            JSON.stringify(frameData, (k, v) => (v instanceof Uint8Array ? toBase64(v) : v))
         );
     } catch (e) {
         console.warn('Failed to save frame to localStorage', e);
