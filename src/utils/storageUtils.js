@@ -73,6 +73,43 @@ const uint8ArrayReviver = (key, value) => {
     return value;
 };
 
+/**
+ * Validates the structure of palette data to prevent XSS or malformed storage.
+ * @param {any} data
+ * @returns {boolean}
+ */
+const validatePaletteData = (data) => {
+    if (!data || typeof data !== 'object') return false;
+
+    const loadedPalettes = data.palettes || {};
+
+    // Strict validation for the palettes object
+    return Object.entries(loadedPalettes).every(([id, p]) => {
+        const hasValidStructure =
+            p &&
+            typeof p.name === 'string' &&
+            p.name.length < 50 &&
+            Array.isArray(p.colors) &&
+            p.colors.length === 4;
+
+        if (!hasValidStructure) return false;
+
+        // Ensure colors are valid RGB integers
+        return p.colors.every(
+            (c) =>
+                Number.isInteger(c.r) &&
+                c.r >= 0 &&
+                c.r <= 255 &&
+                Number.isInteger(c.g) &&
+                c.g >= 0 &&
+                c.g <= 255 &&
+                Number.isInteger(c.b) &&
+                c.b >= 0 &&
+                c.b <= 255
+        );
+    });
+};
+
 // Generic localStorage operations with optional custom replacer/reviver
 const storage = {
     getItem: (key, reviver = uint8ArrayReviver) => {
@@ -86,10 +123,18 @@ const storage = {
     },
     setItem: (key, value, replacer = uint8ArrayReplacer) => {
         try {
+            // Apply specific validation for palettes
+            if (key === KEYS.PALETTES && !validatePaletteData(value)) {
+                console.error('Invalid palette data format rejected.');
+                return false;
+            }
+
             const stringifiedValue = JSON.stringify(value, replacer);
             window.localStorage.setItem(key, stringifiedValue);
+            return true;
         } catch (error) {
             console.error(`Error setting item "${key}" in localStorage:`, error);
+            return false;
         }
     },
     removeItem: (key) => {
@@ -123,9 +168,10 @@ export function getItem(key, reviver = uint8ArrayReviver) {
  * @param {string} key - The key of the item to set.
  * @param {any} value - The value to store. It will be stringified.
  * @param {Function} [replacer] - Optional JSON replacer function.
+ * @returns {boolean} True if the item was successfully set.
  */
 export function setItem(key, value, replacer = uint8ArrayReplacer) {
-    storage.setItem(key, value, replacer);
+    return storage.setItem(key, value, replacer);
 }
 
 /**
