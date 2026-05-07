@@ -1,4 +1,13 @@
 /**
+ * Constants for localStorage keys used by the application.
+ */
+const KEYS = {
+    SAVE_DATA: 'tricklens-save-data',
+    FRAME_DATA: 'tricklens-frame-data',
+    PALETTES: 'tricklens-saved-palettes'
+};
+
+/**
  * Gets an item from localStorage.
  * @param {string} key - The key of the item to retrieve.
  * @returns {any | null} The retrieved item, parsed from JSON, or null if not found.
@@ -28,7 +37,7 @@ export function setItem(key, value) {
 
 export function getStoredSave() {
     try {
-        const saved = window.localStorage.getItem('tricklens-save-data');
+        const saved = window.localStorage.getItem(KEYS.SAVE_DATA);
         if (saved) {
             const parsed = JSON.parse(saved);
             if (parsed.photos) {
@@ -54,7 +63,7 @@ export function getStoredSave() {
 export function setStoredSave(saveData) {
     try {
         window.localStorage.setItem(
-            'tricklens-save-data',
+            KEYS.SAVE_DATA,
             JSON.stringify(saveData, (k, v) => (v instanceof Uint8Array ? Array.from(v) : v))
         );
     } catch (e) {
@@ -63,12 +72,12 @@ export function setStoredSave(saveData) {
 }
 
 export function removeStoredSave() {
-    window.localStorage.removeItem('tricklens-save-data');
+    window.localStorage.removeItem(KEYS.SAVE_DATA);
 }
 
 export function getStoredFrame() {
     try {
-        const saved = window.localStorage.getItem('tricklens-frame-data');
+        const saved = window.localStorage.getItem(KEYS.FRAME_DATA);
         if (saved) {
             const parsed = JSON.parse(saved);
             if (parsed.data) {
@@ -87,7 +96,7 @@ export function getStoredFrame() {
 export function setStoredFrame(frameData) {
     try {
         window.localStorage.setItem(
-            'tricklens-frame-data',
+            KEYS.FRAME_DATA,
             JSON.stringify(frameData, (k, v) => (v instanceof Uint8Array ? Array.from(v) : v))
         );
     } catch (e) {
@@ -96,5 +105,36 @@ export function setStoredFrame(frameData) {
 }
 
 export function removeStoredFrame() {
-    window.localStorage.removeItem('tricklens-frame-data');
+    window.localStorage.removeItem(KEYS.FRAME_DATA);
+}
+
+export function getStoredPalettes() {
+    try {
+        const saved = window.localStorage.getItem(KEYS.PALETTES);
+        return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+        console.error('Failed to load user palettes from localStorage', e);
+        return null;
+    }
+}
+
+export function setStoredPalettes(palettesData) {
+    try {
+        window.localStorage.setItem(KEYS.PALETTES, JSON.stringify(palettesData));
+    } catch (e) {
+        console.error('Failed to save user palettes to localStorage', e);
+    }
+}
+
+export function removeStoredPalettes() {
+    window.localStorage.removeItem(KEYS.PALETTES);
+}
+
+/**
+ * Clears only the app-specific data from localStorage.
+ */
+export function clearAppStorage() {
+    Object.values(KEYS).forEach((key) => {
+        window.localStorage.removeItem(key);
+    });
 }

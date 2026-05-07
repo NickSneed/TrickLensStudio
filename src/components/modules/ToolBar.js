@@ -4,7 +4,12 @@ import PaletteSelector from './PaletteSelector.js';
 import FileLoader from '../elements/FileLoader.js';
 import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../../utils/canvasUtils.js';
-import { setStoredFrame, removeStoredFrame } from '../../utils/storageUtils.js';
+import {
+    setStoredFrame,
+    removeStoredFrame,
+    setStoredSave,
+    removeStoredSave
+} from '../../utils/storageUtils.js';
 import ImageEditor from './ImageEditor.js';
 import * as styles from './ToolBar.module.css';
 
@@ -44,16 +49,7 @@ const ToolBar = forwardRef(
         const loadSave = ({ data }) => {
             const saveData = parseSave(data);
             setSaveData(saveData);
-            try {
-                localStorage.setItem(
-                    'tricklens-save-data',
-                    JSON.stringify(saveData, (k, v) =>
-                        v instanceof Uint8Array ? Array.from(v) : v
-                    )
-                );
-            } catch (e) {
-                console.warn('Failed to save to localStorage', e);
-            }
+            setStoredSave(saveData);
             window.scrollTo(0, 0);
         };
 
@@ -75,7 +71,7 @@ const ToolBar = forwardRef(
                             onChange={loadSave}
                             onRemove={() => {
                                 setSaveData(null);
-                                localStorage.removeItem('tricklens-save-data');
+                                removeStoredSave();
                             }}
                             showRemove={saveData ? true : false}
                             accept=".sav"

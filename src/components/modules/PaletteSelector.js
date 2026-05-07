@@ -7,6 +7,11 @@ import FileLoader from '../elements/FileLoader.js';
 import SwatchSet from '../elements/SwatchSet.js';
 import MainButton from '../elements/MainButton.js';
 import Swatch from '../elements/Swatch.js';
+import {
+    getStoredPalettes,
+    setStoredPalettes,
+    removeStoredPalettes
+} from '../../utils/storageUtils.js';
 
 /**
  * Adjusts the brightness of an RGB color using specific shade levels.
@@ -69,15 +74,10 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
 
     // Load user palettes from local storage on component mount
     useEffect(() => {
-        try {
-            const storedData = localStorage.getItem('tricklens-saved-palettes');
-            if (storedData) {
-                const parsed = JSON.parse(storedData);
-                setUserPalettes(parsed.palettes || {});
-                setQuickColors(parsed.quickColors || []);
-            }
-        } catch (e) {
-            console.error('Failed to load user palettes from localStorage', e);
+        const stored = getStoredPalettes();
+        if (stored) {
+            setUserPalettes(stored.palettes || {});
+            setQuickColors(stored.quickColors || []);
         }
     }, []);
 
@@ -123,13 +123,10 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
 
             setUserPalettes(loadedPalettes);
             setQuickColors(loadedQuickColors);
-            localStorage.setItem(
-                'tricklens-saved-palettes',
-                JSON.stringify({
-                    palettes: loadedPalettes,
-                    quickColors: loadedQuickColors
-                })
-            );
+            setStoredPalettes({
+                palettes: loadedPalettes,
+                quickColors: loadedQuickColors
+            });
             window.scrollTo(0, 0);
         } catch (error) {
             console.error('Error loading palette file:', error);
@@ -140,7 +137,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
     const handleClearUserPalettes = () => {
         setUserPalettes({});
         setQuickColors([]);
-        localStorage.removeItem('tricklens-saved-palettes');
+        removeStoredPalettes();
     };
 
     const handleRandom = () => {
