@@ -37,6 +37,8 @@ const EditModal = ({ photos, palette, frame, username }) => {
     const [rgbBrightness, setRgbBrightness] = useState(0); // Brightness for RGB mode
     const [rgbContrast, setRgbContrast] = useState(0); // Contrast for RGB mode
 
+    const frameInputRef = useRef(null);
+
     // Reset settings when the edit modal opens
     useEffect(() => {
         setEffect('none');
@@ -48,6 +50,10 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setLocalPalette(palette);
         setMontageType('none');
         setLocalFrame(frame);
+
+        if (frameInputRef.current) {
+            frameInputRef.current.value = '';
+        }
     }, [photos, palette]);
 
     // Initialize canvas drawing hook
@@ -133,6 +139,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
     const controlsContent = (
         <>
             <FileLoader
+                ref={frameInputRef}
                 text="Select frame &hellip;"
                 onChange={loadFrame}
                 onRemove={() => {
