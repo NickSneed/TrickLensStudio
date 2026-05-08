@@ -1,4 +1,4 @@
-import { useRef, forwardRef } from 'react';
+import { useRef, forwardRef, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
 import * as styles from './FileLoader.module.css';
 import MainButton from './MainButton.js';
@@ -18,8 +18,17 @@ import CloseButton from './CloseButton.js';
  */
 const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept }, ref) => {
     const reader = new FileReader();
-    const internalRef = useRef(null);
-    const inputRef = ref || internalRef;
+    const inputRef = useRef(null);
+
+    // Expose a clear method to parent components
+    useImperativeHandle(ref, () => ({
+        clear: () => {
+            if (inputRef.current) {
+                inputRef.current.value = '';
+            }
+        }
+    }));
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -32,18 +41,12 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
     };
 
     const handleRemove = () => {
-        if (onRemove) {
-            onRemove();
-        }
-        if (inputRef.current) {
-            inputRef.current.value = null;
-        }
+        onRemove?.();
+        if (inputRef.current) inputRef.current.value = '';
     };
 
     const handleButtonClick = () => {
-        if (inputRef.current) {
-            inputRef.current.click();
-        }
+        inputRef.current?.click();
     };
 
     return (

@@ -51,9 +51,8 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setMontageType('none');
         setLocalFrame(frame);
 
-        if (frameInputRef.current) {
-            frameInputRef.current.value = '';
-        }
+        // Clear the frame input
+        frameInputRef.current?.clear();
     }, [photos, palette]);
 
     // Initialize canvas drawing hook
