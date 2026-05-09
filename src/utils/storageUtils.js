@@ -139,6 +139,27 @@ const validateFrameData = (data) => {
     return data.width > 0 && data.width <= 160 && data.height > 0 && data.height <= 224;
 };
 
+/**
+ * Validates the structure of save data to ensure it conforms to Game Boy Camera expectations.
+ * @param {any} data
+ * @returns {boolean}
+ */
+const validateSaveData = (data) => {
+    if (!data || typeof data !== 'object') return false;
+
+    // username is typically 8 chars in GBC, allowing 50 for safety
+    if (typeof data.username !== 'string' || data.username.length > 50) return false;
+
+    if (!Array.isArray(data.photos) || data.photos.length > 30) return false;
+
+    return data.photos.every((p) => {
+        if (p === null) return true;
+        if (typeof p !== 'object') return false;
+
+        return typeof p.isDeleted === 'boolean' && typeof p.slot === 'number';
+    });
+};
+
 // Generic localStorage operations with optional custom replacer/reviver
 const storage = {
     getItem: (key, reviver = uint8ArrayReviver) => {
@@ -160,6 +181,11 @@ const storage = {
 
             if (key === KEYS.FRAME_DATA && !validateFrameData(value)) {
                 console.error('Invalid frame data format rejected.');
+                return false;
+            }
+
+            if (key === KEYS.SAVE_DATA && !validateSaveData(value)) {
+                console.error('Invalid save data format rejected.');
                 return false;
             }
 
