@@ -115,6 +115,30 @@ const validatePaletteData = (data) => {
     });
 };
 
+/**
+ * Validates the structure of frame data.
+ * @param {any} data
+ * @returns {boolean}
+ */
+const validateFrameData = (data) => {
+    if (!data || typeof data !== 'object') return false;
+
+    const safeNameRegex = /^[a-zA-Z0-9\s\-_.]+$/;
+
+    const hasValidStructure =
+        typeof data.width === 'number' &&
+        typeof data.height === 'number' &&
+        typeof data.name === 'string' &&
+        data.name.length < 100 &&
+        safeNameRegex.test(data.name) &&
+        (data.data instanceof Uint8Array || (data.data && data.data.__type === 'Uint8Array')); // Handle both raw and serialized forms
+
+    if (!hasValidStructure) return false;
+
+    // Sanity check dimensions for Game Boy Camera frames
+    return data.width > 0 && data.width <= 160 && data.height > 0 && data.height <= 224;
+};
+
 // Generic localStorage operations with optional custom replacer/reviver
 const storage = {
     getItem: (key, reviver = uint8ArrayReviver) => {
@@ -131,6 +155,11 @@ const storage = {
             // Apply specific validation for palettes
             if (key === KEYS.PALETTES && !validatePaletteData(value)) {
                 console.error('Invalid palette data format rejected.');
+                return false;
+            }
+
+            if (key === KEYS.FRAME_DATA && !validateFrameData(value)) {
+                console.error('Invalid frame data format rejected.');
                 return false;
             }
 
