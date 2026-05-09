@@ -48,10 +48,10 @@ const SettingsMenu = () => {
                     value={settings.color}
                     onChange={handleSettingChange}
                 >
-                    <option>red</option>
-                    <option>green (default)</option>
-                    <option>yellow</option>
-                    <option>blue</option>
+                    <option value="green">green (default)</option>
+                    <option value="red">red</option>
+                    <option value="yellow">yellow</option>
+                    <option value="blue">blue</option>
                 </select>
             </label>
             <label>

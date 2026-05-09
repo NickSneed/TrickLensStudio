@@ -215,6 +215,18 @@ const storage = {
                 return false;
             }
 
+            // Validate theme setting
+            if (key === KEYS.SETTING_THEME && !['system', 'light', 'dark'].includes(value)) {
+                console.error(`Invalid theme value for ${key} rejected.`);
+                return false;
+            }
+
+            // Validate UI color setting
+            if (key === KEYS.SETTING_COLOR && !['red', 'yellow', 'green', 'blue'].includes(value)) {
+                console.error(`Invalid color value for ${key} rejected.`);
+                return false;
+            }
+
             const stringifiedValue = JSON.stringify(value, replacer);
             window.localStorage.setItem(key, stringifiedValue);
             return true;
