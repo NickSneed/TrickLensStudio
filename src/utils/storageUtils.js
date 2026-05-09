@@ -189,6 +189,19 @@ const storage = {
                 return false;
             }
 
+            // Validate boolean settings
+            if (
+                [
+                    KEYS.SETTING_IS_ANIMATE,
+                    KEYS.SETTING_IS_REVERSED,
+                    KEYS.SETTING_IS_SHOW_DELETED
+                ].includes(key) &&
+                typeof value !== 'boolean'
+            ) {
+                console.error(`Invalid boolean value for ${key} rejected.`);
+                return false;
+            }
+
             const stringifiedValue = JSON.stringify(value, replacer);
             window.localStorage.setItem(key, stringifiedValue);
             return true;
