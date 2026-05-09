@@ -1,7 +1,7 @@
 import { useSettings } from '../../context/SettingsContext.js';
 import * as styles from './SettingsMenu.module.css';
 import MainButton from '../elements/MainButton.js';
-import { clearAppStorage } from '../../utils/storageUtils.js';
+import { clearAppStorage, getStorageSize, formatBytes } from '../../utils/storageUtils.js';
 
 /**
  * SettingsMenu component displays a list of configurable application settings.
@@ -12,6 +12,8 @@ import { clearAppStorage } from '../../utils/storageUtils.js';
  */
 const SettingsMenu = () => {
     const { settings, handleSettingChange } = useSettings();
+
+    const usage = formatBytes(getStorageSize());
 
     const handleClearStorage = () => {
         if (
@@ -143,6 +145,7 @@ const SettingsMenu = () => {
                 <span></span>
                 Enable Animations
             </label>
+            <p>Storage used: {usage} / 5MB</p>
             <MainButton onClick={handleClearStorage}>Clear All Data</MainButton>
         </div>
     );

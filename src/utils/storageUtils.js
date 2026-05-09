@@ -334,3 +334,31 @@ export function removeItem(key) {
 export function clearAppStorage() {
     storage.clear();
 }
+
+/**
+ * Calculates the estimated size of localStorage in bytes.
+ * @returns {number} The total bytes used.
+ */
+export function getStorageSize() {
+    let total = 0;
+    for (const key in window.localStorage) {
+        if (Object.prototype.hasOwnProperty.call(window.localStorage, key)) {
+            const value = window.localStorage.getItem(key);
+            total += (key.length + (value ? value.length : 0)) * 2;
+        }
+    }
+    return total;
+}
+
+/**
+ * Formats a byte count into a human-readable string.
+ * @param {number} bytes
+ * @returns {string}
+ */
+export function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
