@@ -116,6 +116,43 @@ const validatePaletteData = (data) => {
 };
 
 /**
+ * Validates a single palette object.
+ * @param {any} p
+ * @returns {boolean}
+ */
+const validateSinglePalette = (p) => {
+    if (!p || typeof p !== 'object') return false;
+
+    const safeRegex = /^[a-zA-Z0-9\s\-_]+$/;
+
+    const hasValidStructure =
+        typeof p.id === 'string' &&
+        safeRegex.test(p.id) &&
+        typeof p.name === 'string' &&
+        p.name.length > 0 &&
+        p.name.length < 50 &&
+        safeRegex.test(p.name) &&
+        Array.isArray(p.colors) &&
+        p.colors.length === 4;
+
+    if (!hasValidStructure) return false;
+
+    return p.colors.every(
+        (c) =>
+            c &&
+            Number.isInteger(c.r) &&
+            c.r >= 0 &&
+            c.r <= 255 &&
+            Number.isInteger(c.g) &&
+            c.g >= 0 &&
+            c.g <= 255 &&
+            Number.isInteger(c.b) &&
+            c.b >= 0 &&
+            c.b <= 255
+    );
+};
+
+/**
  * Validates the structure of frame data.
  * @param {any} data
  * @returns {boolean}
@@ -179,6 +216,11 @@ const storage = {
                 return false;
             }
 
+            if (key === KEYS.ACTIVE_PALETTE && !validateSinglePalette(value)) {
+                console.error('Invalid active palette data format rejected.');
+                return false;
+            }
+
             if (key === KEYS.FRAME_DATA && !validateFrameData(value)) {
                 console.error('Invalid frame data format rejected.');
                 return false;
@@ -224,6 +266,12 @@ const storage = {
             // Validate UI color setting
             if (key === KEYS.SETTING_COLOR && !['red', 'yellow', 'green', 'blue'].includes(value)) {
                 console.error(`Invalid color value for ${key} rejected.`);
+                return false;
+            }
+
+            // Validate export format setting
+            if (key === KEYS.SETTING_EXPORT_FORMAT && !['jpg', 'png'].includes(value)) {
+                console.error(`Invalid export format value for ${key} rejected.`);
                 return false;
             }
 
