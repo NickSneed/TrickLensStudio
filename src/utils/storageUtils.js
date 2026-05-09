@@ -83,12 +83,17 @@ const validatePaletteData = (data) => {
 
     const loadedPalettes = data.palettes || {};
 
+    // Regex to allow only alphanumeric, spaces, and hyphens/underscores in names
+    const safeNameRegex = /^[a-zA-Z0-9\s\-_]+$/;
+
     // Strict validation for the palettes object
     return Object.values(loadedPalettes).every((p) => {
         const hasValidStructure =
             p &&
             typeof p.name === 'string' &&
+            p.name.length > 0 &&
             p.name.length < 50 &&
+            safeNameRegex.test(p.name) &&
             Array.isArray(p.colors) &&
             p.colors.length === 4;
 
