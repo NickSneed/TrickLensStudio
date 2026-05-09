@@ -202,6 +202,19 @@ const storage = {
                 return false;
             }
 
+            // Validate numeric settings
+            if (
+                [
+                    KEYS.SETTING_EXPORT_QUALITY,
+                    KEYS.SETTING_SAVE_SCALE,
+                    KEYS.SETTING_SCALE_FACTOR
+                ].includes(key) &&
+                typeof value !== 'number'
+            ) {
+                console.error(`Invalid numeric value for ${key} rejected.`);
+                return false;
+            }
+
             const stringifiedValue = JSON.stringify(value, replacer);
             window.localStorage.setItem(key, stringifiedValue);
             return true;
