@@ -120,7 +120,7 @@ const ToolBar = forwardRef(
                     {count > 0 ? <div className={styles.photoCount}>{count}</div> : null}
                     <div className={styles.toolbaritem}>
                         <FileLoader
-                            text="Load .sav or .png &hellip;"
+                            text="Load file(s) &hellip;"
                             onChange={handleFileLoad}
                             onRemove={() => {
                                 setSaveData(null);

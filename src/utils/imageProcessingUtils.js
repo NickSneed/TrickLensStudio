@@ -1,4 +1,33 @@
 /**
+ * Calculates the luminance of an RGB color using standard Rec. 709 coefficients.
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {number}
+ */
+const getLuminance = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+/**
+ * Creates a map of color strings to palette indices (0, 1, 2, 3...) sorted by brightness.
+ * Lightest colors get lower indices.
+ * @param {Iterable<{r: number, g: number, b: number}>} uniqueColors
+ * @returns {Map<string, number>}
+ */
+const createColorIndexMap = (uniqueColors) => {
+    const colorsWithLuminance = Array.from(uniqueColors).map((color) => ({
+        ...color,
+        luminance: getLuminance(color.r, color.g, color.b)
+    }));
+
+    // Sort lightest to darkest
+    colorsWithLuminance.sort((a, b) => b.luminance - a.luminance);
+
+    return new Map(
+        colorsWithLuminance.map((color, index) => [`${color.r},${color.g},${color.b}`, index])
+    );
+};
+
+/**
  * Analyzes the image to find unique colors and sorts them by luminance.
  * @param {HTMLImageElement} image - The source image.
  * @param {number} width - The width to analyze.
@@ -32,23 +61,7 @@ export const analyzeImageColors = (image, width, height) => {
         }
     }
 
-    // Calculate luminance for each unique color to map them to palette indices (brightness)
-    const colorsWithLuminance = Array.from(uniqueColors.values()).map((color) => ({
-        ...color,
-        luminance: 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b
-    }));
-
-    // Sort lightest to darkest
-    colorsWithLuminance.sort((a, b) => b.luminance - a.luminance);
-
-    // Create the new colors map
-    const newColorMap = new Map();
-    colorsWithLuminance.forEach((color, index) => {
-        const colorStr = `${color.r},${color.g},${color.b}`;
-        newColorMap.set(colorStr, index);
-    });
-
-    return newColorMap;
+    return createColorIndexMap(uniqueColors.values());
 };
 
 /**
@@ -279,7 +292,7 @@ export const transformPngToGbcPhoto = async (data, name) => {
     const { data: pixels } = ctx.getImageData(0, 0, img.width, img.height);
 
     const sampledColors = [];
-    const colorBrightnessMap = new Map();
+    const uniqueColors = new Map();
 
     // Sample the center of each "fat" pixel block
     for (let y = 0; y < TARGET_H; y++) {
@@ -291,22 +304,17 @@ export const transformPngToGbcPhoto = async (data, name) => {
             const rgb = `${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`;
             sampledColors.push(rgb);
 
-            if (!colorBrightnessMap.has(rgb)) {
-                // Calculate luminance to determine brightness (Rec. 601)
-                const brightness =
-                    0.299 * pixels[i] + 0.587 * pixels[i + 1] + 0.114 * pixels[i + 2];
-                colorBrightnessMap.set(rgb, brightness);
+            if (!uniqueColors.has(rgb)) {
+                uniqueColors.set(rgb, { r: pixels[i], g: pixels[i + 1], b: pixels[i + 2] });
             }
         }
     }
 
-    const sortedRgb = Array.from(colorBrightnessMap.entries())
-        .sort((a, b) => b[1] - a[1])
-        .map(([rgb]) => rgb);
+    const colorMap = createColorIndexMap(uniqueColors.values());
 
     const gbcPixels = new Uint8Array(TARGET_W * TARGET_H);
     for (let i = 0; i < sampledColors.length; i++) {
-        gbcPixels[i] = Math.min(Math.max(sortedRgb.indexOf(sampledColors[i]), 0), 3);
+        gbcPixels[i] = Math.min(colorMap.get(sampledColors[i]) ?? 0, 3);
     }
 
     return {
