@@ -68,14 +68,16 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         }
     }, [currentPalette?.id]);
 
-    // Load user palettes from local storage on component mount
+    // Load user palettes from local storage whenever the modal opens
     useEffect(() => {
-        const stored = getItem(KEYS.PALETTES);
-        if (stored) {
-            setUserPalettes(stored.palettes || {});
-            setQuickColors(stored.quickColors || []);
+        if (isOpen) {
+            const stored = getItem(KEYS.PALETTES);
+            if (stored) {
+                setUserPalettes(stored.palettes || {});
+                setQuickColors(stored.quickColors || []);
+            }
         }
-    }, []);
+    }, [isOpen]);
 
     // Combine built-in and user palettes for easier access throughout the component
     const allPalettes = useMemo(() => ({ ...palettes, ...userPalettes }), [userPalettes]);
