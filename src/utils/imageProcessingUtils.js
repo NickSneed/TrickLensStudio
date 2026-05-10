@@ -28,6 +28,24 @@ const createColorIndexMap = (uniqueColors) => {
 };
 
 /**
+ * Creates a temporary canvas, draws the image onto it at the specified size,
+ * and returns the context and canvas.
+ * @param {HTMLImageElement} image
+ * @param {number} width
+ * @param {number} height
+ * @returns {{canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D}}
+ */
+const createContextWithImage = (image, width, height) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(image, 0, 0, width, height);
+    return { canvas, ctx };
+};
+
+/**
  * Analyzes the image to find unique colors and sorts them by luminance.
  * @param {HTMLImageElement} image - The source image.
  * @param {number} width - The width to analyze.
@@ -35,13 +53,8 @@ const createColorIndexMap = (uniqueColors) => {
  * @returns {Map<string, number>} A map of color strings to indices.
  */
 export const analyzeImageColors = (image, width, height) => {
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = width;
-    tempCanvas.height = height;
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.imageSmoothingEnabled = false;
-    tempCtx.drawImage(image, 0, 0, width, height);
-    const imageData = tempCtx.getImageData(0, 0, width, height);
+    const { ctx } = createContextWithImage(image, width, height);
+    const imageData = ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
     const uniqueColors = new Map();
 
@@ -108,14 +121,8 @@ export const getFramedLayout = (baseDimensions, frame) => {
  * @returns {HTMLCanvasElement} A new canvas with the palette applied.
  */
 const applyPalette = (source, width, height, colorIndexMap, palette) => {
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = width;
-    tempCanvas.height = height;
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.imageSmoothingEnabled = false;
-    tempCtx.drawImage(source, 0, 0, width, height);
-
-    const imageData = tempCtx.getImageData(0, 0, width, height);
+    const { canvas, ctx } = createContextWithImage(source, width, height);
+    const imageData = ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
 
     // Use the palette object directly
@@ -138,10 +145,10 @@ const applyPalette = (source, width, height, colorIndexMap, palette) => {
                 data[i + 3] = 255;
             }
         }
-        tempCtx.putImageData(imageData, 0, 0);
+        ctx.putImageData(imageData, 0, 0);
     }
 
-    return tempCanvas;
+    return canvas;
 };
 
 /**
@@ -284,11 +291,7 @@ export const transformPngToGbcPhoto = async (data, name) => {
     const TARGET_W = 128;
     const TARGET_H = 112;
 
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
+    const { ctx } = createContextWithImage(img, img.width, img.height);
     const { data: pixels } = ctx.getImageData(0, 0, img.width, img.height);
 
     const sampledColors = [];
