@@ -145,7 +145,10 @@ const SettingsMenu = () => {
                 <span></span>
                 Enable Animations
             </label>
-            <p>Storage used: {usage} / 5MB</p>
+            <p>
+                <span className="group">Storage used:</span>
+                <span className="group">{usage} / 5MB</span>
+            </p>
             <MainButton onClick={handleClearStorage}>Clear All Data</MainButton>
         </div>
     );
