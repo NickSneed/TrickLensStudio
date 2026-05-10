@@ -80,14 +80,14 @@ const Home = () => {
 
     const isSelectionFull = selectedPhotos.length >= 4;
 
-    const allPhotos = Array.from({ length: 30 }, (_, i) => {
-        const photos = saveData?.photos[i];
-        if (photos && (!photos.isDeleted || settings.isShowDeleted)) {
-            photos.index = i;
-            return photos;
-        }
-        return null;
-    }).filter(Boolean);
+    const allPhotos = (saveData?.photos || [])
+        .map((photo, i) => {
+            if (photo && (!photo.isDeleted || settings.isShowDeleted)) {
+                return { ...photo, index: i };
+            }
+            return null;
+        })
+        .filter(Boolean);
 
     allPhotos.sort((a, b) => a.slot - b.slot);
 

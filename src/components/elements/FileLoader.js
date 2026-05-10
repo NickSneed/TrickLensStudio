@@ -14,29 +14,47 @@ import CloseButton from './CloseButton.js';
  * @param {Function} [props.onRemove] - Handler called when the remove button is clicked.
  * @param {boolean} [props.showRemove=false] - Whether to display the remove button.
  * @param {string} [props.accept=''] - The file types to accept (e.g., ".sav", ".png").
+ * @param {boolean} [props.multiple=false] - Whether to allow multiple file selection.
  * @param {React.Ref} ref - Ref forwarded to the internal file input element.
  */
-const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept }, ref) => {
-    const reader = new FileReader();
+const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept, multiple }, ref) => {
     const inputRef = useRef(null);
 
-    // Expose a clear method to parent components
+    // Expose methods to parent components
     useImperativeHandle(ref, () => ({
         clear: () => {
             if (inputRef.current) {
                 inputRef.current.value = '';
             }
+        },
+        click: () => {
+            inputRef.current?.click();
         }
     }));
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            reader.onload = () => {
-                onChange({ data: reader.result, name: file.name });
-            };
+    const handleFileChange = async (event) => {
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
 
-            reader.readAsArrayBuffer(file);
+        const readFile = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({ data: reader.result, name: file.name });
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        };
+
+        try {
+            if (multiple) {
+                const results = await Promise.all(files.map(readFile));
+                onChange(results);
+            } else {
+                const result = await readFile(files[0]);
+                onChange(result);
+            }
+        } catch (error) {
+            console.error('Error loading file(s):', error);
         }
     };
 
@@ -55,7 +73,7 @@ const FileLoader = forwardRef(({ text, onChange, onRemove, showRemove, accept },
                 ref={inputRef}
                 type="file"
                 accept={accept}
-                multiple
+                multiple={multiple}
                 onChange={handleFileChange}
             />
             <MainButton
@@ -83,11 +101,13 @@ FileLoader.propTypes = {
     onChange: PropTypes.func.isRequired,
     onRemove: PropTypes.func,
     showRemove: PropTypes.bool,
-    accept: PropTypes.string
+    accept: PropTypes.string,
+    multiple: PropTypes.bool
 };
 
 FileLoader.defaultProps = {
     onRemove: null,
     showRemove: false,
-    accept: ''
+    accept: '',
+    multiple: false
 };

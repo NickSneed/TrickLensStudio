@@ -44,30 +44,64 @@ const ToolBar = forwardRef(
          * Handles file selection for both Game Boy Camera saves (.sav) and images (.png).
          * If a PNG is loaded, it is converted into a synthetic GBC photo object.
          */
-        const handleFileLoad = async ({ data, name }) => {
-            const extension = name.toLowerCase().split('.').pop();
+        const handleFileLoad = async (input) => {
+            const files = Array.isArray(input) ? input : [input];
+            const savFile = files.find((f) => f.name.toLowerCase().endsWith('.sav'));
 
-            if (extension === 'sav') {
-                const saveData = parseSave(data);
+            if (savFile) {
+                const saveData = parseSave(savFile.data);
                 setSaveData(saveData);
                 setItem(KEYS.SAVE_DATA, saveData);
                 window.scrollTo(0, 0);
                 return;
             }
 
-            if (extension === 'png') {
-                try {
-                    const photo = await transformPngToGbcPhoto(data, name);
-                    const importedSave = {
-                        username: 'Imported',
-                        photos: [photo]
-                    };
+            const pngFiles = files.filter((f) => f.name.toLowerCase().endsWith('.png'));
 
-                    setSaveData(importedSave);
-                    setItem(KEYS.SAVE_DATA, importedSave);
+            if (pngFiles.length > 0) {
+                const currentCount = saveData?.photos?.length || 0;
+                const remaining = 30 - currentCount;
+
+                if (remaining <= 0) {
+                    alert('The photo album is full (max 30 photos).');
+                    return;
+                }
+
+                if (pngFiles.length > remaining) {
+                    alert(
+                        `Album space is limited. Only ${remaining} of ${pngFiles.length} photos will be imported.`
+                    );
+                }
+
+                const pngToProcess = pngFiles.slice(0, remaining);
+
+                try {
+                    const transformed = await Promise.all(
+                        pngToProcess.map((f) => transformPngToGbcPhoto(f.data, f.name))
+                    );
+
+                    setSaveData((currentSave) => {
+                        const existingPhotos = currentSave?.photos || [];
+                        const startIdx = existingPhotos.length;
+
+                        const newPhotos = transformed.map((photo, i) => ({
+                            ...photo,
+                            slot: startIdx + i,
+                            index: startIdx + i
+                        }));
+
+                        const updatedSave = {
+                            username: currentSave?.username || 'Imported',
+                            photos: [...existingPhotos, ...newPhotos]
+                        };
+
+                        setItem(KEYS.SAVE_DATA, updatedSave);
+                        return updatedSave;
+                    });
+
                     window.scrollTo(0, 0);
                 } catch (error) {
-                    console.error('Failed to transform PNG:', error);
+                    console.error('Failed to transform PNGs:', error);
                 }
             }
         };
@@ -93,6 +127,7 @@ const ToolBar = forwardRef(
                                 removeItem(KEYS.SAVE_DATA);
                             }}
                             showRemove={saveData ? true : false}
+                            multiple={true}
                             accept=".sav,.png"
                             ref={ref}
                         />
