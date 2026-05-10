@@ -245,3 +245,77 @@ export const createImageFromBuffer = (buffer) => {
         img.src = url;
     });
 };
+
+/**
+ * Transforms a PNG file (ArrayBuffer) into a synthetic Game Boy Camera photo object.
+ * Handles downsampling from "fat pixel" scaled images and maps 4 colors based on brightness.
+ *
+ * @param {ArrayBuffer} data - The raw PNG file data.
+ * @param {string} name - The filename to be used as a comment.
+ * @returns {Promise<Object>} The transformed photo object.
+ */
+export const transformPngToGbcPhoto = async (data, name) => {
+    const img = await createImageFromBuffer(data);
+    const baseDim = calculateBaseDimensions(img.width, img.height);
+    const pixelSize = img.width / baseDim.width;
+
+    let offsetX = 0;
+    let offsetY = 0;
+
+    // If the image proportion matches a framed shot, set offsets to crop the center 128x112
+    if (baseDim.width === 160) {
+        offsetX = 16;
+        offsetY = baseDim.height === 224 ? 40 : 16;
+    }
+
+    const TARGET_W = 128;
+    const TARGET_H = 112;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const { data: pixels } = ctx.getImageData(0, 0, img.width, img.height);
+
+    const sampledColors = [];
+    const colorBrightnessMap = new Map();
+
+    // Sample the center of each "fat" pixel block
+    for (let y = 0; y < TARGET_H; y++) {
+        for (let x = 0; x < TARGET_W; x++) {
+            const srcX = Math.floor((offsetX + x + 0.5) * pixelSize);
+            const srcY = Math.floor((offsetY + y + 0.5) * pixelSize);
+            const i = (srcY * img.width + srcX) * 4;
+
+            const rgb = `${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`;
+            sampledColors.push(rgb);
+
+            if (!colorBrightnessMap.has(rgb)) {
+                // Calculate luminance to determine brightness (Rec. 601)
+                const brightness =
+                    0.299 * pixels[i] + 0.587 * pixels[i + 1] + 0.114 * pixels[i + 2];
+                colorBrightnessMap.set(rgb, brightness);
+            }
+        }
+    }
+
+    const sortedRgb = Array.from(colorBrightnessMap.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([rgb]) => rgb);
+
+    const gbcPixels = new Uint8Array(TARGET_W * TARGET_H);
+    for (let i = 0; i < sampledColors.length; i++) {
+        gbcPixels[i] = Math.min(Math.max(sortedRgb.indexOf(sampledColors[i]), 0), 3);
+    }
+
+    return {
+        width: TARGET_W,
+        height: TARGET_H,
+        pixels: gbcPixels,
+        comment: name,
+        frameId: '1',
+        slot: 0,
+        isDeleted: false
+    };
+};

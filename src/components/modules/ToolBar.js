@@ -5,7 +5,7 @@ import FileLoader from '../elements/FileLoader.js';
 import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../../utils/canvasUtils.js';
 import { setItem, removeItem, KEYS } from '../../utils/storageUtils.js';
-import ImageEditor from './ImageEditor.js';
+import { transformPngToGbcPhoto } from '../../utils/imageProcessingUtils.js';
 import * as styles from './ToolBar.module.css';
 
 /**
@@ -40,12 +40,36 @@ const ToolBar = forwardRef(
         },
         ref
     ) => {
-        // Parses the save data
-        const loadSave = ({ data }) => {
-            const saveData = parseSave(data);
-            setSaveData(saveData);
-            setItem(KEYS.SAVE_DATA, saveData);
-            window.scrollTo(0, 0);
+        /**
+         * Handles file selection for both Game Boy Camera saves (.sav) and images (.png).
+         * If a PNG is loaded, it is converted into a synthetic GBC photo object.
+         */
+        const handleFileLoad = async ({ data, name }) => {
+            const extension = name.toLowerCase().split('.').pop();
+
+            if (extension === 'sav') {
+                const saveData = parseSave(data);
+                setSaveData(saveData);
+                setItem(KEYS.SAVE_DATA, saveData);
+                window.scrollTo(0, 0);
+                return;
+            }
+
+            if (extension === 'png') {
+                try {
+                    const photo = await transformPngToGbcPhoto(data, name);
+                    const importedSave = {
+                        username: 'Imported',
+                        photos: [photo]
+                    };
+
+                    setSaveData(importedSave);
+                    setItem(KEYS.SAVE_DATA, importedSave);
+                    window.scrollTo(0, 0);
+                } catch (error) {
+                    console.error('Failed to transform PNG:', error);
+                }
+            }
         };
 
         // Set the frame
@@ -62,14 +86,14 @@ const ToolBar = forwardRef(
                     {count > 0 ? <div className={styles.photoCount}>{count}</div> : null}
                     <div className={styles.toolbaritem}>
                         <FileLoader
-                            text="Select .sav &hellip;"
-                            onChange={loadSave}
+                            text="Load .sav or .png &hellip;"
+                            onChange={handleFileLoad}
                             onRemove={() => {
                                 setSaveData(null);
                                 removeItem(KEYS.SAVE_DATA);
                             }}
                             showRemove={saveData ? true : false}
-                            accept=".sav"
+                            accept=".sav,.png"
                             ref={ref}
                         />
                     </div>
@@ -85,16 +109,11 @@ const ToolBar = forwardRef(
                             accept=".png"
                         />
                     </div>
-                    <div className={styles.toolbarHalfGroup}>
-                        <div className={`${styles.toolbaritem} ${styles.toolbaritemhalf}`}>
-                            <PaletteSelector
-                                currentPalette={palette}
-                                onPaletteChange={setPalette}
-                            />
-                        </div>
-                        <div className={`${styles.toolbaritem} ${styles.toolbaritemhalf}`}>
-                            <ImageEditor />
-                        </div>
+                    <div className={styles.toolbaritem}>
+                        <PaletteSelector
+                            currentPalette={palette}
+                            onPaletteChange={setPalette}
+                        />
                     </div>
                     <div className={styles.settingsbutton}>
                         <button
