@@ -2,11 +2,11 @@
 
 https://tlstudio.nicksneed.com/
 
-TrickLens is a web-based utility that allows you to view, customize, and export your Game Boy Camera photos from a `.sav` file.
+TrickLens is a web-based utility that allows you to view, customize, and export your Game Boy Camera photos from a `.sav` file. You can also edit your exported `.png` files.
 
 ## Features
 
-- **Load Game Boy Camera saves or pngs:** Open and view photos directly from your `.sav` files or png files.
+- **Load Game Boy Camera saves or pngs:** Open and view photos directly from your `.sav` files or `.png` files.
 - **Custom Palettes:** Apply a variety of color palettes to change the look of your photos.
 - **Custom Frames:** Load `.png` files to be used as frames for your photos.
 - **Export to PNG or JPG:** Save your favorite shots as high-quality PNG files.
