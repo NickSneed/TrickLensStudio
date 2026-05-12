@@ -6,6 +6,7 @@ import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../../utils/canvasUtils.js';
 import { setItem, removeItem, KEYS } from '../../utils/storageUtils.js';
 import { transformPngToGbcPhoto } from '../../utils/imageProcessingUtils.js';
+import { isIOS } from '../../utils/deviceUtils.js';
 import * as styles from './ToolBar.module.css';
 
 /**
@@ -128,7 +129,7 @@ const ToolBar = forwardRef(
                             }}
                             showRemove={saveData ? true : false}
                             multiple={true}
-                            accept=".sav,.png"
+                            accept={!isIOS() ? '.sav,.png' : null}
                             ref={ref}
                         />
                     </div>
