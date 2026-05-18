@@ -143,7 +143,7 @@ const SettingsMenu = () => {
                     onChange={handleSettingChange}
                 />
                 <span></span>
-                Enable Animations
+                Enable animations
             </label>
             <p>
                 <span className="group">Storage used:</span>
