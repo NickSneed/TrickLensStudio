@@ -15,7 +15,7 @@ export default {
     entry: './src/app.js',
     devtool: isProduction ? 'source-map' : 'eval-source-map',
     output: {
-        filename: '[name].[contenthash].js',
+        filename: isProduction ? '[name].[contenthash].js' : '[name].js',
         path: path.resolve(__dirname, 'dist')
     },
     module: {
@@ -84,7 +84,7 @@ export default {
             isProduction
         }),
         new MiniCssExtractPlugin({
-            filename: '[name].css'
+            filename: isProduction ? '[name].[contenthash].css' : '[name].css'
         }),
         new CopyWebpackPlugin({
             patterns: [
