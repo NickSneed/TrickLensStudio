@@ -15,7 +15,7 @@ export default {
     entry: './src/app.js',
     devtool: isProduction ? 'source-map' : 'eval-source-map',
     output: {
-        filename: '[name].bundle.js',
+        filename: '[name].[contenthash].js',
         path: path.resolve(__dirname, 'dist')
     },
     module: {
