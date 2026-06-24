@@ -41,5 +41,8 @@
         "react-dom": "^19.0.0",
         "react-router-dom": "^7.6.0",
         "tricklens-js": "github:NickSneed/TrickLensJS"
+    },
+    "overrides": {
+        "uuid": "^11.1.0"
     }
 }
