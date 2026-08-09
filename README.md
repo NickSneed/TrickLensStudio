@@ -91,3 +91,4 @@ JSON format:
 - Add stamps
 - Add option to save custom palettes
 - Add Game Boy controls
+- Add option for scanlines
