@@ -526,6 +526,7 @@ p span.group + span.group {
 @media (min-width: 1280px) {
     .Modal-module__small--N8RLo .Modal-module__modal--D_3rm {
         height: auto;
+        max-height: 90vh;
         max-width: 500px;
     }
 }
@@ -910,4 +911,4 @@ p span.group + span.group {
 }
 
 
-/*# sourceMappingURL=main.16791ebc9e97dbb60c4e.css.map*/
+/*# sourceMappingURL=main.db8fa3f0441fdc6ab469.css.map*/
