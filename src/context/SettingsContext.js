@@ -18,7 +18,8 @@ const SETTINGS_STORAGE_MAP = {
     isAnimate: KEYS.SETTING_IS_ANIMATE,
     isScanline: KEYS.SETTING_IS_SCANLINE,
     scanlineBrightness: KEYS.SETTING_SCANLINE_BRIGHTNESS,
-    saveScale: KEYS.SETTING_SAVE_SCALE
+    saveScale: KEYS.SETTING_SAVE_SCALE,
+    isScanlineDisplayOnly: KEYS.SETTING_IS_SCANLINE_DISPLAY_ONLY
 };
 
 export const SettingsProvider = ({ children }) => {
@@ -35,8 +36,9 @@ export const SettingsProvider = ({ children }) => {
             theme: getItem(KEYS.SETTING_THEME) || 'system',
             isAnimate: getItem(KEYS.SETTING_IS_ANIMATE) || false,
             isScanline: getItem(KEYS.SETTING_IS_SCANLINE) || false,
-            scanlineBrightness: getItem(KEYS.SETTING_SCANLINE_BRIGHTNESS) ?? 0.45,
-            saveScale: Number(getItem(KEYS.SETTING_SAVE_SCALE)) || 10
+            scanlineBrightness: getItem(KEYS.SETTING_SCANLINE_BRIGHTNESS) ?? 0.25,
+            saveScale: Number(getItem(KEYS.SETTING_SAVE_SCALE)) || 10,
+            isScanlineDisplayOnly: getItem(KEYS.SETTING_IS_SCANLINE_DISPLAY_ONLY) ?? true
         };
     });
 

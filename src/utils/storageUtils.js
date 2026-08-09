@@ -19,7 +19,8 @@ export const KEYS = {
     SETTING_IS_ANIMATE: 'tricklens-setting-is-animate',
     SETTING_IS_SCANLINE: 'tricklens-setting-is-scanline',
     SETTING_SCANLINE_BRIGHTNESS: 'tricklens-setting-scanline-brightness',
-    SETTING_SAVE_SCALE: 'tricklens-setting-save-scale'
+    SETTING_SAVE_SCALE: 'tricklens-setting-save-scale',
+    SETTING_IS_SCANLINE_DISPLAY_ONLY: 'tricklens-setting-is-scanline-display-only'
 };
 
 /**
