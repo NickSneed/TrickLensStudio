@@ -147,6 +147,18 @@ const SettingsMenu = () => {
                     Scanline grid
                 </label>
             )}
+            {settings.isScanline && settings.scaleFactor > 1 && (
+                <label className="pixelCheckbox">
+                    <input
+                        type="checkbox"
+                        name="isScanlineDisplayOnly"
+                        checked={settings.isScanlineDisplayOnly}
+                        onChange={handleSettingChange}
+                    />
+                    <span></span>
+                    Scanline display only
+                </label>
+            )}
             {settings.isScanline && settings.scaleFactor > 1 ? (
                 <label>
                     Brightness:{' '}
