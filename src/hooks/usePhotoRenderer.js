@@ -26,14 +26,14 @@ const drawScanlineGrid = (ctx, pixelScale, brightness, palette) => {
     ctx.beginPath();
 
     // Draw horizontal lines
-    for (let y = pixelScale; y < totalHeight; y += pixelScale) {
+    for (let y = 0; y < totalHeight; y += pixelScale) {
         const currentY = Math.round(y) + 0.5;
         ctx.moveTo(0, currentY);
         ctx.lineTo(totalWidth, currentY);
     }
 
     // Draw vertical segments skipping horizontal lines
-    for (let x = pixelScale; x < totalWidth; x += pixelScale) {
+    for (let x = 0; x < totalWidth; x += pixelScale) {
         const currentX = Math.round(x) + 0.5;
         for (let y = 0; y < totalHeight; y += pixelScale) {
             const startY = y + 1;
