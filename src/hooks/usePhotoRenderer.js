@@ -5,17 +5,21 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
 import { useSettings } from '../context/SettingsContext.js';
 
 /**
- * Draws a gray scanline grid aligned to actual rendered pixels.
+ * Draws a scanline grid aligned to actual rendered pixels.
  * @param {CanvasRenderingContext2D} ctx
  * @param {number} pixelScale
  * @param {number} brightness
+ * @param {string} color
  */
-const drawScanlineGrid = (ctx, pixelScale, brightness) => {
+const drawScanlineGrid = (ctx, pixelScale, brightness, palette) => {
+    const colorObj = palette.colors[0];
     const totalWidth = ctx.canvas.width;
     const totalHeight = ctx.canvas.height;
 
     ctx.save();
-    ctx.strokeStyle = `rgba(120, 120, 120, ${brightness})`;
+    ctx.strokeStyle = colorObj
+        ? `rgba(${colorObj.r}, ${colorObj.g}, ${colorObj.b}, ${brightness})`
+        : `rgba(255, 255, 255, ${brightness})`;
     ctx.lineWidth = 1;
     ctx.setLineDash([]);
     ctx.beginPath();
@@ -145,7 +149,7 @@ export const usePhotoRenderer = (
                 saveCtx.imageSmoothingEnabled = imageSmoothing;
                 saveCtx.drawImage(compositionCanvas, 0, 0, saveCanvas.width, saveCanvas.height);
                 if (isScanline) {
-                    drawScanlineGrid(saveCtx, saveScale, scanlineBrightness);
+                    drawScanlineGrid(saveCtx, saveScale, scanlineBrightness, palette);
                 }
 
                 // Store the save-ready canvas
@@ -167,7 +171,7 @@ export const usePhotoRenderer = (
                         displayCanvas.height
                     );
                     if (isScanline) {
-                        drawScanlineGrid(displayCtx, scale, scanlineBrightness);
+                        drawScanlineGrid(displayCtx, scale, scanlineBrightness, palette);
                     }
                 }
             } catch (error) {
