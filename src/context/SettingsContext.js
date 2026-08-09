@@ -28,15 +28,15 @@ export const SettingsProvider = ({ children }) => {
         const initialIsReversed = getItem(KEYS.SETTING_IS_REVERSED);
         return {
             scaleFactor: getItem(KEYS.SETTING_SCALE_FACTOR) || 2,
-            isShowDeleted: getItem(KEYS.SETTING_IS_SHOW_DELETED) || false,
+            isShowDeleted: getItem(KEYS.SETTING_IS_SHOW_DELETED) ?? false,
             color: getItem(KEYS.SETTING_COLOR) || 'green',
             isReversed: initialIsReversed === null ? false : initialIsReversed,
             exportFormat: getItem(KEYS.SETTING_EXPORT_FORMAT) || 'png',
             exportQuality: Number(getItem(KEYS.SETTING_EXPORT_QUALITY)) || 0.9,
             theme: getItem(KEYS.SETTING_THEME) || 'system',
-            isAnimate: getItem(KEYS.SETTING_IS_ANIMATE) || false,
-            isScanline: getItem(KEYS.SETTING_IS_SCANLINE) || false,
-            scanlineBrightness: getItem(KEYS.SETTING_SCANLINE_BRIGHTNESS) ?? 0.25,
+            isAnimate: getItem(KEYS.SETTING_IS_ANIMATE) ?? false,
+            isScanline: getItem(KEYS.SETTING_IS_SCANLINE) ?? false,
+            scanlineBrightness: getItem(KEYS.SETTING_SCANLINE_BRIGHTNESS) ?? 0.2,
             saveScale: Number(getItem(KEYS.SETTING_SAVE_SCALE)) || 10,
             isScanlineDisplayOnly: getItem(KEYS.SETTING_IS_SCANLINE_DISPLAY_ONLY) ?? true
         };
