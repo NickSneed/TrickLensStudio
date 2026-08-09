@@ -5,6 +5,38 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
 import { useSettings } from '../context/SettingsContext.js';
 
 /**
+ * Draws a gray scanline grid aligned to actual rendered pixels.
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {number} pixelScale
+ * @param {number} brightness
+ */
+const drawScanlineGrid = (ctx, pixelScale, brightness) => {
+    const totalWidth = ctx.canvas.width;
+    const totalHeight = ctx.canvas.height;
+
+    ctx.save();
+    ctx.strokeStyle = `rgba(120, 120, 120, ${brightness})`;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+
+    for (let x = pixelScale; x < totalWidth; x += pixelScale) {
+        const currentX = Math.round(x) + 0.5;
+        ctx.moveTo(currentX, 0);
+        ctx.lineTo(currentX, totalHeight);
+    }
+
+    for (let y = pixelScale; y < totalHeight; y += pixelScale) {
+        const currentY = Math.round(y) + 0.5;
+        ctx.moveTo(0, currentY);
+        ctx.lineTo(totalWidth, currentY);
+    }
+
+    ctx.stroke();
+    ctx.restore();
+};
+
+/**
  * Hook to render the photo with applied effects, palettes, and frames.
  * Handles both display rendering and creating a high-resolution version for saving.
  *
@@ -37,7 +69,7 @@ export const usePhotoRenderer = (
     const displayCanvasRef = useRef(null);
     const internalSaveRef = useRef(null);
     const saveCanvasRef = externalSaveRef || internalSaveRef;
-    const { saveScale } = settings; // Scale factor for the high-resolution export
+    const { saveScale, isScanline, scanlineBrightness } = settings; // Scale factor for the high-resolution export, optional scanline overlay, and brightness
 
     useEffect(() => {
         if (!photo) return;
@@ -112,6 +144,9 @@ export const usePhotoRenderer = (
                 const saveCtx = saveCanvas.getContext('2d');
                 saveCtx.imageSmoothingEnabled = imageSmoothing;
                 saveCtx.drawImage(compositionCanvas, 0, 0, saveCanvas.width, saveCanvas.height);
+                if (isScanline) {
+                    drawScanlineGrid(saveCtx, saveScale, scanlineBrightness);
+                }
 
                 // Store the save-ready canvas
                 saveCanvasRef.current = saveCanvas;
@@ -131,6 +166,9 @@ export const usePhotoRenderer = (
                         displayCanvas.width,
                         displayCanvas.height
                     );
+                    if (isScanline) {
+                        drawScanlineGrid(displayCtx, scale, scanlineBrightness);
+                    }
                 }
             } catch (error) {
                 console.log(error);
@@ -147,7 +185,9 @@ export const usePhotoRenderer = (
         photoB,
         rgbBrightness,
         rgbContrast,
-        imageSmoothing
+        imageSmoothing,
+        isScanline,
+        scanlineBrightness
     ]);
 
     return { displayCanvasRef, saveCanvasRef };

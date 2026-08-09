@@ -138,6 +138,34 @@ const SettingsMenu = () => {
             <label className="pixelCheckbox">
                 <input
                     type="checkbox"
+                    name="isScanline"
+                    checked={settings.isScanline}
+                    onChange={handleSettingChange}
+                />
+                <span></span>
+                Scanline grid
+            </label>
+            {settings.isScanline ? (
+                <label>
+                    Brightness:{' '}
+                    <span className={styles.qualityValue}>
+                        {Math.round(settings.scanlineBrightness * 100)}%
+                    </span>
+                    <input
+                        className={styles.qualitySlider}
+                        type="range"
+                        name="scanlineBrightness"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value={settings.scanlineBrightness}
+                        onChange={handleSettingChange}
+                    />
+                </label>
+            ) : null}
+            <label className="pixelCheckbox">
+                <input
+                    type="checkbox"
                     name="isAnimate"
                     checked={settings.isAnimate}
                     onChange={handleSettingChange}

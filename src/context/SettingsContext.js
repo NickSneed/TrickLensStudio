@@ -16,6 +16,8 @@ const SETTINGS_STORAGE_MAP = {
     exportQuality: KEYS.SETTING_EXPORT_QUALITY,
     theme: KEYS.SETTING_THEME,
     isAnimate: KEYS.SETTING_IS_ANIMATE,
+    isScanline: KEYS.SETTING_IS_SCANLINE,
+    scanlineBrightness: KEYS.SETTING_SCANLINE_BRIGHTNESS,
     saveScale: KEYS.SETTING_SAVE_SCALE
 };
 
@@ -32,6 +34,8 @@ export const SettingsProvider = ({ children }) => {
             exportQuality: Number(getItem(KEYS.SETTING_EXPORT_QUALITY)) || 0.9,
             theme: getItem(KEYS.SETTING_THEME) || 'system',
             isAnimate: getItem(KEYS.SETTING_IS_ANIMATE) || false,
+            isScanline: getItem(KEYS.SETTING_IS_SCANLINE) || false,
+            scanlineBrightness: getItem(KEYS.SETTING_SCANLINE_BRIGHTNESS) ?? 0.45,
             saveScale: Number(getItem(KEYS.SETTING_SAVE_SCALE)) || 10
         };
     });
@@ -87,7 +91,10 @@ export const SettingsProvider = ({ children }) => {
         const newValue =
             type === 'checkbox'
                 ? checked
-                : name === 'scaleFactor' || name === 'exportQuality' || name === 'saveScale'
+                : name === 'scaleFactor' ||
+                    name === 'exportQuality' ||
+                    name === 'saveScale' ||
+                    name === 'scanlineBrightness'
                   ? Number(value)
                   : value;
 

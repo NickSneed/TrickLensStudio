@@ -17,6 +17,8 @@ export const KEYS = {
     SETTING_EXPORT_QUALITY: 'tricklens-setting-export-quality',
     SETTING_THEME: 'tricklens-setting-theme',
     SETTING_IS_ANIMATE: 'tricklens-setting-is-animate',
+    SETTING_IS_SCANLINE: 'tricklens-setting-is-scanline',
+    SETTING_SCANLINE_BRIGHTNESS: 'tricklens-setting-scanline-brightness',
     SETTING_SAVE_SCALE: 'tricklens-setting-save-scale'
 };
 
@@ -236,7 +238,8 @@ const storage = {
                 [
                     KEYS.SETTING_IS_ANIMATE,
                     KEYS.SETTING_IS_REVERSED,
-                    KEYS.SETTING_IS_SHOW_DELETED
+                    KEYS.SETTING_IS_SHOW_DELETED,
+                    KEYS.SETTING_IS_SCANLINE
                 ].includes(key) &&
                 typeof value !== 'boolean'
             ) {
@@ -249,7 +252,8 @@ const storage = {
                 [
                     KEYS.SETTING_EXPORT_QUALITY,
                     KEYS.SETTING_SAVE_SCALE,
-                    KEYS.SETTING_SCALE_FACTOR
+                    KEYS.SETTING_SCALE_FACTOR,
+                    KEYS.SETTING_SCANLINE_BRIGHTNESS
                 ].includes(key) &&
                 typeof value !== 'number'
             ) {
