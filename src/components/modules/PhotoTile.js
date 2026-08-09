@@ -59,7 +59,7 @@ function PhotoTile({
             <div className={styles.phototile}>
                 {onClick ? (
                     <button
-                        className={`${styles.canvasContainer} ${settings.isAnimate ? 'shake' : ''}`}
+                        className={`${styles.canvasContainer} ${settings.isAnimate && !settings.isScanline ? 'shake' : ''}`}
                         onClick={onClick}
                     >
                         {canvasMarkup}
