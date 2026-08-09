@@ -36,7 +36,7 @@ export const SettingsProvider = ({ children }) => {
             theme: getItem(KEYS.SETTING_THEME) || 'system',
             isAnimate: getItem(KEYS.SETTING_IS_ANIMATE) ?? false,
             isScanline: getItem(KEYS.SETTING_IS_SCANLINE) ?? false,
-            scanlineBrightness: getItem(KEYS.SETTING_SCANLINE_BRIGHTNESS) ?? 0.2,
+            scanlineBrightness: getItem(KEYS.SETTING_SCANLINE_BRIGHTNESS) ?? 0.15,
             saveScale: Number(getItem(KEYS.SETTING_SAVE_SCALE)) || 10,
             isScanlineDisplayOnly: getItem(KEYS.SETTING_IS_SCANLINE_DISPLAY_ONLY) ?? true
         };

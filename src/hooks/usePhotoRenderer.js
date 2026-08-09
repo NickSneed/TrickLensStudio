@@ -15,11 +15,12 @@ const drawScanlineGrid = (ctx, pixelScale, brightness, palette) => {
     const colorObj = palette.colors[0];
     const totalWidth = ctx.canvas.width;
     const totalHeight = ctx.canvas.height;
+    const scaledBrightness = brightness + pixelScale / 50;
 
     ctx.save();
     ctx.strokeStyle = colorObj
-        ? `rgba(${colorObj.r}, ${colorObj.g}, ${colorObj.b}, ${brightness})`
-        : `rgba(255, 255, 255, ${brightness})`;
+        ? `rgba(${colorObj.r}, ${colorObj.g}, ${colorObj.b}, ${scaledBrightness})`
+        : `rgba(255, 255, 255, ${scaledBrightness})`;
     ctx.lineWidth = 1;
     ctx.setLineDash([]);
     ctx.beginPath();
