@@ -135,17 +135,19 @@ const SettingsMenu = () => {
                 <span></span>
                 Show deleted
             </label>
-            <label className="pixelCheckbox">
-                <input
-                    type="checkbox"
-                    name="isScanline"
-                    checked={settings.isScanline}
-                    onChange={handleSettingChange}
-                />
-                <span></span>
-                Scanline grid
-            </label>
-            {settings.isScanline ? (
+            {settings.scaleFactor > 1 && (
+                <label className="pixelCheckbox">
+                    <input
+                        type="checkbox"
+                        name="isScanline"
+                        checked={settings.isScanline}
+                        onChange={handleSettingChange}
+                    />
+                    <span></span>
+                    Scanline grid
+                </label>
+            )}
+            {settings.isScanline && settings.scaleFactor > 1 ? (
                 <label>
                     Brightness:{' '}
                     <span className={styles.qualityValue}>

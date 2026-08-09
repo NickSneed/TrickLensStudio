@@ -81,7 +81,8 @@ export const usePhotoRenderer = (
     const displayCanvasRef = useRef(null);
     const internalSaveRef = useRef(null);
     const saveCanvasRef = externalSaveRef || internalSaveRef;
-    const { saveScale, isScanline, scanlineBrightness } = settings; // Scale factor for the high-resolution export, optional scanline overlay, and brightness
+    const { saveScale, isScanline, scanlineBrightness } = settings;
+    const activeScanline = isScanline && displayScale > 1;
 
     useEffect(() => {
         if (!photo) return;
@@ -156,7 +157,7 @@ export const usePhotoRenderer = (
                 const saveCtx = saveCanvas.getContext('2d');
                 saveCtx.imageSmoothingEnabled = imageSmoothing;
                 saveCtx.drawImage(compositionCanvas, 0, 0, saveCanvas.width, saveCanvas.height);
-                if (isScanline) {
+                if (activeScanline) {
                     drawScanlineGrid(saveCtx, saveScale, scanlineBrightness, palette);
                 }
 
@@ -178,7 +179,7 @@ export const usePhotoRenderer = (
                         displayCanvas.width,
                         displayCanvas.height
                     );
-                    if (isScanline) {
+                    if (activeScanline) {
                         drawScanlineGrid(displayCtx, scale, scanlineBrightness, palette);
                     }
                 }
