@@ -804,16 +804,19 @@ p span.group + span.group {
     margin: 0 0 1em;
 }
 
-.SettingsMenu-module__qualityValue--aSTSJ {
+.SettingsMenu-module__sliderValue--ND2xt {
     display: inline-block;
-    margin: 1em;
     text-align: right;
     width: 3em;
 }
 
-.SettingsMenu-module__qualitySlider--dIBGI {
+.SettingsMenu-module__slider--EIsTe {
     vertical-align: middle;
     margin-left: 0;
+}
+
+.SettingsMenu-module__settings--GltHh h3 {
+    margin: 2.5em 0 1.5em;
 }
 
 .EditModal-module__select--I8RkU,
@@ -911,4 +914,4 @@ p span.group + span.group {
 }
 
 
-/*# sourceMappingURL=main.db8fa3f0441fdc6ab469.css.map*/
+/*# sourceMappingURL=main.fe321859a44b0d1d2d9c.css.map*/
