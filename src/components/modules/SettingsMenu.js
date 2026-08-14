@@ -100,11 +100,11 @@ const SettingsMenu = () => {
             {settings.exportFormat === 'jpg' ? (
                 <label>
                     Quality:{' '}
-                    <span className={styles.qualityValue}>
+                    <span className={styles.sliderValue}>
                         {Math.round(settings.exportQuality * 100)}%
                     </span>
                     <input
-                        className={styles.qualitySlider}
+                        className={styles.slider}
                         type="range"
                         name="exportQuality"
                         min="0.1"
@@ -135,6 +135,12 @@ const SettingsMenu = () => {
                 <span></span>
                 Show deleted
             </label>
+            <p>
+                <span className="group">Storage used:</span>
+                <span className="group">{usage} / 5MB</span>
+            </p>
+            <MainButton onClick={handleClearStorage}>Clear All Data</MainButton>
+            <h3>Experiemental Settings</h3>
             {settings.scaleFactor > 1 && (
                 <label className="pixelCheckbox">
                     <input
@@ -162,11 +168,11 @@ const SettingsMenu = () => {
             {settings.isScanline && settings.scaleFactor > 1 ? (
                 <label>
                     Brightness:{' '}
-                    <span className={styles.qualityValue}>
+                    <span className={styles.sliderValue}>
                         {Math.round(settings.scanlineBrightness * 100)}%
                     </span>
                     <input
-                        className={styles.qualitySlider}
+                        className={styles.slider}
                         type="range"
                         name="scanlineBrightness"
                         min="0"
@@ -187,11 +193,6 @@ const SettingsMenu = () => {
                 <span></span>
                 Enable animations
             </label>
-            <p>
-                <span className="group">Storage used:</span>
-                <span className="group">{usage} / 5MB</span>
-            </p>
-            <MainButton onClick={handleClearStorage}>Clear All Data</MainButton>
         </div>
     );
 };

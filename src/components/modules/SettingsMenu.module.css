@@ -2,14 +2,17 @@
     margin: 0 0 1em;
 }
 
-.qualityValue {
+.sliderValue {
     display: inline-block;
-    margin: 1em;
     text-align: right;
     width: 3em;
 }
 
-.qualitySlider {
+.slider {
     vertical-align: middle;
     margin-left: 0;
+}
+
+.settings h3 {
+    margin: 2.5em 0 1.5em;
 }
