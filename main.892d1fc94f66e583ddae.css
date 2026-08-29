@@ -728,15 +728,24 @@ p span.group + span.group {
     display: block;
     margin: 0 0 0.5em;
     width: 100%;
+
+    @media (min-width: 1280px) {
+        display: block;
+        float: left;
+        margin: 0 1em 0 0;
+        max-width: 340px;
+        width: auto;
+    }
 }
+
 @media (max-width: 1279px) {
     .ToolBar-module__toolbarHalfGroup--umCwk {
         display: flex;
-        gap: 8px; /* Adjust spacing between the two items */
+        gap: 8px;
         width: 100%;
     }
 
-    .ToolBar-module__toolbaritemhalf--FSK62 {
+    .ToolBar-module__toolbarHalfGroup--umCwk .ToolBar-module__toolbaritem--GOAOI {
         width: 50%;
     }
 }
@@ -745,6 +754,10 @@ p span.group + span.group {
     float: right;
     margin: 0 0 0 10px;
     width: auto;
+
+    @media (min-width: 1280px) {
+        margin-top: 0.3em;
+    }
 }
 
 .ToolBar-module__settingsbutton--EEeVa button,
@@ -764,6 +777,13 @@ p span.group + span.group {
 .ToolBar-module__logo--X_NMS {
     float: left;
     line-height: 2.5em;
+
+    @media (min-width: 1280px) {
+        font-size: 1em;
+        float: right;
+        line-height: 3.4em;
+        margin-right: 1em;
+    }
 }
 
 .ToolBar-module__photoCount--i1x1y {
@@ -777,27 +797,6 @@ p span.group + span.group {
     padding: 0.5em;
     position: absolute;
     top: -2em;
-}
-
-@media (min-width: 1280px) {
-    .ToolBar-module__toolbar--JGAy8 .ToolBar-module__toolbaritem--GOAOI {
-        display: block;
-        float: left;
-        margin: 0 1em 0 0;
-        max-width: 340px;
-        width: auto;
-    }
-
-    .ToolBar-module__logo--X_NMS {
-        font-size: 1em;
-        float: right;
-        line-height: 3.4em;
-        margin-right: 1em;
-    }
-
-    .ToolBar-module__settingsbutton--EEeVa {
-        margin-top: 0.3em;
-    }
 }
 
 .SettingsMenu-module__settings--GltHh label {
@@ -914,4 +913,4 @@ p span.group + span.group {
 }
 
 
-/*# sourceMappingURL=main.fe321859a44b0d1d2d9c.css.map*/
+/*# sourceMappingURL=main.892d1fc94f66e583ddae.css.map*/
