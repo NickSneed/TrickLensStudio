@@ -35,15 +35,24 @@
     display: block;
     margin: 0 0 0.5em;
     width: 100%;
+
+    @media (min-width: 1280px) {
+        display: block;
+        float: left;
+        margin: 0 1em 0 0;
+        max-width: 340px;
+        width: auto;
+    }
 }
+
 @media (max-width: 1279px) {
     .toolbarHalfGroup {
         display: flex;
-        gap: 8px; /* Adjust spacing between the two items */
+        gap: 8px;
         width: 100%;
     }
 
-    .toolbaritemhalf {
+    .toolbarHalfGroup .toolbaritem {
         width: 50%;
     }
 }
@@ -52,6 +61,10 @@
     float: right;
     margin: 0 0 0 10px;
     width: auto;
+
+    @media (min-width: 1280px) {
+        margin-top: 0.3em;
+    }
 }
 
 .settingsbutton button,
@@ -71,6 +84,13 @@
 .logo {
     float: left;
     line-height: 2.5em;
+
+    @media (min-width: 1280px) {
+        font-size: 1em;
+        float: right;
+        line-height: 3.4em;
+        margin-right: 1em;
+    }
 }
 
 .photoCount {
@@ -84,25 +104,4 @@
     padding: 0.5em;
     position: absolute;
     top: -2em;
-}
-
-@media (min-width: 1280px) {
-    .toolbar .toolbaritem {
-        display: block;
-        float: left;
-        margin: 0 1em 0 0;
-        max-width: 340px;
-        width: auto;
-    }
-
-    .logo {
-        font-size: 1em;
-        float: right;
-        line-height: 3.4em;
-        margin-right: 1em;
-    }
-
-    .settingsbutton {
-        margin-top: 0.3em;
-    }
 }

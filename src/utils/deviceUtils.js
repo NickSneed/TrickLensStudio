@@ -9,3 +9,16 @@ export const isIOS = () =>
         (navigator.userAgent.includes('Mac') &&
             typeof document !== 'undefined' &&
             'ontouchend' in document));
+
+/**
+ * Checks if the current device is running Android.
+ * @returns {boolean} True if the device is determined to be Android.
+ */
+export const isAndroid = () =>
+    typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+
+/**
+ * Checks if the current device is running either iOS or Android.
+ * @returns {boolean} True if the device is mobile (iOS or Android).
+ */
+export const isMobile = () => isIOS() || isAndroid();

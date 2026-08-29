@@ -2,11 +2,12 @@ import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import PaletteSelector from './PaletteSelector.js';
 import FileLoader from '../elements/FileLoader.js';
+import MainButton from '../elements/MainButton.js';
 import { parseSave } from 'tricklens-js';
 import { convertFrameToData } from '../../utils/canvasUtils.js';
 import { setItem, removeItem, KEYS } from '../../utils/storageUtils.js';
 import { transformPngToGbcPhoto } from '../../utils/imageProcessingUtils.js';
-import { isIOS } from '../../utils/deviceUtils.js';
+import { isIOS, isMobile } from '../../utils/deviceUtils.js';
 import * as styles from './ToolBar.module.css';
 
 /**
@@ -23,6 +24,8 @@ import * as styles from './ToolBar.module.css';
  * @param {Object} props.frame - The currently selected frame object.
  * @param {string} props.color - The UI color theme.
  * @param {number} props.count - The number of photos currently loaded.
+ * @param {Array} props.photos - The array of visible photo objects for bulk export.
+ * @param {Function} props.onBulkExport - Callback to trigger bulk export of all photos.
  * @param {React.Ref} ref - Ref forwarded to the file loader input.
  */
 const ToolBar = forwardRef(
@@ -37,7 +40,9 @@ const ToolBar = forwardRef(
             saveData,
             frame,
             color,
-            count
+            count,
+            photos,
+            onBulkExport
         },
         ref
     ) => {
@@ -145,11 +150,18 @@ const ToolBar = forwardRef(
                             accept=".png"
                         />
                     </div>
-                    <div className={styles.toolbaritem}>
-                        <PaletteSelector
-                            currentPalette={palette}
-                            onPaletteChange={setPalette}
-                        />
+                    <div className={!isMobile() ? styles.toolbarHalfGroup : styles.toolbaritem}>
+                        <div className={styles.toolbaritem}>
+                            <PaletteSelector
+                                currentPalette={palette}
+                                onPaletteChange={setPalette}
+                            />
+                        </div>
+                        {photos && photos.length > 0 && !isMobile() ? (
+                            <div className={styles.toolbaritem}>
+                                <MainButton onClick={onBulkExport}>Export all</MainButton>
+                            </div>
+                        ) : null}
                     </div>
                     <div className={styles.settingsbutton}>
                         <button
@@ -180,5 +192,7 @@ ToolBar.propTypes = {
     saveData: PropTypes.object,
     frame: PropTypes.object,
     color: PropTypes.string.isRequired,
-    count: PropTypes.number.isRequired
+    count: PropTypes.number.isRequired,
+    photos: PropTypes.array,
+    onBulkExport: PropTypes.func
 };

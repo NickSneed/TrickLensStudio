@@ -83,7 +83,6 @@ JSON format:
 ## To do
 
 - Add more help docs
-- Add bulk export
 - Add animated gif export
 - Fix effects and drawing when applying rgb
 - Add hold shift while drawing

@@ -1,53 +1,6 @@
 import { useRef, useEffect } from 'react';
-import { applyPalette, applyRGB } from 'tricklens-js';
-import { composeImage } from '../utils/canvasUtils.js';
-import { getFrameOffsets } from '../utils/frameUtils.js';
 import { useSettings } from '../context/SettingsContext.js';
-
-/**
- * Draws a scanline grid aligned to actual rendered pixels.
- * @param {CanvasRenderingContext2D} ctx
- * @param {number} pixelScale
- * @param {number} brightness
- * @param {string} color
- */
-const drawScanlineGrid = (ctx, pixelScale, brightness, palette) => {
-    const colorObj = palette.colors[0];
-    const totalWidth = ctx.canvas.width;
-    const totalHeight = ctx.canvas.height;
-    const scaledBrightness = brightness + pixelScale / 50;
-
-    ctx.save();
-    ctx.strokeStyle = colorObj
-        ? `rgba(${colorObj.r}, ${colorObj.g}, ${colorObj.b}, ${scaledBrightness})`
-        : `rgba(255, 255, 255, ${scaledBrightness})`;
-    ctx.lineWidth = 1;
-    ctx.setLineDash([]);
-    ctx.beginPath();
-
-    // Draw horizontal lines
-    for (let y = 0; y < totalHeight; y += pixelScale) {
-        const currentY = Math.round(y) + 0.5;
-        ctx.moveTo(0, currentY);
-        ctx.lineTo(totalWidth, currentY);
-    }
-
-    // Draw vertical segments skipping horizontal lines
-    for (let x = 0; x < totalWidth; x += pixelScale) {
-        const currentX = Math.round(x) + 0.5;
-        for (let y = 0; y < totalHeight; y += pixelScale) {
-            const startY = y + 1;
-            const endY = Math.min(y + pixelScale, totalHeight);
-            if (startY < endY) {
-                ctx.moveTo(currentX, startY);
-                ctx.lineTo(currentX, endY);
-            }
-        }
-    }
-
-    ctx.stroke();
-    ctx.restore();
-};
+import { drawScanlineGrid, composePhotoCanvas } from '../utils/renderUtils.js';
 
 /**
  * Hook to render the photo with applied effects, palettes, and frames.
@@ -91,64 +44,14 @@ export const usePhotoRenderer = (
 
         (async () => {
             try {
-                const { width, height, pixels } = photo;
-
-                let palettePixels;
-
-                // If red and green photos are passed apply rgb colors otherwise apply a palette
-                if (photoG && photoB) {
-                    // Combine R, G, B channels into a single color photo
-                    palettePixels = applyRGB(
-                        pixels,
-                        photoG.pixels,
-                        photoB.pixels,
-                        width,
-                        height,
-                        rgbBrightness,
-                        rgbContrast
-                    );
-                } else {
-                    // Apply the selected color palette to the grayscale photo
-                    palettePixels = applyPalette(pixels, palette, paletteOrder);
-                }
-
-                // Create a bitmap from the raw photo data for efficient drawing
-                const imageBitmap = await createImageBitmap(
-                    new ImageData(palettePixels, width, height)
-                );
-
-                // Recolor the frame if it exists
-                let frameBitmap = null;
-                if (frame) {
-                    // Create a clean copy of frame data to apply palette
-                    const cleanData = new Uint8Array(frame.data.length);
-                    for (let i = 0; i < frame.data.length; i++) {
-                        // Replace transparent index (4) with 0 for palette application
-                        cleanData[i] = frame.data[i] === 4 ? 0 : frame.data[i];
-                    }
-
-                    // Apply palette to frame data
-                    const framePixels = applyPalette(cleanData, palette, paletteOrder);
-
-                    // Restore transparency for index 4
-                    for (let i = 0; i < frame.data.length; i++) {
-                        if (frame.data[i] === 4) {
-                            framePixels[i * 4 + 3] = 0; // Set Alpha to 0
-                        }
-                    }
-                    frameBitmap = await createImageBitmap(
-                        new ImageData(framePixels, frame.width, frame.height)
-                    );
-                }
-
-                const offsets = getFrameOffsets(frame);
-                // Use an OffscreenCanvas for composition
-                const compositionCanvas = composeImage(
-                    imageBitmap,
-                    frameBitmap,
-                    width,
-                    height,
-                    offsets
+                const rgbOptions =
+                    photoG && photoB ? { photoG, photoB, rgbBrightness, rgbContrast } : null;
+                const compositionCanvas = await composePhotoCanvas(
+                    photo,
+                    palette,
+                    frame,
+                    paletteOrder,
+                    rgbOptions
                 );
 
                 // Create and prepare the save canvas in memory

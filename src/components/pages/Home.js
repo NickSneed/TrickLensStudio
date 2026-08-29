@@ -8,6 +8,7 @@ import EditModal from '../modules/EditModal.js';
 import { getItem, setItem, KEYS } from '../../utils/storageUtils.js';
 import MontageToolbar from '../modules/MontageToolbar.js';
 import { useSettings } from '../../context/SettingsContext.js';
+import { bulkExport } from '../../utils/bulkExportUtils.js';
 
 /**
  * Home page component that manages the primary photo grid, save data loading,
@@ -138,6 +139,16 @@ const Home = () => {
         };
     }, [editPhotos, photosToRender]);
 
+    const handleBulkExport = () => {
+        bulkExport(
+            photosToRender,
+            palette,
+            frame,
+            saveData?.username || '',
+            settings
+        );
+    };
+
     return (
         <>
             {saveData ? (
@@ -215,6 +226,8 @@ const Home = () => {
                 isSettingsOpen={isSettingsOpen}
                 color={settings.color}
                 count={photosToRender.length}
+                photos={photosToRender}
+                onBulkExport={handleBulkExport}
                 ref={fileInputRef}
             />
         </>
