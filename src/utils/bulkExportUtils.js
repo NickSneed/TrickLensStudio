@@ -1,4 +1,5 @@
 import { renderPhotoToCanvas } from './renderUtils.js';
+import { canvasToBlob } from './canvasUtils.js';
 
 /**
  * Bulk exports all provided photos as individual image files.
@@ -25,15 +26,7 @@ export async function bulkExport(photos, palette, frame, username, settings) {
 
         try {
             const canvas = await renderPhotoToCanvas(photo, palette, frame, settings);
-
-            let blob;
-            if (canvas.convertToBlob) {
-                blob = await canvas.convertToBlob({ type: mimeType, quality: exportQuality });
-            } else if (canvas.toBlob) {
-                blob = await new Promise((resolve) =>
-                    canvas.toBlob(resolve, mimeType, exportQuality)
-                );
-            }
+            const blob = await canvasToBlob(canvas, mimeType, exportQuality);
 
             if (!blob) continue;
 

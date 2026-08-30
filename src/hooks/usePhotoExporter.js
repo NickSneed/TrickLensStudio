@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { canvasToBlob } from '../utils/canvasUtils.js';
 
 // Helper function to format the username for the filename
 const getFormattedUsername = (username) => {
@@ -36,16 +37,6 @@ export const usePhotoExporter = (
         };
     };
 
-    // Helper to get a Blob from either HTMLCanvasElement (toBlob) or OffscreenCanvas (convertToBlob)
-    const getCanvasBlob = async (canvas, mimeType, quality) => {
-        if (canvas.convertToBlob) {
-            return await canvas.convertToBlob({ type: mimeType, quality });
-        } else if (canvas.toBlob) {
-            return new Promise((resolve) => canvas.toBlob(resolve, mimeType, quality));
-        }
-        return null;
-    };
-
     // Handles downloading the image to the user's device
     const handleExport = useCallback(async () => {
         const canvas = saveCanvasRef.current;
@@ -56,8 +47,8 @@ export const usePhotoExporter = (
 
         const { mimeType, extension } = getFormatDetails();
 
-        // Convert the canvas content to a Blob
-        const blob = await getCanvasBlob(canvas, mimeType, quality);
+        // Convert the canvas content to a Blob using the shared utility
+        const blob = await canvasToBlob(canvas, mimeType, quality);
 
         if (!blob) return;
 
@@ -85,8 +76,8 @@ export const usePhotoExporter = (
         try {
             const { mimeType, extension } = getFormatDetails();
 
-            // Convert canvas to Blob
-            const blob = await getCanvasBlob(canvas, mimeType, quality);
+            // Convert canvas to Blob using the shared utility
+            const blob = await canvasToBlob(canvas, mimeType, quality);
 
             if (!blob) return;
 

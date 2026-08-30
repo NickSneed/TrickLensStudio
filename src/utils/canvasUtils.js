@@ -65,3 +65,20 @@ export function composeImage(imageBitmap, frameBitmap, width, height, offsets) {
 
     return compositionCanvas;
 }
+
+/**
+ * Converts a canvas or OffscreenCanvas to a Blob.
+ *
+ * @param {HTMLCanvasElement|OffscreenCanvas} canvas - The canvas to convert.
+ * @param {string} mimeType - The MIME type (e.g., 'image/png', 'image/jpeg').
+ * @param {number} quality - Quality value between 0 and 1 for lossy formats.
+ * @returns {Promise<Blob|null>} The generated blob.
+ */
+export async function canvasToBlob(canvas, mimeType, quality) {
+    if (canvas.convertToBlob) {
+        return await canvas.convertToBlob({ type: mimeType, quality });
+    } else if (canvas.toBlob) {
+        return await new Promise((resolve) => canvas.toBlob(resolve, mimeType, quality));
+    }
+    return null;
+}
