@@ -20,6 +20,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     const redoStackRef = useRef([]);
     const drawPhotoRef = useRef(drawPhoto);
     const MAX_HISTORY_STEPS = 20;
+    const lastPointRef = useRef(null);
 
     useEffect(() => {
         drawPhotoRef.current = drawPhoto;
@@ -36,6 +37,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
         setPreviewPhoto(initialPhoto);
         historyRef.current = [];
         redoStackRef.current = [];
+        lastPointRef.current = null; // Reset last point
     }, [initialPhoto]);
 
     useEffect(() => {
@@ -100,65 +102,102 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     );
 
     const applyBrush = useCallback(
-        (pixels, x, y) => {
+        (pixels, points) => {
             const photoWidth = 128;
             const photoHeight = 112;
 
             const newPixels = new Uint8Array(pixels);
             const size = Number(brushSize);
 
-            // Apply the brush to the pixel data
-            for (let i = 0; i < size; i++) {
-                for (let j = 0; j < size; j++) {
-                    const drawX = x + i;
-                    const drawY = y + j;
-                    // Ensure drawing stays within photo bounds
-                    if (drawX >= 0 && drawX < photoWidth && drawY >= 0 && drawY < photoHeight) {
-                        const index = drawY * photoWidth + drawX;
-                        newPixels[index] = Number(brushColor);
+            points.forEach(({ x, y }) => {
+                // Apply the brush to the pixel data
+                for (let i = 0; i < size; i++) {
+                    for (let j = 0; j < size; j++) {
+                        const drawX = x + i;
+                        const drawY = y + j;
+                        // Ensure drawing stays within photo bounds
+                        if (drawX >= 0 && drawX < photoWidth && drawY >= 0 && drawY < photoHeight) {
+                            const index = drawY * photoWidth + drawX;
+                            newPixels[index] = Number(brushColor);
+                        }
                     }
                 }
-            }
+            });
+
             return newPixels;
         },
         [brushColor, brushSize]
     );
 
-    const drawOnCanvas = useCallback(
-        (e) => {
-            if (!drawPhoto) return;
-            const coords = getCanvasRelativeCoords(e);
-            if (!coords) return;
-            const { unscaledX, unscaledY } = coords;
+    const getLinePixels = (x0, y0, x1, y1) => {
+        const points = [];
+        const dx = Math.abs(x1 - x0);
+        const dy = Math.abs(y1 - y0);
+        const sx = x0 < x1 ? 1 : -1;
+        const sy = y0 < y1 ? 1 : -1;
+        let err = dx - dy;
 
-            const newPixels = applyBrush(drawPhoto.pixels, unscaledX, unscaledY);
-            setDrawPhoto({ ...drawPhoto, pixels: newPixels });
-        },
-        [drawPhoto, getCanvasRelativeCoords, applyBrush]
-    );
+        let currX = x0;
+        let currY = y0;
+
+        while (true) {
+            points.push({ x: currX, y: currY });
+            if (currX === x1 && currY === y1) break;
+            const e2 = 2 * err;
+            if (e2 > -dy) {
+                err -= dy;
+                currX += sx;
+            }
+            if (e2 < dx) {
+                err += dx;
+                currY += sy;
+            }
+        }
+        return points;
+    };
 
     const handleDrawStart = useCallback(
         (e) => {
-            // If it's a mouse event (has a button property), ensure it's the left mouse button (0)
             if (e.button !== undefined && e.button !== 0) {
                 return;
             }
-
             if (e.cancelable) {
                 e.preventDefault();
             }
+
+            const coords = getCanvasRelativeCoords(e);
+            if (!coords || !drawPhoto) return;
+            const { unscaledX, unscaledY } = coords;
+
             if (drawPhoto) {
                 historyRef.current.push(drawPhoto.pixels);
-                // Keep only the last MAX_HISTORY_STEPS items
                 if (historyRef.current.length > MAX_HISTORY_STEPS) {
-                    historyRef.current.shift(); // Remove the oldest entry
+                    historyRef.current.shift();
                 }
                 redoStackRef.current = [];
             }
+
+            let points;
+            if (e.shiftKey && lastPointRef.current) {
+                // Get all points along the straight line from the last point to the current point
+                points = getLinePixels(
+                    lastPointRef.current.x,
+                    lastPointRef.current.y,
+                    unscaledX,
+                    unscaledY
+                );
+            } else {
+                // Just a single point/brush placement
+                points = [{ x: unscaledX, y: unscaledY }];
+            }
+
+            const newPixels = applyBrush(drawPhoto.pixels, points);
+
+            setDrawPhoto({ ...drawPhoto, pixels: newPixels });
+            lastPointRef.current = { x: unscaledX, y: unscaledY };
             setIsDrawing(true);
-            drawOnCanvas(e);
         },
-        [drawPhoto, drawOnCanvas]
+        [drawPhoto, getCanvasRelativeCoords, applyBrush]
     );
 
     const handleDrawMove = useCallback(
@@ -182,7 +221,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
                 if (!isHoveringRef.current && !isDrawing) return;
 
                 const { unscaledX, unscaledY } = coords;
-                const newPixels = applyBrush(drawPhoto.pixels, unscaledX, unscaledY);
+                const newPixels = applyBrush(drawPhoto.pixels, [{ x: unscaledX, y: unscaledY }]);
                 if (isDrawing) {
                     setDrawPhoto({ ...drawPhoto, pixels: newPixels });
                 } else {
