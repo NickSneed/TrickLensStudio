@@ -16,6 +16,14 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     const [isDrawing, setIsDrawing] = useState(false);
     const requestRef = useRef(null);
     const isHoveringRef = useRef(false);
+    const historyRef = useRef([]);
+    const redoStackRef = useRef([]);
+    const drawPhotoRef = useRef(drawPhoto);
+    const MAX_HISTORY_STEPS = 20;
+
+    useEffect(() => {
+        drawPhotoRef.current = drawPhoto;
+    }, [drawPhoto]);
 
     useEffect(() => {
         return () => {
@@ -26,11 +34,40 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
     useEffect(() => {
         setDrawPhoto(initialPhoto);
         setPreviewPhoto(initialPhoto);
+        historyRef.current = [];
+        redoStackRef.current = [];
     }, [initialPhoto]);
 
     useEffect(() => {
         setPreviewPhoto(drawPhoto);
     }, [drawPhoto]);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Check for Ctrl+Z (or Cmd+Z on Mac)
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                e.preventDefault();
+
+                if (historyRef.current.length === 0) return;
+
+                const previousPixels = historyRef.current.pop(); // Get last state
+
+                // Save current state to redo stack using the ref
+                if (drawPhotoRef.current) {
+                    redoStackRef.current.push(drawPhotoRef.current.pixels);
+                }
+
+                // Apply previous state
+                setDrawPhoto((prev) => (prev ? { ...prev, pixels: previousPixels } : prev));
+                setPreviewPhoto((prev) => (prev ? { ...prev, pixels: previousPixels } : prev));
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     const getCoords = (e) => {
         // Normalizes touch and mouse coordinates
@@ -102,13 +139,26 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
 
     const handleDrawStart = useCallback(
         (e) => {
+            // If it's a mouse event (has a button property), ensure it's the left mouse button (0)
+            if (e.button !== undefined && e.button !== 0) {
+                return;
+            }
+
             if (e.cancelable) {
                 e.preventDefault();
+            }
+            if (drawPhoto) {
+                historyRef.current.push(drawPhoto.pixels);
+                // Keep only the last MAX_HISTORY_STEPS items
+                if (historyRef.current.length > MAX_HISTORY_STEPS) {
+                    historyRef.current.shift(); // Remove the oldest entry
+                }
+                redoStackRef.current = [];
             }
             setIsDrawing(true);
             drawOnCanvas(e);
         },
-        [drawOnCanvas]
+        [drawPhoto, drawOnCanvas]
     );
 
     const handleDrawMove = useCallback(
