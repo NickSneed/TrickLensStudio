@@ -207,7 +207,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
             const indent = ' '.repeat(indentSpaces);
             const formattedColors = colorObjects.map((c) => `${indent}${c}`).join(',\n');
 
-            return `${p1}\n${formattedColors}\n            ]`;
+            return `${p1}\n${formattedColors}\n${' '.repeat(indentSpaces - 4)}]`;
         };
 
         // Format palette "colors" arrays (16 spaces) and root-level "quickColors" (16 spaces)
@@ -217,7 +217,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         );
         jsonString = jsonString.replace(
             /("quickColors":\s*\[)\s*([\s\S]*?)\s*\]/g,
-            formatColorArray(4)
+            formatColorArray(8)
         );
 
         const blob = new Blob([jsonString], {
