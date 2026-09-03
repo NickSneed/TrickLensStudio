@@ -86,5 +86,4 @@ JSON format:
 - Add animated gif export
 - Fix effects and drawing when applying rgb
 - Add stamps
-- Add option to save custom palettes
 - Add Game Boy controls

@@ -132,10 +132,73 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
         }
     };
 
+    const handleSaveCurrentPalette = () => {
+        if (!currentPalette || !currentPalette.colors) {
+            alert('No active palette to save.');
+            return;
+        }
+        const paletteName = window.prompt(
+            'Enter a name for your custom palette:',
+            'My Custom Palette'
+        );
+        if (!paletteName) return;
+
+        const trimmedName = paletteName.trim();
+        const paletteKey = trimmedName.toLowerCase().replace(/\s+/g, '-');
+
+        if (allPalettes[paletteKey] || userPalettes[paletteKey]) {
+            const overwrite = window.confirm(
+                `A palette with the name "${trimmedName}" already exists. Do you want to overwrite it?`
+            );
+            if (!overwrite) return;
+        }
+
+        const updatedUserPalettes = {
+            ...userPalettes,
+            [paletteKey]: {
+                name: trimmedName,
+                colors: currentPalette.colors
+            }
+        };
+
+        setUserPalettes(updatedUserPalettes);
+        setItem(KEYS.PALETTES, {
+            palettes: updatedUserPalettes,
+            quickColors: quickColors
+        });
+
+        // Switch active palette to the newly saved custom palette
+        onPaletteChange({
+            id: paletteKey,
+            name: trimmedName,
+            colors: currentPalette.colors
+        });
+        alert(`Palette "${trimmedName}" saved successfully!`);
+    };
+
     const handleClearUserPalettes = () => {
         setUserPalettes({});
         setQuickColors([]);
         removeItem(KEYS.PALETTES);
+    };
+
+    const handleExportPalettesJson = () => {
+        const exportData = {
+            palettes: Object.keys(userPalettes).length > 0 ? userPalettes : palettes,
+            quickColors: quickColors.length > 0 ? quickColors : []
+        };
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+            type: 'application/json'
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download =
+            Object.keys(userPalettes).length > 0 ? 'custom-palettes.json' : 'palettes.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     };
 
     const handleRandom = () => {
@@ -375,6 +438,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                         )}
                     </div>
                     <h3>Load/Manage</h3>
+                    <MainButton onClick={handleSaveCurrentPalette}>Save palette</MainButton>
                     <FileLoader
                         text="Load config ..."
                         onChange={handleLoadUserPalettesFile}
@@ -382,6 +446,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                         accept=".json"
                         showRemove={Object.keys(userPalettes).length > 0}
                     />
+                    <MainButton onClick={handleExportPalettesJson}>Export palettes</MainButton>
                 </Modal>
             </div>
         </>
