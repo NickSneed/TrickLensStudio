@@ -184,17 +184,49 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
 
     const handleExportPalettesJson = () => {
         const exportData = {
-            palettes: Object.keys(userPalettes).length > 0 ? userPalettes : palettes,
+            palettes: allPalettes,
             quickColors: quickColors.length > 0 ? quickColors : []
         };
-        const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+
+        let jsonString = JSON.stringify(exportData, null, 4);
+
+        const formatColorArray = (indentSpaces) => (match, p1, p2) => {
+            const colorObjects = p2
+                .split(/},\s*/)
+                .map((item) => {
+                    const r = item.match(/"r":\s*(\d+)/)?.[1];
+                    const g = item.match(/"g":\s*(\d+)/)?.[1];
+                    const b = item.match(/"b":\s*(\d+)/)?.[1];
+                    if (r !== undefined && g !== undefined && b !== undefined) {
+                        return `{ "r": ${r}, "g": ${g}, "b": ${b} }`;
+                    }
+                    return null;
+                })
+                .filter(Boolean);
+
+            const indent = ' '.repeat(indentSpaces);
+            const formattedColors = colorObjects.map((c) => `${indent}${c}`).join(',\n');
+
+            return `${p1}\n${formattedColors}\n            ]`;
+        };
+
+        // Format palette "colors" arrays (16 spaces) and root-level "quickColors" (16 spaces)
+        jsonString = jsonString.replace(
+            /("colors":\s*\[)\s*([\s\S]*?)\s*\]/g,
+            formatColorArray(16)
+        );
+        jsonString = jsonString.replace(
+            /("quickColors":\s*\[)\s*([\s\S]*?)\s*\]/g,
+            formatColorArray(4)
+        );
+
+        const blob = new Blob([jsonString], {
             type: 'application/json'
         });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download =
-            Object.keys(userPalettes).length > 0 ? 'custom-palettes.json' : 'palettes.json';
+        a.download = 'palettes.json';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
