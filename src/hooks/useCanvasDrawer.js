@@ -9,8 +9,9 @@ import { getFrameOffsets } from '../utils/frameUtils.js';
  * @param {Object} frame - The current frame (used for offset calculations).
  * @param {number} brushColor - The color index to draw with (0-3).
  * @param {number} brushSize - The size of the drawing brush in pixels.
+ * @param {string} brushStyle - The currently selected brush style.
  */
-export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
+export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize, brushStyle) => {
     const [drawPhoto, setDrawPhoto] = useState(initialPhoto); // The "saved" photo state
     const [previewPhoto, setPreviewPhoto] = useState(initialPhoto); // The photo state for rendering, including hover previews
     const [isDrawing, setIsDrawing] = useState(false);
@@ -109,16 +110,100 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
             const newPixels = new Uint8Array(pixels);
             const size = Number(brushSize);
 
+            // Brush shapes definition (relative coordinates)
+            const brushes = {
+                heart: [
+                    { x: 1, y: 0 },
+                    { x: 2, y: 0 },
+                    { x: 4, y: 0 },
+                    { x: 5, y: 0 },
+                    { x: 0, y: 1 },
+                    { x: 1, y: 1 },
+                    { x: 2, y: 1 },
+                    { x: 3, y: 1 },
+                    { x: 4, y: 1 },
+                    { x: 5, y: 1 },
+                    { x: 6, y: 1 },
+                    { x: 0, y: 2 },
+                    { x: 1, y: 2 },
+                    { x: 2, y: 2 },
+                    { x: 3, y: 2 },
+                    { x: 4, y: 2 },
+                    { x: 5, y: 2 },
+                    { x: 6, y: 2 },
+                    { x: 1, y: 3 },
+                    { x: 2, y: 3 },
+                    { x: 3, y: 3 },
+                    { x: 4, y: 3 },
+                    { x: 5, y: 3 },
+                    { x: 2, y: 4 },
+                    { x: 3, y: 4 },
+                    { x: 4, y: 4 },
+                    { x: 3, y: 5 }
+                ],
+                star: [
+                    { x: 3, y: 0 },
+                    { x: 2, y: 1 },
+                    { x: 3, y: 1 },
+                    { x: 4, y: 1 },
+                    { x: 0, y: 2 },
+                    { x: 1, y: 2 },
+                    { x: 2, y: 2 },
+                    { x: 3, y: 2 },
+                    { x: 4, y: 2 },
+                    { x: 5, y: 2 },
+                    { x: 6, y: 2 },
+                    { x: 2, y: 3 },
+                    { x: 3, y: 3 },
+                    { x: 4, y: 3 },
+                    { x: 1, y: 4 },
+                    { x: 5, y: 4 },
+                    { x: 0, y: 5 },
+                    { x: 6, y: 5 }
+                ],
+                smile: [
+                    { x: 1, y: 0 },
+                    { x: 5, y: 0 },
+                    { x: 1, y: 3 },
+                    { x: 5, y: 3 },
+                    { x: 2, y: 4 },
+                    { x: 3, y: 4 },
+                    { x: 4, y: 4 }
+                ]
+            };
+
             points.forEach(({ x, y }) => {
-                // Apply the brush to the pixel data
-                for (let i = 0; i < size; i++) {
-                    for (let j = 0; j < size; j++) {
-                        const drawX = x + i;
-                        const drawY = y + j;
-                        // Ensure drawing stays within photo bounds
-                        if (drawX >= 0 && drawX < photoWidth && drawY >= 0 && drawY < photoHeight) {
-                            const index = drawY * photoWidth + drawX;
-                            newPixels[index] = Number(brushColor);
+                if (brushStyle !== 'none' && brushes[brushStyle]) {
+                    brushes[brushStyle].forEach((offset) => {
+                        const drawX = x + offset.x * size;
+                        const drawY = y + offset.y * size;
+                        for (let i = 0; i < size; i++) {
+                            for (let j = 0; j < size; j++) {
+                                const px = drawX + i;
+                                const py = drawY + j;
+                                if (px >= 0 && px < photoWidth && py >= 0 && py < photoHeight) {
+                                    const index = py * photoWidth + px;
+                                    newPixels[index] = Number(brushColor);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    // Apply standard brush to the pixel data
+                    for (let i = 0; i < size; i++) {
+                        for (let j = 0; j < size; j++) {
+                            const drawX = x + i;
+                            const drawY = y + j;
+                            // Ensure drawing stays within photo bounds
+                            if (
+                                drawX >= 0 &&
+                                drawX < photoWidth &&
+                                drawY >= 0 &&
+                                drawY < photoHeight
+                            ) {
+                                const index = drawY * photoWidth + drawX;
+                                newPixels[index] = Number(brushColor);
+                            }
                         }
                     }
                 }
@@ -126,7 +211,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize) => {
 
             return newPixels;
         },
-        [brushColor, brushSize]
+        [brushColor, brushSize, brushStyle]
     );
 
     const getLinePixels = (x0, y0, x1, y1) => {

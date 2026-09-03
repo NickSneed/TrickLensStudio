@@ -32,6 +32,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
     const [effect, setEffect] = useState('none'); // Current trick lens effect
     const [brushColor, setBrushColor] = useState(0); // Brush color index
     const [brushSize, setBrushSize] = useState(1); // Brush size
+    const [brushStyle, setBrushStyle] = useState('none'); // Selected brush style
     const [montageType, setMontageType] = useState('none'); // Selected montage layout
     const [paletteOrder, setPaletteOrder] = useState('normal'); // Palette color mapping order
     const [rgbBrightness, setRgbBrightness] = useState(0); // Brightness for RGB mode
@@ -44,6 +45,7 @@ const EditModal = ({ photos, palette, frame, username }) => {
         setEffect('none');
         setBrushColor(0);
         setBrushSize(1);
+        setBrushStyle('none');
         setRgbBrightness(0);
         setRgbContrast(0);
         setPaletteOrder('normal');
@@ -60,7 +62,8 @@ const EditModal = ({ photos, palette, frame, username }) => {
         photos ? photos[0] : null,
         localFrame,
         brushColor,
-        brushSize
+        brushSize,
+        brushStyle
     );
 
     // Set idRgb flag for RGB montages
@@ -183,6 +186,19 @@ const EditModal = ({ photos, palette, frame, username }) => {
                     <option value="flip-h">flip-h</option>
                     <option value="flip-v">flip-v</option>
                     <option value="flip-vh">flip-vh</option>
+                </select>
+            </label>
+            <label>
+                Brush Style:
+                <select
+                    className={styles.select}
+                    value={brushStyle}
+                    onChange={(e) => setBrushStyle(e.target.value)}
+                >
+                    <option value="none">none</option>
+                    <option value="heart">Heart</option>
+                    <option value="star">Star</option>
+                    <option value="smile">Smile</option>
                 </select>
             </label>
             <label>
