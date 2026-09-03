@@ -439,6 +439,7 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                     </div>
                     <h3>Load/Manage</h3>
                     <MainButton onClick={handleSaveCurrentPalette}>Save palette</MainButton>
+                    <MainButton onClick={handleExportPalettesJson}>Export palettes</MainButton>
                     <FileLoader
                         text="Load config ..."
                         onChange={handleLoadUserPalettesFile}
@@ -446,7 +447,6 @@ const PaletteSelector = ({ currentPalette, onPaletteChange }) => {
                         accept=".json"
                         showRemove={Object.keys(userPalettes).length > 0}
                     />
-                    <MainButton onClick={handleExportPalettesJson}>Export palettes</MainButton>
                 </Modal>
             </div>
         </>
