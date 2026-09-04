@@ -44,6 +44,7 @@
     },
     "overrides": {
         "uuid": "^11.1.0",
-        "react-router": "8.3.0"
+        "react-router": "8.3.0",
+        "fast-uri": "3.1.6"
     }
 }
