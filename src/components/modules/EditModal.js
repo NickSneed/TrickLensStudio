@@ -11,6 +11,7 @@ import { convertFrameToData } from '../../utils/canvasUtils.js';
 import FileLoader from '../elements/FileLoader.js';
 import ExportButton from '../elements/ExportButton.js';
 import EditorLayout from './EditorLayout.js';
+import { BRUSH_SHAPES } from '../../utils/brushConstants.js';
 
 /**
  * EditModal component allows users to edit, apply effects, and export photos.
@@ -196,9 +197,14 @@ const EditModal = ({ photos, palette, frame, username }) => {
                     onChange={(e) => setBrushStyle(e.target.value)}
                 >
                     <option value="none">none</option>
-                    <option value="heart">Heart</option>
-                    <option value="star">Star</option>
-                    <option value="smile">Smile</option>
+                    {Object.keys(BRUSH_SHAPES).map((shapeKey) => (
+                        <option
+                            key={shapeKey}
+                            value={shapeKey}
+                        >
+                            {shapeKey.charAt(0).toUpperCase() + shapeKey.slice(1)}
+                        </option>
+                    ))}
                 </select>
             </label>
             <label>

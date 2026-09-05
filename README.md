@@ -82,7 +82,7 @@ JSON format:
 
 ## To do
 
-- Add more help docs
+- Add more help UI docs
 - Add animated gif export
 - Fix effects and drawing when applying rgb
 - Add stamps

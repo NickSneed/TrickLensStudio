@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { getFrameOffsets } from '../utils/frameUtils.js';
+import { BRUSH_SHAPES } from '../utils/brushConstants.js'; // <-- Import here
 
 /**
  * Hook to handle drawing operations on the photo canvas.
@@ -111,66 +112,7 @@ export const useCanvasDrawer = (initialPhoto, frame, brushColor, brushSize, brus
             const size = Number(brushSize);
 
             // Brush shapes definition (relative coordinates)
-            const brushes = {
-                heart: [
-                    { x: 1, y: 0 },
-                    { x: 2, y: 0 },
-                    { x: 4, y: 0 },
-                    { x: 5, y: 0 },
-                    { x: 0, y: 1 },
-                    { x: 1, y: 1 },
-                    { x: 2, y: 1 },
-                    { x: 3, y: 1 },
-                    { x: 4, y: 1 },
-                    { x: 5, y: 1 },
-                    { x: 6, y: 1 },
-                    { x: 0, y: 2 },
-                    { x: 1, y: 2 },
-                    { x: 2, y: 2 },
-                    { x: 3, y: 2 },
-                    { x: 4, y: 2 },
-                    { x: 5, y: 2 },
-                    { x: 6, y: 2 },
-                    { x: 1, y: 3 },
-                    { x: 2, y: 3 },
-                    { x: 3, y: 3 },
-                    { x: 4, y: 3 },
-                    { x: 5, y: 3 },
-                    { x: 2, y: 4 },
-                    { x: 3, y: 4 },
-                    { x: 4, y: 4 },
-                    { x: 3, y: 5 }
-                ],
-                star: [
-                    { x: 3, y: 0 },
-                    { x: 2, y: 1 },
-                    { x: 3, y: 1 },
-                    { x: 4, y: 1 },
-                    { x: 0, y: 2 },
-                    { x: 1, y: 2 },
-                    { x: 2, y: 2 },
-                    { x: 3, y: 2 },
-                    { x: 4, y: 2 },
-                    { x: 5, y: 2 },
-                    { x: 6, y: 2 },
-                    { x: 2, y: 3 },
-                    { x: 3, y: 3 },
-                    { x: 4, y: 3 },
-                    { x: 1, y: 4 },
-                    { x: 5, y: 4 },
-                    { x: 0, y: 5 },
-                    { x: 6, y: 5 }
-                ],
-                smile: [
-                    { x: 1, y: 0 },
-                    { x: 5, y: 0 },
-                    { x: 1, y: 3 },
-                    { x: 5, y: 3 },
-                    { x: 2, y: 4 },
-                    { x: 3, y: 4 },
-                    { x: 4, y: 4 }
-                ]
-            };
+            const brushes = BRUSH_SHAPES;
 
             points.forEach(({ x, y }) => {
                 if (brushStyle !== 'none' && brushes[brushStyle]) {
