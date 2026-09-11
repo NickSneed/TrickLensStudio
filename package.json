@@ -42,9 +42,7 @@
         "react-router-dom": "^7.6.0",
         "tricklens-js": "github:NickSneed/TrickLensJS"
     },
-    "overrides": {
-        "uuid": "^11.1.0",
-        "react-router": "8.3.0",
-        "fast-uri": "3.1.6"
+    "allowScripts": {
+        "github:NickSneed/TrickLensJS#9d81a0ecb9e0f26848438d0d8cb190155f9847a1": true
     }
 }
